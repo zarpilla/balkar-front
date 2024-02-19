@@ -1,0 +1,120 @@
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-ExtraBold.woff2') format('woff2'),
+        url('Athletics-ExtraBold.woff') format('woff'),
+        url('Athletics-ExtraBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-LightItalic.woff2') format('woff2'),
+        url('Athletics-LightItalic.woff') format('woff'),
+        url('Athletics-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-Bold.woff2') format('woff2'),
+        url('Athletics-Bold.woff') format('woff'),
+        url('Athletics-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-Regular.woff2') format('woff2'),
+        url('Athletics-Regular.woff') format('woff'),
+        url('Athletics-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-ExtraBoldItalic.woff2') format('woff2'),
+        url('Athletics-ExtraBoldItalic.woff') format('woff'),
+        url('Athletics-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-Italic.woff2') format('woff2'),
+        url('Athletics-Italic.woff') format('woff'),
+        url('Athletics-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-Black.woff2') format('woff2'),
+        url('Athletics-Black.woff') format('woff'),
+        url('Athletics-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-Medium.woff2') format('woff2'),
+        url('Athletics-Medium.woff') format('woff'),
+        url('Athletics-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-MediumItalic.woff2') format('woff2'),
+        url('Athletics-MediumItalic.woff') format('woff'),
+        url('Athletics-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-BoldItalic.woff2') format('woff2'),
+        url('Athletics-BoldItalic.woff') format('woff'),
+        url('Athletics-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-Light.woff2') format('woff2'),
+        url('Athletics-Light.woff') format('woff'),
+        url('Athletics-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Athletics';
+    src: url('Athletics-BlackItalic.woff2') format('woff2'),
+        url('Athletics-BlackItalic.woff') format('woff'),
+        url('Athletics-BlackItalic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+

@@ -1,0 +1,180 @@
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+
+
+body {
+    font-family: Athletics;
+  }
+  
+  .btn.btn-primary {
+    border-radius: 25px;
+    border: 0;
+    background: var(--Resilience-fosc, #020034);
+    color: var(--blanc, #FFF);
+    text-align: center;
+    font-family: Athletics;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 40px;
+    line-height: 30px;
+  }
+  
+  .btn.btn-primary:hover {
+    background: var(--Balkar, #F3C857);
+    color: var(--Resilience-fosc, #020034);
+  }
+  
+  .btn.btn-primary:hover svg path{
+    fill: var(--Resilience-fosc, #020034);
+  }
+  
+  .btn.btn-secondary {  
+    border: 0;
+    border-radius: 25px;
+    background: var(--Balkar, #EFDDA2);
+    color: var(--Resilience-fosc, #020034);
+    text-align: center;
+    font-family: Athletics;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 40px;
+    line-height: 30px;
+  }
+  
+  .btn.btn-secondary:hover {
+    background: var(--Resilience-fosc, #F3C857);
+    color: var(--blanc, #020034);
+  }
+  
+  .btn.btn-primary svg, .btn.btn-secondary svg{
+    margin-left: 10px;
+    vertical-align: -4px;
+  }
+  
+  .btn.btn-secondary:hover svg path{
+    fill: var(--blanc, #020034);
+  }
+  
+  .btn.btn-primary.icon-left svg, .btn.btn-secondary.icon-left svg, .btn.btn-tertiary.icon-left svg{
+    margin-right: 10px;
+    vertical-align: -4px;
+  }
+
+
+  .btn.btn-tertiary {  
+    border: 2px solid var(--Resilience-fosc, #020034);
+    border-radius: 25px;
+    background: transparent;
+    color: var(--Resilience-fosc, #020034);
+    text-align: center;
+    font-family: Athletics;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 40px;
+    line-height: 30px;
+  }
+  
+  .btn.btn.btn-tertiary:hover {
+    background: var(--Resilience-fosc, #F3C857);
+    color: var(--blanc, #020034);
+  }
+  
+  .btn.btn-primary svg, .btn.btn-secondary svg, .btn.btn-tertiary svg{
+    margin-left: 10px;
+    vertical-align: -4px;
+  }
+  
+  .btn.btn-medium { 
+    padding: 0px 10px;
+    font-size: 14px;
+  }
+
+  .bg-balkar{
+    background: var(--Balkar-bg, #FBF7EB); 
+  }
+  
+  .bg-white{
+    background: var(--blanc, #FFF);
+  }
+  
+  a{
+    color: #0A0A0A;
+  }
+
+  .border{
+    border-color: #0A0A0A!important;
+  }
+  
+  
+  input[type='text'],
+  input[type='date'],
+  input[type='number'],
+  input[type='password'],
+  textarea {
+    border-radius: 4px;
+    border: 1px solid var(--gray-0250, #C2C2C2);
+    background: var(--gray-0210, #FFF);
+    padding: 6px 12px !important;
+  
+    color: var(--gray-02100, #0A0A0A);
+    font-family: Athletics;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+    max-width: 100%;
+    height: 40px;
+  }
+  
+  
+  input[type='radio'],
+  input[type='checkbox'] {
+    accent-color: #F06500;
+  }
+  
+  textarea {
+    height: auto;
+    min-height: 100px;
+  }
+  
+  select {
+    color: var(--gray-02100, #0A0A0A);
+    /* Body Text/SF Pro/14/Regular */
+    font-family: Athletics;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    height: 40px;
+    padding: 6px !important;
+  }
+  
+  input[type='text'][disabled],
+  input[type='number'][disabled],
+  input[type='date'][disabled],
+  textarea[disabled],
+  select[disabled] {
+    border: 1px solid var(--secondary-200, #d7dde5) !important;
+    background: var(--neutral-medium, #f8f9fd) !important;
+  }
+  
+  .zzzrounded {
+    border-radius: 12px !important;
+  }
+  
+  .clickable{
+    cursor: pointer;
+  }
