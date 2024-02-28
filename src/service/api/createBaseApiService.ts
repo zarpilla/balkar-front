@@ -4,8 +4,9 @@ const CreateBaseApiService = (resource: string) => {
   return {
     // Get a list of resources
     list: () => service({ requiresAuth: true }).get(`${resource}`),
+    // query: (query: string) => service({ requiresAuth: true }).get(`${resource}?${query}`),
     // Get a single resource by its id
-    get: (id: string) => service({ requiresAuth: true }).get(`${resource}/uid/${id}`),
+    get: (id: string) => service({ requiresAuth: true }).get(`${resource}/${id}`),
     // Create a new resource
     create: (payload: any) => service({ requiresAuth: true }).post(`${resource}`, { data: payload }),
     // Replace an existing resource with payload

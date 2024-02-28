@@ -7,26 +7,24 @@
       v-if="isInitial || isSaving || isSuccess"
     >
       <div
-        id="dropzone"
         class="dropbox"
         v-cloak
         @drop.prevent="addFile($event)"
         @dragover.prevent
       >
+      
+
         <input
           type="file"
-          :multiple="multiple"
           :name="uploadFieldName"
           :disabled="isSaving"          
-          :accept="accept"
+          accept="image/*"
           class="input-file"
           @change="filesChange($event, uploadFieldName, $event.target.files)"
         />
-        <p v-if="isInitial || isSuccess">
-          {{ $t('drag-files-here') }}<br />
-          {{ $t('or-click') }}          
+        <p>          
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/></svg>
         </p>
-        <p v-if="isSaving">Pujant {{ fileCount }} arxius...</p>
       </div>
     </form>
 
@@ -85,13 +83,11 @@ const STATUS_INITIAL = 0,
   // });
 
 export default defineComponent({
-  name: "FileUploadSubmission",
+  name: "FileUploadMessage",
   props: {
-    learningSpace: String,
+    channel: Number,
     users_permissions_user: [String, Number],
-    moduleId: String,
-    multiple: Boolean,
-    accept: String
+    parent: Number,
   },
   // emits: ['uploaded'],
   setup(props, { emit }) {
@@ -128,7 +124,7 @@ export default defineComponent({
         formData.append('files.file', fileList[x], fileList[x].name);
       });
 
-      const data = { moduleId: props.moduleId, learning_space: props.learningSpace, users_permissions_user: '0', field: 'file'}
+      const data = { channel: props.channel, parent: props.parent? props.parent : null, users_permissions_user: '0', field: 'file'}
 
       formData.append('data', JSON.stringify(data));
       // save it
@@ -143,10 +139,11 @@ export default defineComponent({
     };
 
     const save = (formData: FormData, fileList: FileList) => {
+      console.log("save", formData);
       currentStatus.value = STATUS_SAVING;
 
 
-      service({ requiresAuth: true, multipart: true }).post("submissions", formData)
+      service({ requiresAuth: true, multipart: true }).post("messages", formData)
         .then((res) => {
           console.log(res);
 
@@ -164,6 +161,7 @@ export default defineComponent({
     };
 
     const filesChange = (event: any, fieldName: string, xfileList: FileList) => {
+console.log('filesChange')
       // ...
 
       const formData = new FormData();
@@ -175,7 +173,7 @@ export default defineComponent({
         formData.append('files.file', xfileList[x], xfileList[x].name);
       });
 
-      const data = { moduleId: props.moduleId, learning_space: props.learningSpace, users_permissions_user: '0', field: 'file'}
+      const data = { channel: props.channel, parent: props.parent? props.parent : null, users_permissions_user: '0', field: 'file'}
 
       formData.append('data', JSON.stringify(data));
 
@@ -212,13 +210,10 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.dropbox {
-  outline: 2px dashed #020034; /* the dash box */
-  outline-offset: -10px;
-  background: #BBDFF7;
+.dropbox {  
+  background: transparent;
   color: #020034;
-  padding: 10px 10px;
-  min-height: 80px; /* minimum height */
+  padding: 0px;
   position: relative;
   cursor: pointer;
 }
@@ -226,18 +221,21 @@ export default defineComponent({
 .input-file {
   opacity: 0; /* invisible but it's there! */
   width: 100%;
-  height: 200px;
+  height: 40px;
   position: absolute;
   cursor: pointer;
 }
 
-.dropbox:hover {
-  background: #fff; /* when mouse over to the drop zone, change color */
+.zdropbox:hover svg{
+  fill: #F3C857; /* when mouse over to the drop zone, change color */
 }
 
 .dropbox p {
   font-size: 1em;
   text-align: center;
-  padding: 30px 0;
+}
+.dropbox svg {
+  margin-top: 10px;
+  margin-left: 4px;
 }
 </style>

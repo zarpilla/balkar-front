@@ -5,6 +5,9 @@ import VueMarkdown from 'vue-markdown-render'
 import { useRouter } from 'vue-router'
 import CustomToast from '@/components/CustomToast.vue'
 import FileUpload from '@/components/FileUploadSubmission.vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
 
 const props = defineProps<{
   uid: string
@@ -13,6 +16,7 @@ const props = defineProps<{
 const router = useRouter()
 const moduleId = ref(router.currentRoute.value.params.moduleId as string)
 const topicId = ref(router.currentRoute.value.params.topicId as string)
+const apiBase = import.meta.env.VITE_API_BASE
 
 const loaded = ref(false)
 const space = ref<any>(null)
@@ -85,15 +89,29 @@ const uploaded = async () => {
   console.log('uploaded')
   await load()
 }
+
+const authenticated = computed(() => {
+  return authStore.isAuthenticated()
+})
+
+const removeSubmission = async (id: string) => {
+  console.log('removeSubmission')
+  await Api.submissions.remove(id)
+  await load()
+}
 </script>
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
-    <div class="bg-balkar">
+    <div :class="{ 'bg-balkar': authenticated }">
       <div class="container">
-        <RouterLink class="btn btn-tertiary mb-3" :to="`/space/${space.uid}`">
-          {{ space.name }} - {{ (space.completedPct * 100).toFixed(0) }}%
+        <RouterLink class="btn btn-primary mb-3" :to="`/space/${space.uid}`">
+          {{ space.name }}
         </RouterLink>
+
+        <span v-if="authenticated && space.enrolled" class="ms-3 completed-pct completed-pct-space">
+          {{ (space.completedPct * 100).toFixed(0) }}%
+        </span>
       </div>
     </div>
 
@@ -101,7 +119,7 @@ const uploaded = async () => {
       <img :src="base + space.banner.url" class="w-100" />
     </div>
 
-    <div class="not-enrolled" v-if="space.enrolled === false">
+    <div class="not-enrolled" v-if="authenticated && space.enrolled === false">
       <div class="container bg-white mt-5">
         <vue-markdown
           v-if="space.publicDescription"
@@ -114,6 +132,21 @@ const uploaded = async () => {
         </button>
       </div>
     </div>
+
+    <div class="not-enrolled" v-if="!authenticated">
+      <div class="container zbg-balkar zmt-5">
+        <vue-markdown
+          v-if="space.publicDescription"
+          class="mt-4 mb-4"
+          :source="space.publicDescription"
+        ></vue-markdown>
+
+        <RouterLink to="/login" class="btn btn-primary mt-4 mb-4">
+          {{ $t('Apuntar-se') }}
+        </RouterLink>
+      </div>
+    </div>
+
     <div class="enrolled" v-if="space.enrolled === true" :class="{ 'module-selected': moduleId }">
       <div class="container bg-white mt-5" v-if="!moduleId">
         <vue-markdown
@@ -213,16 +246,52 @@ const uploaded = async () => {
                 </div>
 
                 <div v-if="module.submissions">
-                  <div v-for="sub in module.submissions" :key="sub.id">
-                    <div v-if="sub.file && sub.file.length">
-                      {{ sub.file[0].name }} - {{ sub.file[0].url }}
+                  <div v-for="sub in module.submissions" :key="sub.id" class="uploaded-file">
+                    <div v-if="sub.file && sub.file.length" class="d-flex zuploaded-file px-2 py-4">
+                      <a :href="apiBase + sub.file[0].url" target="_blank">
+                        {{ sub.file[0].name }}
+                      </a>
+                      <svg
+                        @click="removeSubmission(sub.id)"
+                        class="remove-file ms-auto"
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24"
+                        viewBox="0 -960 960 960"
+                        width="24"
+                      >
+                        <path
+                          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+                        />
+                      </svg>
                     </div>
                   </div>
                   <!-- <pre>{{ module.submissions }}</pre> -->
                 </div>
               </div>
             </div>
+
+            <div v-if="!moduleId && space.forum && space.enrolled" class="forum module module-type-forum">
+              <RouterLink
+                :to="`/forum/${uid}`"
+                class="d-flex"
+              >
+                {{ space.forum.name }}                
+              </RouterLink>
+              <div class="description">
+                {{ space.forum.description }}                
+              </div>
+
+              <div class="d-flex w-100 mt-3">
+                <RouterLink
+                :to="`/forum/${uid}`"
+                class="ms-auto btn btn-white"
+              >
+                {{ $t('FORUM ACCESS') }}
+              </RouterLink>
+              </div>
+              
           </div>
+        </div>
           <div class="col-12 col-md-3" v-if="moduleId">
             <div class="module">
               <h4 class="text-uppercase quick-access-name">
@@ -281,7 +350,7 @@ const uploaded = async () => {
 .module {
   background: rgba(242, 90, 1, 0.8);
   background: #efdda2;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   color: var(--Nabiu, #020034);
   font-family: Athletics;
   font-size: 26px;
@@ -347,9 +416,9 @@ const uploaded = async () => {
 
   color: var(--Nabiu, #020034);
   font-family: Athletics;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
-  font-weight: 900;
+  font-weight: normal;
   line-height: 28px; /* 140% */
 
   padding: 2rem 4rem;
@@ -366,9 +435,41 @@ const uploaded = async () => {
   line-height: 30px;
   height: 30px;
   padding: 0 1rem;
+  display: inline-block;
+  font-weight: 700;
+}
+.completed-pct-space {
+  line-height: 28px;
+  margin-top: 0px;
+  vertical-align: 5px;
 }
 .quick-access-button {
   line-height: 20px;
+}
+.uploaded-file {
+  border-bottom: 1px solid #eee;
+}
+.uploaded-file:last-child {
+  border-bottom: none !important;
+}
+.remove-file {
+  cursor: pointer;
+}
+.module-type-forum {
+  background: var(--Canya, #A5DDA3);
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+.module-type-forum .description{
+  font-size: 14px;
+  line-height: 20px;
+  margin-top: 6px;  
+  color: var(--Nabiu, #020034);
+  font-family: Athletics;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 28px; /* 140% */
 }
 @media (min-width: 1024px) {
 }

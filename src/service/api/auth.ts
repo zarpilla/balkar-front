@@ -8,9 +8,9 @@ export const auth = {
       identifier: login,
       password: password
     }),
-    register: (username: string, email: string, password: string): Promise<any> =>
+    register: (email: string, password: string): Promise<any> =>
     service().post('auth/local/register', {
-      username: username,
+      username: email,
       email: email,
       password: password
     }),

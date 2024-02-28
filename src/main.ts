@@ -22,7 +22,7 @@ const i18n = createI18n({
     fallbackLocale: 'ca',
   })
   
-  axios.get(import.meta.env.VITE_API_URL + '/translations?_limit=100')
+  axios.get(import.meta.env.VITE_API_URL + '/translations?_limit=1000')
   .then(response => {
     
     const translations = response.data

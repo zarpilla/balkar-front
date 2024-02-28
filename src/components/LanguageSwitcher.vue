@@ -89,7 +89,11 @@ const setLocale = (loc: string) => {
 }
 
 .locale{
-  color: #757575;
+  color: #0e0f11;
+  cursor: pointer;
+}
+.locale span{
+  display: block;
 }
 
 .user-logo {

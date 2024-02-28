@@ -20,6 +20,11 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue')
     },
     {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue')
+    },
+    {
       path: '/forgot',
       name: 'forgot',
       component: () => import('../views/ForgotView.vue')
@@ -63,11 +68,17 @@ const router = createRouter({
       component: () => import('../views/DashboardView.vue')
     },
     {
+      path: '/agenda',
+      name: 'agenda',
+      meta: { requiresAuth: true },
+      component: () => import('../views/DashboardView.vue')
+    },
+    {
       path: '/space/:uid',
       name: 'space',
       meta: { requiresAuth: true },
       component: () => import('../views/SpaceView.vue')
-    },
+    },    
     {
       path: '/space/:uid/module/:moduleId',
       name: 'space-module',
@@ -79,6 +90,24 @@ const router = createRouter({
       name: 'spaces-module-topic',
       meta: { requiresAuth: true },
       component: () => import('../views/SpaceView.vue')
+    },
+    {
+      path: '/enroll/:uid',
+      name: 'enroll',
+      meta: { requiresAuth: false },
+      component: () => import('../views/SpaceView.vue')
+    },
+    {
+      path: '/forum/:uid',
+      name: 'forum',
+      meta: { requiresAuth: true },
+      component: () => import('../views/ForumView.vue')
+    },
+    {
+      path: '/forum/:uid/channel/:channelId',
+      name: 'forum-channel',
+      meta: { requiresAuth: true },
+      component: () => import('../views/ForumView.vue')
     },
   ]
 })

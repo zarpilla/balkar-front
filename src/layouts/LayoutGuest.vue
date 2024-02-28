@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { useApplicationStore } from '@/stores/application.js'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+
 const { t, locale } = useI18n()
 
 const applicationStore = useApplicationStore()
@@ -31,20 +33,50 @@ if (localStorage.getItem('locale')) {
     locale.value = storedLocale
   }  
 }
+
+const readQueryStringParameter = (name: string) => {
+  const urlParams = new URLSearchParams(window.location.search)
+  return urlParams.get(name)
+}
+
+
+if (readQueryStringParameter('locale')) {
+  const localeQs = readQueryStringParameter('locale')
+  if (localeQs) {
+    locale.value = localeQs
+    localStorage.setItem('locale', localeQs)
+    window.location
+  }
+}
 </script>
 
 <template>
-  <header v-if="props.loaded && applicationLoaded">
+  <header v-if="props.loaded && applicationLoaded" class="pb-4">
     <div class="container">
       <div class="logo-outter">
-        <RouterLink to="/">
-          <img src="@/assets/logo.svg" alt="Balkar" />
-        </RouterLink>
+        <div class="d-flex align-items-center">
+
+          <div class="col-6 col-md-2 order-0 order-md-0">
+            <RouterLink to="/">
+              <img src="@/assets/logo.svg" alt="Balkar" />
+            </RouterLink>
+          </div>
+
+          <div class="col-6 col-md-2 order-1 order-md-2 ms-auto">
+            <div class="auth-wrapper mt-4 d-flex">
+              <AuthenticatedUser></AuthenticatedUser>
+
+              <LanguageSwitcher class="ms-4"></LanguageSwitcher>
+            </div>
+          </div>
+          
+        </div>  
+
       </div>
       <h1 class="mt-3 pb-3">{{ $t('benvinguda-al-teu-balkar') }}</h1>
 
       <div class="d-flex">
-        <RouterLink to="/login" class="btn btn-primary me-5">
+        <RouterLink to="/login" class="btn btn-secondary me-5">
           {{ $t('accedeix-al-teu-perfil') }}
           <svg
             width="16"
@@ -55,12 +87,12 @@ if (localStorage.getItem('locale')) {
           >
             <path
               d="M8.83496 1C8.83496 0.447715 8.38725 1.30493e-08 7.83496 0C7.28268 -1.30493e-08 6.83496 0.447715 6.83496 1L8.83496 1ZM7.12785 18.7071C7.51838 19.0976 8.15154 19.0976 8.54207 18.7071L14.906 12.3431C15.2966 11.9526 15.2966 11.3195 14.906 10.9289C14.5155 10.5384 13.8823 10.5384 13.4918 10.9289L7.83496 16.5858L2.17811 10.9289C1.78758 10.5384 1.15442 10.5384 0.763892 10.9289C0.373368 11.3195 0.373368 11.9526 0.763892 12.3431L7.12785 18.7071ZM6.83496 1L6.83496 18L8.83496 18L8.83496 1L6.83496 1Z"
-              fill="white"
+              fill="#020034"
             />
           </svg>
         </RouterLink>
 
-        <RouterLink to="/login" class="btn btn-secondary">
+        <RouterLink to="/register" class="btn btn-secondary">
           {{ $t('crea-nou-perfil') }}
           <svg
             width="16"
@@ -79,7 +111,7 @@ if (localStorage.getItem('locale')) {
     </div>
   </header>
 
-  <div v-if="props.loaded && applicationLoaded" class="bg-balkar pt-5">
+  <div v-if="props.loaded && applicationLoaded" class="zbg-balkar pt-3">
     <div class="container">
       <div class="row align-items-start">
         <div :class="props.css">
@@ -145,5 +177,13 @@ header {
   .slot {
     height: auto;
   }
+}
+.router-link-exact-active, .router-link-exact-active:hover, .router-link-exact-active:focus{
+  color: #fff;
+  background-color: #020034;
+  border-color: #020034;
+}
+.router-link-exact-active svg path, .router-link-exact-active:hover svg path, .router-link-exact-active:focus svg path{
+  fill: #fff;
 }
 </style>

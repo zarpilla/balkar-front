@@ -12,7 +12,6 @@ import { useI18n } from 'vue-i18n'
 import { Api } from '@/service/api'
 const { t } = useI18n()
 
-
 const authStore = useAuthStore()
 const loading = ref(true)
 const authenticated = ref(true)
@@ -119,9 +118,7 @@ const submit = async () => {
     }
   } catch (err: any) {
     console.log('err', err)
-    if (
-      err && err.message
-    ) {
+    if (err && err.message) {
       status.error = false
       status.message = ''
       status.errorPwd = true
@@ -150,7 +147,11 @@ const submit = async () => {
           />
         </FormField>
 
-        <FormField class="position-relative" :help="status.messagePwd" :label="$t('password-label')">
+        <FormField
+          class="position-relative"
+          :help="status.messagePwd"
+          :label="$t('password-label')"
+        >
           <div class="abs-forgot">
             <RouterLink tabindex="-1" to="/forgot">{{ $t('forgot-password') }}</RouterLink>
           </div>
@@ -168,20 +169,23 @@ const submit = async () => {
           />
         </FormField>
 
-        <button
-          class="mt-4 w-100z btn btn-primary"
-          type="submit"
-          @click="submit"
-          color="primary"
-        >
+        <button class="mt-4 w-100z btn btn-primary" type="submit" @click="submit" color="primary">
           {{ $t('login-button') }}
 
-          <svg width="37" height="16" viewBox="0 0 37 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M1.10156 7.20868C0.549278 7.20868 0.101563 7.65639 0.101562 8.20868C0.101562 8.76096 0.549278 9.20868 1.10156 9.20868L1.10156 7.20868ZM36.2985 8.91579C36.6891 8.52527 36.6891 7.8921 36.2985 7.50158L29.9346 1.13762C29.5441 0.747091 28.9109 0.747091 28.5204 1.13762C28.1298 1.52814 28.1298 2.1613 28.5204 2.55183L34.1772 8.20868L28.5204 13.8655C28.1298 14.2561 28.1298 14.8892 28.5204 15.2798C28.9109 15.6703 29.5441 15.6703 29.9346 15.2798L36.2985 8.91579ZM1.10156 9.20868L35.5914 9.20868L35.5914 7.20868L1.10156 7.20868L1.10156 9.20868Z" fill="#fff"/>
-</svg>
+          <svg
+            width="37"
+            height="16"
+            viewBox="0 0 37 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.10156 7.20868C0.549278 7.20868 0.101563 7.65639 0.101562 8.20868C0.101562 8.76096 0.549278 9.20868 1.10156 9.20868L1.10156 7.20868ZM36.2985 8.91579C36.6891 8.52527 36.6891 7.8921 36.2985 7.50158L29.9346 1.13762C29.5441 0.747091 28.9109 0.747091 28.5204 1.13762C28.1298 1.52814 28.1298 2.1613 28.5204 2.55183L34.1772 8.20868L28.5204 13.8655C28.1298 14.2561 28.1298 14.8892 28.5204 15.2798C28.9109 15.6703 29.5441 15.6703 29.9346 15.2798L36.2985 8.91579ZM1.10156 9.20868L35.5914 9.20868L35.5914 7.20868L1.10156 7.20868L1.10156 9.20868Z"
+              fill="#fff"
+            />
+          </svg>
         </button>
       </form>
-
     </div>
   </LayoutGuest>
 </template>

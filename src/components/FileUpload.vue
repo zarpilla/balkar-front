@@ -363,14 +363,12 @@ export default {
   outline: 2px dashed #aaa; /* the dash box */
   outline-offset: -10px;
   background: #f9f9f9;
-  background: #eeeeee;
+  background: #BBDFF7;
   color: dimgray;
   padding: 10px 10px;
   min-height: 80px; /* minimum height */
   position: relative;
   cursor: pointer;
-  // font-family: "Varela Round";
-  margin-bottom: 2rem;
 }
 
 .input-file {

@@ -85,7 +85,7 @@ const submit = async () => {
 
 <template>
   <LayoutGuest :loaded="true" css="col-lg-4 offset-lg-4 place-items-center">
-    <div>
+    <div class="bg-white p-4">
       <h3 class="mb-5">{{ $t('reset-password') }}</h3>
 
       <form @submit.prevent="submit">
