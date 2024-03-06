@@ -75,8 +75,8 @@ if (readQueryStringParameter('locale')) {
       </div>
       <h1 class="mt-3 pb-3">{{ $t('benvinguda-al-teu-balkar') }}</h1>
 
-      <div class="d-flex">
-        <RouterLink to="/login" class="btn btn-secondary me-5">
+      <div class="d-flex flex-wrap">
+        <RouterLink to="/login" class="btn btn-secondary me-5 mb-4 mb-md-0">
           {{ $t('accedeix-al-teu-perfil') }}
           <svg
             width="16"
@@ -92,7 +92,7 @@ if (readQueryStringParameter('locale')) {
           </svg>
         </RouterLink>
 
-        <RouterLink to="/register" class="btn btn-secondary">
+        <RouterLink to="/register" class="btn btn-secondary mb-4 mb-md-0">
           {{ $t('crea-nou-perfil') }}
           <svg
             width="16"
