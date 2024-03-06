@@ -20,7 +20,7 @@
           :disabled="isSaving"          
           :accept="accept"
           class="input-file"
-          @change="filesChange($event, uploadFieldName, $event.target.files)"
+          @change="filesChange($event, uploadFieldName, $event.target)"
         />
         <p v-if="isInitial || isSuccess">
           {{ $t('drag-files-here') }}<br />
@@ -163,8 +163,10 @@ export default defineComponent({
         });
     };
 
-    const filesChange = (event: any, fieldName: string, xfileList: FileList) => {
+    const filesChange = (event: any, fieldName: string, target: any) => {
       // ...
+
+      const xfileList: FileList = target.files
 
       const formData = new FormData();
 

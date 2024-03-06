@@ -324,8 +324,8 @@ const processUpload = async (event: any) => {
   height: 2rem;
   width: 2rem;
   display: block;
-  mask: url('@/assets/images/upload.svg') no-repeat center / 100%;
-  -webkit-mask: url('@/assets/images/upload.svg') no-repeat center / 100%;
+  /* mask: url('@/assets/images/upload.svg') no-repeat center / 100%;
+  -webkit-mask: url('@/assets/images/upload.svg') no-repeat center / 100%; */
 
   position: absolute;
   bottom: -10px;
