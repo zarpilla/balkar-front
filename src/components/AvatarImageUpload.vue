@@ -306,14 +306,14 @@ const processUpload = async (event: any) => {
   animation-fill-mode: forwards;
 }
 
-.spinner {
+/* .spinner {
   background-color: #fff;
   height: 2rem;
   width: 2rem;
   display: block;
   mask: url('@/assets/images/spinner.svg') no-repeat center / 100%;
   -webkit-mask: url('@/assets/images/spinner.svg') no-repeat center / 100%;
-}
+} */
 
 .upload-wrapper .file-upload:hover .upload-button .spinner {
   background-color: #fff;
