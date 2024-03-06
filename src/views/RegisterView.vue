@@ -15,7 +15,7 @@ const authStore = useAuthStore()
 const loading = ref(false)
 
 const form = reactive({
-  name: '',
+  // name: '',
   email: '',
   password: '',
   passwordRepeat: ''
@@ -55,11 +55,11 @@ const submit = async () => {
     status.messagePwd = ''
     status.messagePwdRepeat = ''
 
-    if (checkEmpty(form.name)) {
-      status.errorName = true
-      status.messageName = t('name-is-mandatory')
-      return
-    }
+    // if (checkEmpty(form.name)) {
+    //   status.errorName = true
+    //   status.messageName = t('name-is-mandatory')
+    //   return
+    // }
 
     if (checkEmpty(form.email)) {
       status.errorEmail = true
@@ -108,7 +108,7 @@ const submit = async () => {
       <h3 class="mb-4">{{ $t('crea-el-teu-espai-balkar') }}</h3>
 
       <form @submit.prevent="submit">
-        <FormField :help="status.messageName" :label="$t('name-label')" class="mb-4">
+        <!-- <FormField :help="status.messageName" :label="$t('name-label')" class="mb-4">
           <FormControl
             @click="removeError"
             :placeholderEffect="false"
@@ -118,7 +118,7 @@ const submit = async () => {
             name="name"
             maxlength="200"
           />
-        </FormField>
+        </FormField> -->
 
         <FormField :help="status.messageEmail" :label="$t('email-label')" class="mb-4">
           <FormControl

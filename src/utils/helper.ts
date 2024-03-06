@@ -1,4 +1,4 @@
-// import { isValid, parse } from 'date-fns'
+import { formatDistance } from 'date-fns'
 // import { zonedTimeToUtc } from 'date-fns-tz'
 import { type CellFormat, type ICheckIsDateOverload } from '@/types/types'
 import { v1 as uuidv1, v5 as uuidv5 } from 'uuid'
@@ -162,4 +162,8 @@ export const formatPrice = (value: any) => {
 
 export const checkPasswordMatch = (password: string, confirmPassword: string) => {
   return !checkEmpty(password) && !checkEmpty(confirmPassword) && password === confirmPassword
+}
+
+export const timeAgo = (date: string) => {
+  return formatDistance(new Date(date), new Date(), { addSuffix: true })
 }

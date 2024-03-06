@@ -10,7 +10,7 @@ const authStore = useAuthStore()
 </script>
 
 <template>
-  <div class="d-flex flex-row ">
+  <div class="d-flex flex-row flex-wrap">
     <RouterLink to="/dashboard" class="btn btn-secondary me-4"> {{ $t('les-meves-formacions') }} </RouterLink>
 
     <RouterLink to="/agenda" class="btn btn-secondary me-auto"> {{ $t('agenda') }}</RouterLink>

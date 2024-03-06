@@ -5,11 +5,11 @@ export const useAuthStore = defineStore('auth', {
     /* User */
     userId: '' as string,
     userName: '' as string,
+    name: '' as string,
+    lastname: '' as string,
     userEmail: '' as string,
     pictureUrl: '' as string,
     jwt: '' as string,
-    hasGSToken: '0' as string,
-    notificationToken: '' as string
   }),
   actions: {
     setUser(payload: any) {
@@ -17,9 +17,17 @@ export const useAuthStore = defineStore('auth', {
         this.userId = payload.id
         localStorage.setItem('user.id', payload.id)
       }
+      if (payload.username) {
+        this.userName = payload.username
+        localStorage.setItem('user.username', payload.name)
+      }
       if (payload.name) {
-        this.userName = payload.name
+        this.name = payload.name
         localStorage.setItem('user.name', payload.name)
+      }
+      if (payload.lastname) {
+        this.lastname = payload.lastname
+        localStorage.setItem('user.lastname', payload.lastname)
       }
       if (payload.email) {
         this.userEmail = payload.email
@@ -33,46 +41,28 @@ export const useAuthStore = defineStore('auth', {
         this.pictureUrl = payload.pictureUrl
         localStorage.setItem('user.pictureUrl', payload.pictureUrl)
       }
-      if (payload.hasGSToken) {
-        this.hasGSToken = payload.hasGSToken
-        localStorage.setItem('user.hasGSToken', payload.hasGSToken ? '1' : '0')
-      }
     },
 
     isAuthenticated() {
       return localStorage.getItem('user.id')
     },
 
-    hasGSRegistered() {
-      return localStorage.getItem('user.hasGSToken') === '1'
-    },
-
-    removeGSRegisteredStatus() {
-      this.hasGSToken = '0'
-      localStorage.removeItem('user.hasGSToken')
-      localStorage.removeItem('user.monetrToken')
-    },
-
-    setGSRegistered(valueGSToken: string, valueGSState: string) {
-      this.hasGSToken = valueGSToken
-      localStorage.removeItem('user.hasGSToken')
-      localStorage.removeItem('user.monetrToken')
-      localStorage.setItem('user.monetrToken', valueGSState)
-      localStorage.setItem('user.hasGSToken', valueGSToken)
-    },
-
-    setNotificationToken(token: string) {
-      this.notificationToken = token
-    },
 
     logout() {
+      this.userId = ''
+      this.userName = ''
+      this.name = ''
+      this.lastname = ''
+      this.userEmail = ''
+      this.jwt = ''
+      this.pictureUrl = ''
       localStorage.removeItem('user.id')
       localStorage.removeItem('user.name')
+      localStorage.removeItem('user.lastname')
+      localStorage.removeItem('user.username')
       localStorage.removeItem('user.email')
       localStorage.removeItem('user.jwt')
-      localStorage.removeItem('user.pictureUrl')
-      localStorage.removeItem('user.hasGSToken')
-      localStorage.removeItem('user.monetrToken')
+      localStorage.removeItem('user.pictureUrl')      
     }
   }
 })

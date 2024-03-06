@@ -7,7 +7,7 @@ import { submissions } from './submissions'
 import { forums } from './forums'
 import { messages } from './messages'
 import { channels } from './channels'
-
+import { avatars } from './avatars'
 
 export const Api = {
   learningSpaces,
@@ -18,5 +18,6 @@ export const Api = {
   submissions,
   forums,
   messages,
-  channels
+  channels,
+  avatars
 }

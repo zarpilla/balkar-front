@@ -31,5 +31,8 @@ export const auth = {
     }),
   
   emailConfirmation: (email: string) =>
-    service({ requiresAuth: true }).post(`auth/send-email-confirmation`, { email })
+    service({ requiresAuth: true }).post(`auth/send-email-confirmation`, { email }),
+  update: (id: string, data: any) => 
+    service({ requiresAuth: true }).put(`users/${id}`, data ),
+
 }

@@ -3,17 +3,17 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 </script>
 
 <template>
-  <LayoutAuthenticated>
-    <div class="account">
+  <LayoutAuthenticated css="bg-white">
+    <div class="space zpt-3">
       <div class="container mt-4">
-        <RouterLink class="button" to="/account/profile">Profile</RouterLink>
-        <RouterLink class="button" to="/account/business">Business Account</RouterLink>
-        <RouterLink class="button" to="/account/contact">Contact</RouterLink>
+        <RouterLink class="btn btn-tertiary me-3" to="/account/profile">{{ $t( 'profile') }}</RouterLink>
+        <RouterLink class="btn btn-tertiary" to="/account/profile/password">{{ $t( 'Change Password') }}</RouterLink>
       </div>
 
       <router-view></router-view>
     </div>
   </LayoutAuthenticated>
+
 </template>
 
 <style>
@@ -22,23 +22,8 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 </style>
 
 <style scoped>
-.button {
-  display: inline-block;
-  border-radius: 4px;
-  background: #f3f3f3;
-  color: #000;
-  font-family: 'SF Pro Text';
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 32px; /* 228.571% */
-  padding: 0 16px;
-  margin-right: 16px;
-  text-decoration: none;
-}
-.router-link-active{
-  background: var(--Orange-20, #FFEBDD); 
-  color: #BD4400; 
-  font-weight: 700;
+.router-link-exact-active, .router-link-exact-active:hover{
+  background:  var(--blanc, #020034)!important;
+  color: #fff!important; 
 }
 </style>

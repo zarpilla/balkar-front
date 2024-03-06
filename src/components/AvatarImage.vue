@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { stringToColor } from '@/utils/colorsFunctions'
 
 const props = defineProps({
   name: {
@@ -18,14 +19,27 @@ const props = defineProps({
 })
 
 const name = computed(() => props.name)
+
+const firstLetterOfName = computed(() => {
+  return name.value ? name.value.charAt(0).toUpperCase() : ''
+})
+
+const apiBase = import.meta.env.VITE_API_BASE
+
+const urlWithApiBase = computed(() => {
+  return props.url ? (( props.url.startsWith(apiBase) ? '' : apiBase) + props.url) : ''
+})
+
+
 </script>
 
 <template>
   <div>
-    <img v-if="url" :src="url" :alt="name" :class="`rounded mr s-${size}`" />
+    <img v-if="url" :src="urlWithApiBase" :alt="name" :class="`rounded mr s-${props.size}`" />
+    <div class="icon mr" :style="`height:${size}px;width:${size}px;background-color:${stringToColor(name || 'x')}`" v-else>
 
-    <div class="icon mr" :style="`height:${size}px;width:${size}px`" v-else>
-      <svg
+      <div class="first-letter" :style="`font-size: ${props.size / 2.5}px; line-height: ${props.size}px`">{{ firstLetterOfName }}</div>
+      <!-- <svg
         class="user-logo"
         :width="size"
         :height="size"
@@ -63,20 +77,18 @@ const name = computed(() => props.name)
             <rect width="20" height="20" fill="white" transform="translate(6 6)" />
           </clipPath>
         </defs>
-      </svg>
-      <!--       
-      <BaseAssetIcon :h="(size).toString()" :w="(size).toString()" :icon="user"></BaseAssetIcon> -->
+      </svg> -->
     </div>
   </div>
 </template>
 
 <style scoped>
 .rounded {
-  border-radius: 50% !important;
+  border-radius: 4px !important;
 }
 
 .icon {
-  border-radius: 50%;
+  border-radius: 5px;
   background: var(--secondary-100, #edeef3);
   width: 100%;
   height: 100%;
@@ -123,10 +135,24 @@ const name = computed(() => props.name)
   font-size: 30px;
 }
 
+.s-56 {
+  width: 56px;
+  height: 56px;
+  line-height: 56px;
+  font-size: 30px;
+}
+
 .s-96 {
   width: 96px;
   height: 96px;
   line-height: 96px;
   font-size: 30px;
+}
+.first-letter{
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--Nabiu, #020034);
+  text-transform: uppercase;
+  color: #fff;
 }
 </style>

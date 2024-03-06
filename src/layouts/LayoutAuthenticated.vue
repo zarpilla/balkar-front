@@ -34,10 +34,17 @@ try {
       if (me && me.data && me.data.id) {
         authStore.setUser({
           id: me.data.id,
-          name: me.data.username,
-          email: me.data.email
+          username: me.data.username,
+          email: me.data.email,
+          name: me.data.name,
+          lastname: me.data.lastname
         })
 
+        const myAvatar = await Api.avatars.mine()
+        if (myAvatar.data && myAvatar.data.data) {          
+          authStore.pictureUrl = myAvatar.data.data.avatar.url
+        }
+        
         if (route.name === 'login') {
           router.push('/dashboard')
         }
@@ -72,9 +79,9 @@ applicationStore.load().then(async () => {
 
 if (localStorage.getItem('locale')) {
   const storedLocale = localStorage.getItem('locale')
-  if (storedLocale){
+  if (storedLocale) {
     locale.value = storedLocale
-  }  
+  }
 }
 </script>
 
@@ -90,7 +97,7 @@ if (localStorage.getItem('locale')) {
           </div>
 
           <div class="col-6 col-md-2 order-1 order-md-2 ms-auto">
-            <div class="auth-wrapper mt-4 d-flex">
+            <div class="auth-wrapper mt-4 d-flex ms-auto">
               <AuthenticatedUser></AuthenticatedUser>
 
               <LanguageSwitcher class="ms-4"></LanguageSwitcher>

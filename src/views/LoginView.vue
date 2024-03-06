@@ -25,9 +25,10 @@ const tryIfUserIsLogged = () => {
           if (meResponse && meResponse.data && meResponse.data.id) {
             useAuthStore().setUser({
               id: meResponse.data.id,
-              name: meResponse.data.username,
-              email: meResponse.data.email
-              // jwt: response.data.jwt,
+              username: meResponse.data.username,
+              email: meResponse.data.email,
+              name: meResponse.data.name,
+              lastname: meResponse.data.lastname
             })
             loading.value = false
 
@@ -108,9 +109,11 @@ const submit = async () => {
       if (meResponse && meResponse.data.id) {
         useAuthStore().setUser({
           id: meResponse.data.id,
-          name: meResponse.data.username,
+          username: meResponse.data.username,
           email: meResponse.data.email,
-          jwt: response.jwt
+          jwt: meResponse.jwt,
+          name: meResponse.data.name,
+          lastname: meResponse.data.lastname
         })
 
         router.push('/dashboard')

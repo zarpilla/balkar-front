@@ -2,17 +2,7 @@
 import { computed, ref, type PropType } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { useApplicationStore } from '@/stores/application'
-
-import BaseAssetIcon from '@/components/BaseAssetIcon.vue'
-// import BaseIcon from '@/components/BaseIcon.vue'
-// import profile from '@/assets/icons/svgs/profile.svg'
-// import key from '@/assets/icons/svgs/key.svg'
-import mail from '@/assets/icons/svgs/mail.svg'
-import logout from '@/assets/icons/svgs/logout.svg'
-// import EditProfileModal from '@/components/profile/EditProfileModal.vue'
-// import ChangePasswordModal from '@/components/profile/ChangePasswordModal.vue'
-import UserAvatarImage from './UserAvatarImage.vue'
+import AvatarImage from './AvatarImage.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -32,27 +22,27 @@ const onlyPart0 = (email: string) => {
 }
 
 const userText = computed(() =>
-  authStore ? (authStore.userName ? authStore.userName : onlyPart0(authStore.userEmail)) : ''
+  authStore ? (authStore.name ? authStore.name + ' ' + authStore.lastname : onlyPart0(authStore.userEmail)) : ''
 )
 </script>
 
 <template>
   <div class="d-flex dropdown zms-3">
-    <a
+    <span
       class="d-flex dropdown-toggle"
       href="#"
       role="button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
     >
-      <UserAvatarImage
+      <AvatarImage
         :bordered="false"
         :size="24"
         class="me-0 me-md-3"
         v-if="authStore"
         :name="userText"
         :url="authStore.pictureUrl"
-      ></UserAvatarImage>
+      ></AvatarImage>
 
       <span class="d-none d-md-block user-name">
         {{ userText }}
@@ -71,7 +61,7 @@ const userText = computed(() =>
           fill="#757575"
         />
       </svg>
-    </a>
+    </span>
 
     <ul class="dropdown-menu">
       <li class="email">

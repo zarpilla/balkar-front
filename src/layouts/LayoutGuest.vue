@@ -57,7 +57,7 @@ if (readQueryStringParameter('locale')) {
         <div class="d-flex align-items-center">
 
           <div class="col-6 col-md-2 order-0 order-md-0">
-            <RouterLink to="/">
+            <RouterLink to="/" class="logo">
               <img src="@/assets/logo.svg" alt="Balkar" />
             </RouterLink>
           </div>
@@ -178,7 +178,7 @@ header {
     height: auto;
   }
 }
-.router-link-exact-active, .router-link-exact-active:hover, .router-link-exact-active:focus{
+.router-link-exact-active:not(.logo), .router-link-exact-active:not(.logo):hover, .router-link-exact-active:not(.logo):focus{
   color: #fff;
   background-color: #020034;
   border-color: #020034;

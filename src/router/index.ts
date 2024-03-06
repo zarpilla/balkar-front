@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import { useAuthStore } from '@/stores/auth'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
@@ -44,18 +43,6 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/create-account',
-      name: 'create-account',
-      meta: {},
-      component: () => import('../views/CreateAccountView.vue')
-    },
-    {
-      path: '/create-account-done',
-      name: 'create-account-done',
-      meta: {},
-      component: () => import('../views/CreateAccountOkView.vue')
-    },
-    {
       path: '/dashboard',
       name: 'dashboard',
       meta: { requiresAuth: true },
@@ -78,7 +65,7 @@ const router = createRouter({
       name: 'space',
       meta: { requiresAuth: true },
       component: () => import('../views/SpaceView.vue')
-    },    
+    },
     {
       path: '/space/:uid/module/:moduleId',
       name: 'space-module',
@@ -109,17 +96,41 @@ const router = createRouter({
       meta: { requiresAuth: true },
       component: () => import('../views/ForumView.vue')
     },
+    {
+      path: '/account',
+      name: 'account',
+      meta: { requiresAuth: true },
+      component: () => import('../views/AccountView.vue'),
+      children: [
+        {
+          path: 'profile',
+          name: 'account-profile',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              name: 'account-profile',
+              path: '',
+              meta: { requiresAuth: true },
+              component: () => import('../components/account/Profile.vue')
+            },
+            {
+              name: 'account-password',
+              path: 'password',
+              meta: { requiresAuth: true },
+              component: () => import('../components/account/ChangePassword.vue')
+            }
+          ]
+        }
+      ]
+    }
   ]
 })
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   if (to.meta.requiresAuth && !authStore.isAuthenticated()) next({ name: 'login' })
-  
 
   next()
 })
-
-
 
 export default router

@@ -66,10 +66,11 @@ export default {
       console.log('uploaded', payload)
       emit('post', {
         id: payload.id,
-        ...payload.attributes,
+        file: payload.file,
         channel: props.channel,
         userId: authStore.userId,
-        username: authStore.userName
+        username: authStore.userName,
+        parent: props.parent
       })
     }
 
@@ -137,7 +138,7 @@ textarea {
   border: 1px solid var(--Nabiu, #020034);
   height: 42px;
   border-radius: 20px;
-  line-height: 26px;
+  line-height: 30px;
   padding: 5px 20px;
   resize: none;
   background: #fff;
@@ -148,7 +149,7 @@ textarea:focus {
 }
 .send {
   right: 20px;
-  bottom: 17px;
+  bottom: 20px;
   cursor: pointer;
   z-index: 100;
 }

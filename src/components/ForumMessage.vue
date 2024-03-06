@@ -9,6 +9,8 @@ import ConfirmModal from '@/components/ConfirmModal.vue'
 import CommentInput from '@/components/CommentInput.vue'
 import { useAuthStore } from '@/stores/auth'
 import { format } from 'date-fns'
+import { timeAgo } from '@/utils/helper'
+import AvatarImage from '@/components/AvatarImage.vue'
 
 const authStore = useAuthStore()
 
@@ -33,46 +35,13 @@ const apiBase = import.meta.env.VITE_API_BASE
 
 <template>
   <div class="d-flex">
-    <svg
-      data-v-31e5adc9=""
-      class="user-logo me-2"
-      width="24"
-      height="24"
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <!--v-if-->
-      <g clip-path="url(#clip0_76_8029)" data-v-31e5adc9="">
-        <path
-          d="M16.0001 15.1667C17.841 15.1667 19.3334 13.6743 19.3334 11.8333C19.3334 9.99238 17.841 8.5 16.0001 8.5C14.1591 8.5 12.6667 9.99238 12.6667 11.8333C12.6667 13.6743 14.1591 15.1667 16.0001 15.1667Z"
-          stroke="#8891A0"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          data-v-31e5adc9=""
-        ></path>
-        <path
-          d="M11 23.5V21.8333C11 20.9493 11.3512 20.1014 11.9763 19.4763C12.6014 18.8512 13.4493 18.5 14.3333 18.5H17.6667C18.5507 18.5 19.3986 18.8512 20.0237 19.4763C20.6488 20.1014 21 20.9493 21 21.8333V23.5"
-          stroke="#8891A0"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          data-v-31e5adc9=""
-        ></path>
-      </g>
-      <defs data-v-31e5adc9="">
-        <clipPath id="clip0_76_8029" data-v-31e5adc9="">
-          <rect
-            width="20"
-            height="20"
-            fill="white"
-            transform="translate(6 6)"
-            data-v-31e5adc9=""
-          ></rect>
-        </clipPath>
-      </defs>
-    </svg>
+    <AvatarImage
+      class="me-2 mt-1"
+      :size="56"
+      :url="message.avatar"
+      :name="message.name || message.username"
+    ></AvatarImage>
+
     <div class="w-75">
       <div class="mt-1">
         <span class="bold pe-2">{{ message.username }}</span>
@@ -89,24 +58,32 @@ const apiBase = import.meta.env.VITE_API_BASE
         </div>
       </div>
 
-      <div
-        v-if="message.children && message.children.length && !detail"
-        class="mt-0 clickable linkable"
-        @click="messageDetail(message)"
-        data-bs-toggle="modal"
-        data-bs-target="#confirm-modal-children-messages"
-      >
-        {{ $t('hi ha ') + ' ' + message.children.length + ' ' + $t('respostes') }}
+      <div class="d-flex">
+        <div
+          v-if="message.children && message.children.length && !detail"
+          class="mt-0 clickable linkable"
+          @click="messageDetail(message)"
+          data-bs-toggle="modal"
+          data-bs-target="#confirm-modal-children-messages"
+        >
+          <span v-if="message.children.length > 1">{{
+            $t('hi-ha-respostes', { n: message.children.length })
+          }}</span>
+          <span v-else>{{ $t('hi-ha-resposta', { n: message.children.length }) }}</span>
+        </div>
+        <span class="ps-3" v-if="!detail && message.children && message.children.length">{{
+          timeAgo(message.children[message.children.length - 1].createdAt)
+        }}</span>
       </div>
-
       <div v-if="message.children && message.children.length === 0" class="mt-1">
         <CommentInput
           :channel="channel"
           :parent="message.id"
           @post="emit('post', $event)"
-          :placeholder="$t('Enviar una resposta')"
+          :placeholder="$t('enviar-una-resposta')"
         />
       </div>
+      <!-- <pre>{{ message }}</pre> -->
     </div>
   </div>
 </template>
@@ -250,10 +227,11 @@ const apiBase = import.meta.env.VITE_API_BASE
   border-radius: 4px;
   margin-top: 3px;
 }
-.forum-image{
+.forum-image {
   border-radius: 8px;
   border: 1px solid #eee;
   padding: 6px;
+  max-width: 100%;
 }
 @media (min-width: 1024px) {
 }

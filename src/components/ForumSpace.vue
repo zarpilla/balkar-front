@@ -10,6 +10,7 @@ import CommentInput from '@/components/CommentInput.vue'
 import ForumMessage from '@/components/ForumMessage.vue'
 import { useAuthStore } from '@/stores/auth'
 import { format } from 'date-fns'
+import { onUnmounted } from 'vue'
 
 const authStore = useAuthStore()
 
@@ -28,6 +29,7 @@ const childrenMessages = ref([])
 const loaded = ref(false)
 const space = ref<any>(null)
 const forum = ref<any>(null)
+const forumBackground = ref<any>(null)
 const messagesPerChannelHome = 5
 const messagesPerChannelChannel = 8
 
@@ -36,7 +38,6 @@ const start = ref<number>(0)
 const messagesPerChannel = ref(channelId.value ? messagesPerChannelChannel : messagesPerChannelHome)
 
 const load = async () => {
-  console.log('load', start.value)
   loaded.value = false
   const { data: forumData } = await Api.forums.get(props.uid)
 
@@ -158,15 +159,35 @@ const uploaded = async () => {
   await load()
 }
 
-const messageDetail = (message: any) => {
+const messageDetail = async (message: any) => {
+  console.log('messageDetail', message)
   childrenMessages.value = message.children
+  // await getChildrenMessages(message)
   showChildrenMessagesParent.value = message
   showChildrenMessages.value = true
 }
 
-const loadDetail = (message: any) => {
+const loadDetail = async (message: any) => {
+  await getChildrenMessages(message)
   console.log('message loadDetail', message, childrenMessages.value)
-  childrenMessages.value.push(message as never)
+  // childrenMessages.value.push(message as never)
+}
+
+const getChildrenMessages = async (message: any) => {
+  if (showChildrenMessagesParent.value) {
+    const { data } = await Api.messages.getChildren((showChildrenMessagesParent.value as any).id)  
+    childrenMessages.value = data.data.children
+    forum.value.channels.find((channel: any) => {
+      if (channel.id.toString() === (showChildrenMessagesParent.value as any).channelId.toString()) {
+        channel.messages.find((m: any) => {
+          if (m.id.toString() === (showChildrenMessagesParent.value as any).id.toString()) {
+            m.children = data.data.children
+          }
+        })
+      }
+    })
+  }
+  
 }
 
 const loadMessage = async (message: any) => {
@@ -178,15 +199,103 @@ const loadMessage = async (message: any) => {
   await load()
 }
 
+const getLasMessageIdFromChannels = computed(() => {
+  const ids = []
+  if (forum.value && forum.value.channels) {
+    for (const channel of forum.value.channels) {
+      if (channel.messages && channel.messages.length) {
+        ids.push(channel.messages[channel.messages.length - 1].id)
+      }
+    }
+  }
+  return ids
+})
+
+
+const getLasMessageIdFromBackgroundChannels = computed(() => {
+  const ids = []
+  if (forumBackground.value && forumBackground.value.channels) {
+    for (const channel of forumBackground.value.channels) {
+      if (channel.messages && channel.messages.length) {
+        ids.push(channel.messages[channel.messages.length - 1].id)
+      }
+    }
+  }
+  return ids
+})
+
+const messagesAndBackgroundMessagesAreEqualArray = computed(() => {
+  if (!forumBackground.value) {
+    return true
+  }
+  const ids = getLasMessageIdFromChannels.value
+  const idsBg = getLasMessageIdFromBackgroundChannels.value
+
+  return ids.map((id, i) => {
+    if (id !== idsBg[i]) {
+      return false
+    }
+    return true
+  })
+})
+
+const messagesAndBackgroundMessagesAreEqual = computed(() => {
+  if (!forumBackground.value) {
+    return true
+  }
+  const ids = getLasMessageIdFromChannels.value
+  const idsBg = getLasMessageIdFromBackgroundChannels.value
+  return JSON.stringify(ids) === JSON.stringify(idsBg)
+})
+
+const loadBackground = async () => {  
+  console.log('loadBackground')
+  const { data: forumData } = await Api.forums.get(props.uid)
+
+  if (forumData) {
+    for await (const channel of forumData.channels) {
+      if (!channel.messages) {
+        channel.messages = []
+      }
+
+      if (channel.id.toString() === channelId.value) {
+        const { data: messages } = await Api.channels.messages(
+          channel.id,
+          messagesPerChannelChannel,
+          start.value
+        )
+        if (messages && messages.data) {
+          messages.data.forEach((message: any) => {
+            channel.messages.push(message)
+          })
+        }
+      } else {
+        const { data: messages } = await Api.channels.messages(
+          channel.id,
+          messagesPerChannelHome,
+          0
+        )
+        if (messages && messages.data) {
+          channel.messages = messages.data
+        }
+      }
+    }
+
+    forumBackground.value = forumData
+  }
+}
+
+const interval = ref<any>(null)
+
 onMounted(() => {
   window.addEventListener('scroll', async () => {
     const scrollPosition = window.innerHeight + window.scrollY
     const documentHeight = document.documentElement.offsetHeight
+    console.log('scrollPosition', scrollPosition, documentHeight)
     if (scrollPosition >= documentHeight) {
       // Scroll is at the end of the page
       console.log('Scroll is at the end of the page')
       if (channelId.value) {        
-
         await awaitUntilLoaded()
         start.value = start.value + messagesPerChannelChannel
         messagesPerChannel.value = start.value + messagesPerChannelChannel
@@ -194,6 +303,14 @@ onMounted(() => {
       }
     }
   })
+
+  // interval.value = setInterval(() => {
+  //   loadBackground()
+  // }, 5000)
+})
+
+onUnmounted(() => {
+  clearInterval(interval.value)
 })
 </script>
 
@@ -221,12 +338,17 @@ onMounted(() => {
       </div>
     </div>
 
+    <!-- <pre>ids: {{ getLasMessageIdFromChannels }}</pre>
+    <pre>ids bg: {{ getLasMessageIdFromBackgroundChannels }}</pre>
+    <pre> messagesAndBackgroundMessagesAreEqual: {{ messagesAndBackgroundMessagesAreEqual }}</pre>
+    <pre>messagesAndBackgroundMessagesAreEqualArray: {{ messagesAndBackgroundMessagesAreEqualArray }}</pre> -->
+
     <div v-for="channel in forum.channels" :key="channel.id">
       <div
         class="container bg-white mt-5"
         v-if="!channelId || (channelId && channelId.toString() === channel.id.toString())"
       >
-        <div class="d-flex w-100 mt-3">
+        <div class="d-flex w-100 mt-3 flex-wrap">
           <div v-if="channelId">
             <RouterLink :to="`/forum/${uid}`" class="btn btn-tertiary mb-4 me-4">
               Tornar
@@ -241,7 +363,7 @@ onMounted(() => {
           :channel="channel.id"
           :parent="0"
           @post="loadMessage"
-          :placeholder="$t('Nou missatge al canal')"
+          :placeholder="$t('nou-missatge-al-canal')"
           class="mb-3"
         />
 
@@ -257,19 +379,19 @@ onMounted(() => {
 
           <div v-if="i === messagesPerChannel - 1 && !channelId">
             <RouterLink :to="`/forum/${uid}/channel/${channel.id}`" class="btn btn-tertiary mb-3">
-              {{ $t('Veure tots els missatges del canal') }}
+              {{ $t('veure-tots-els-missatges-del-canal') }}
             </RouterLink>
           </div>
         </div>
 
         <div v-if="channel.messages && channel.messages.length === 0" class="mt-2 pb-2">
-          {{ $t('No hi ha missatges al canal') }}
+          {{ $t('no-hi-ha-missatges-al-canal') }}
         </div>
       </div>
     </div>
   </div>
   <Teleport to="body">
-    <MessagesModal id="children-messages" :title="$t('thread')">
+    <MessagesModal id="children-messages" :title="$t('thread')">      
       <div v-if="showChildrenMessages">
         <forum-message
           :message="showChildrenMessagesParent"
@@ -291,15 +413,15 @@ onMounted(() => {
           :channel="(showChildrenMessagesParent as any).channelId"
           :parent="(showChildrenMessagesParent as any).id"
           @post="loadDetail"
-          :placeholder="$t('Enviar una resposta')"
+          :placeholder="$t('enviar-una-resposta')"
         />
       </div>
     </MessagesModal>
     <CustomToast
       :show="toastVisible"
       type="success"
-      title="Enrolled"
-      description="Enrolled to space successfully!"
+      :title="$t('enrolled')"
+      :description="$t('enrolled-to-space-successfully')"
       id="account-contact-ok-toast"
     ></CustomToast>
   </Teleport>

@@ -27,7 +27,7 @@ export type UserLoginData = {
 }
 
 export type UserData = {
-  data: User
+  data: User & { name?: string, lastname?: string }
 }
 
 export type Site = {

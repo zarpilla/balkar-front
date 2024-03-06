@@ -49,7 +49,7 @@ const emit = defineEmits<{
     aria-labelledby="edit-kpi-modal-label"
     aria-hidden="true"
   >
-    <div class="modal-dialog zmodal-dialog-centered modal-lg zmodal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-scrollable zmodal-dialog-centered modal-lg zmodal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <div class="modal-hr">

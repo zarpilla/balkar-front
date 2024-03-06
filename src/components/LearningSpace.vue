@@ -157,7 +157,7 @@ const removeSubmission = async (id: string) => {
       </div>
       <div class="container bg-white mt-5">
         <div class="row">
-          <div class="col-12" :class="{ 'col-md-9': moduleId, z: !moduleId }">
+          <div class="col-12 order-1 order-md-0" :class="{ 'col-md-9': moduleId, z: !moduleId }">
             <div v-for="module in pageModules" :key="`module.id-${module.id}`" class="d-block mb-3">
               <RouterLink
                 :to="`/space/${uid}/module/${module.id}`"
@@ -175,7 +175,7 @@ const removeSubmission = async (id: string) => {
                   v-for="(topic, j) in module.topics"
                   :key="`module.id-${module.id}-topic-${topic.id}`"
                 >
-                  <div class="d-block mt-3 mb-3 ms-5">
+                  <div class="d-block mt-3 mb-3 ms-3 ms-md-5">
                     <RouterLink
                       :to="`/space/${uid}/module/${module.id}/topic/${topic.id}`"
                       class="d-flex topic"
@@ -270,29 +270,25 @@ const removeSubmission = async (id: string) => {
               </div>
             </div>
 
-            <div v-if="!moduleId && space.forum && space.enrolled" class="forum module module-type-forum">
-              <RouterLink
-                :to="`/forum/${uid}`"
-                class="d-flex"
-              >
-                {{ space.forum.name }}                
+            <div
+              v-if="!moduleId && space.forum && space.enrolled"
+              class="forum module module-type-forum"
+            >
+              <RouterLink :to="`/forum/${uid}`" class="d-flex">
+                {{ space.forum.name }}
               </RouterLink>
               <div class="description">
-                {{ space.forum.description }}                
+                {{ space.forum.description }}
               </div>
 
               <div class="d-flex w-100 mt-3">
-                <RouterLink
-                :to="`/forum/${uid}`"
-                class="ms-auto btn btn-white"
-              >
-                {{ $t('FORUM ACCESS') }}
-              </RouterLink>
+                <RouterLink :to="`/forum/${uid}`" class="ms-auto btn btn-white">
+                  {{ $t('FORUM ACCESS') }}
+                </RouterLink>
               </div>
-              
+            </div>
           </div>
-        </div>
-          <div class="col-12 col-md-3" v-if="moduleId">
+          <div class="col-12 col-md-3 order-0 order-md-1 mb-5" v-if="moduleId">
             <div class="module">
               <h4 class="text-uppercase quick-access-name">
                 <RouterLink
@@ -456,14 +452,14 @@ const removeSubmission = async (id: string) => {
   cursor: pointer;
 }
 .module-type-forum {
-  background: var(--Canya, #A5DDA3);
+  background: var(--Canya, #a5dda3);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
-.module-type-forum .description{
+.module-type-forum .description {
   font-size: 14px;
   line-height: 20px;
-  margin-top: 6px;  
+  margin-top: 6px;
   color: var(--Nabiu, #020034);
   font-family: Athletics;
   font-size: 16px;
