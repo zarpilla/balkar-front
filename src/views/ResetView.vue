@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FormField from '@/components/FormField.vue'
 import FormControl from '@/components/FormControl.vue'
@@ -7,7 +7,9 @@ import BaseButton from '@/components/BaseButton.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
 import { useAuthStore } from '@/stores/auth.js'
 import { Api } from '@/service/api'
-//import { Toast } from 'bootstrap'
+import PasswordMeter from 'vue-simple-password-meter';
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const form = reactive({
   password: '',
@@ -33,7 +35,7 @@ const { email, code } = route.query
 
 if (typeof code === 'undefined' || !code) {
   status.error = true
-  status.message = 'Invalid request, missing mandatory params'
+  status.message = t('Invalid request, missing mandatory params')
 }
 
 const submit = async () => {
@@ -49,19 +51,22 @@ const submit = async () => {
 
     if (form.password !== form.repassword) {
       status.error = true
-      status.message = "Password and repeat password doesn't mismatch"
+      status.message = t("Password and repeat password doesn't mismatch")
       return
     }
 
     const { email, code } = route.query
 
-    console.log('code', code)
-
     if (typeof code === 'undefined' || !code) {
       status.error = true
-      status.message = 'Invalid request, missing mandatory params'
+      status.message = t('Invalid request, missing mandatory params')
       return
     }
+
+    if (score.value < 3) {
+      status.message = t('password-is-not-safe')
+        return
+      }
 
     // useAuthStore().setUser({
     //   jwt: token
@@ -78,11 +83,17 @@ const submit = async () => {
       err &&
       err.message
     ) {
-      status.message = err.message
+      status.message = t(err.message)
       status.error = true
     }
   }
 }
+const score = ref(0);
+const onScore = (payload: any) => {
+      // console.log(payload.score); // from 0 to 4
+      // console.log(payload.strength); // one of : 'risky', 'guessable', 'weak', 'safe' , 'secure'
+      score.value = payload.score;
+    };
 </script>
 
 <template>
@@ -103,6 +114,7 @@ const submit = async () => {
             name="password"
             maxlength="200"
           />
+          <password-meter @score="onScore" :password="form.password" />
         </FormField>
 
         <FormField class="mt-4" :help="status.message" :label="$t('repeat-new-password-label')">

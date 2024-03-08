@@ -60,7 +60,7 @@ const submit = async () => {
       err.message
     ) {
       status.error = true
-      status.message = err.message
+      status.message = t(err.message)
     }
   }
 }

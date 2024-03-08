@@ -353,14 +353,14 @@ watch(
     </div>
 
     <div class="container">
-      <div class="row">
+      <div class="row mt-5">
         <div class="col-12 order-1 order-md-0 col-md-9">
           <div v-for="channel in forum.channels" :key="channel.id">
             <div
-              class="bg-white mt-5"
+              class="bg-white zmt-5"
               v-if="!channelId || (channelId && channelId.toString() === channel.id.toString())"
             >
-              <div class="d-flex w-100 mt-3 flex-wrap">
+              <div class="d-flex w-100 zmt-3 flex-wrap">
                 <div v-if="channelId">
                   <RouterLink :to="`/forum/${uid}`" class="btn btn-tertiary mb-4 me-4">
                     Tornar
@@ -410,7 +410,13 @@ watch(
         </div>
         <div class="col-12 col-md-3 order-0 order-md-1 mb-5">
           <div class="module module-bordered">
-            <h2 class="mb-3">{{ $t('channels') }}</h2>
+            <h3 class="mb-3">{{ $t('channels') }}</h3>
+            <div>
+              <RouterLink class="btn mb-3 w-100" :to="`/forum/${uid}`"
+              :class="{ 'btn-white': channelId, 'btn-primary': !channelId }">
+                {{ forum.name }}
+              </RouterLink>
+            </div>
             <div v-for="channel in forum.channels" :key="channel.id">
               <RouterLink
                 :to="`/forum/${uid}/channel/${channel.id}`"
@@ -477,7 +483,7 @@ watch(
   text-decoration: none;
 }
 .module-bordered{
-  border-radius: 15px;
+  border-radius: 25px;
 }
 
 .topic {

@@ -9,6 +9,7 @@ import LayoutGuest from '@/layouts/LayoutGuest.vue'
 import FormField from '@/components/FormField.vue'
 import FormControl from '@/components/FormControl.vue'
 import CustomToast from '@/components/CustomToast.vue'
+import PasswordMeter from 'vue-simple-password-meter'
 
 const props = defineProps({
   buttonText: {
@@ -95,6 +96,12 @@ const submit = async () => {
       return
     }
 
+    if (score.value < 3) {
+      status.errorPwd = true
+      status.messagePwd = t('password-is-not-safe')
+      return
+    }
+
     if (form.password !== form.passwordRepeat) {
       status.errorPwdRepeat = true
       status.messagePwdRepeat = t('passwords-do-not-match')
@@ -115,9 +122,7 @@ const submit = async () => {
         registered.value = true
         // router.push({ name: 'login' })
       }, 1000)
-      
-    }
-    else if (response && response.error) {
+    } else if (response && response.error) {
       status.errorOther = true
       status.messageEmail = response.error
       toastErrorVisible.value = !toastErrorVisible.value
@@ -133,8 +138,13 @@ const submit = async () => {
       toastErrorMessage.value = t('email-already-exists')
     }
     toastErrorVisible.value = !toastErrorVisible.value
-    
   }
+}
+const score = ref(0)
+const onScore = (payload: any) => {
+  // console.log(payload.score); // from 0 to 4
+  // console.log(payload.strength); // one of : 'risky', 'guessable', 'weak', 'safe' , 'secure'
+  score.value = payload.score
 }
 </script>
 
@@ -179,6 +189,7 @@ const submit = async () => {
         autocomplete="new-password"
         maxlength="200"
       />
+      <password-meter @score="onScore" :password="form.password" />
     </FormField>
 
     <FormField :help="status.messagePwdRepeat" :label="$t('repeat-password-label')" class="mb-4">

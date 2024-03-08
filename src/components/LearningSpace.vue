@@ -347,8 +347,8 @@ const removeSubmission = async (id: string) => {
                 </div>
               </div>
             </div>
-            <div v-if="space.forum" class="module mt-3 module-type-forum">
-              <RouterLink :to="`/forum/${uid}`" class="ms-auto btn btn-white w-100">
+            <div v-if="space.forum" class="zmodule zmodule-bordered mt-3 zmodule-type-forum">
+              <RouterLink :to="`/forum/${uid}`" class="ms-auto btn btn-secondary w-100">
                   {{ $t('FORUM ACCESS') }}
                 </RouterLink>
             </div>
@@ -383,7 +383,7 @@ const removeSubmission = async (id: string) => {
   text-decoration: none;
 }
 .module-bordered{
-  border-radius: 15px;
+  border-radius: 25px;
 }
 
 .topic {

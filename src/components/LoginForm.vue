@@ -113,7 +113,6 @@ const submit = async () => {
       }
     }
   } catch (err: any) {
-    console.log('err', err)
     if (err && err.message) {
       status.error = false
       status.message = ''
@@ -146,7 +145,7 @@ const resend = async () => {
     }, 1000)
 
   } catch (err: any) {
-    console.log('err', err)
+    console.log('err!', err)
   }
 }
 </script>
@@ -172,7 +171,7 @@ const resend = async () => {
       />
     </FormField>
 
-    <FormField class="position-relative" help="" :label="$t('password-label')">
+    <FormField class="position-relative" :help="status.messagePwd" :label="$t('password-label')">
       <div class="abs-forgot">
         <RouterLink tabindex="-1" to="/forgot">{{ $t('forgot-password') }}</RouterLink>
       </div>
