@@ -17,6 +17,10 @@ export default {
     placeholder: {
       type: String,
       required: true
+    },
+    modal: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -59,7 +63,7 @@ export default {
     const resize = () => {
       const textareaEl: any = textarea.value
       textareaEl.style.height = 'auto'
-      textareaEl.style.height = `${textareaEl.scrollHeight - 22}px`
+      textareaEl.style.height = `${textareaEl.scrollHeight - 30}px`
     }
 
     const uploaded = (payload: any) => {
@@ -99,7 +103,7 @@ const disabled = ref(false)
 <template>
   <div class="zposition-relative">
     <div class="d-flex">
-      <div class="w-100 position-relative">
+      <div class="w-100 position-relative zmt-5" :class="{ 'mt-3': true, 'zmt-2': !modal }">
         <textarea
           class="w-100"
           v-model="message"
@@ -142,6 +146,8 @@ textarea {
   padding: 5px 20px;
   resize: none;
   background: #fff;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 textarea:focus {
   outline: none;
@@ -149,7 +155,7 @@ textarea:focus {
 }
 .send {
   right: 20px;
-  bottom: 20px;
+  bottom: 18px;
   cursor: pointer;
   z-index: 100;
 }

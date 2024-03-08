@@ -2,7 +2,7 @@ import service from '@/service/index'
 
 const resource: string = 'auth'
 export const auth = {
-  get: (): Promise<any> => service({ requiresAuth: true }).get(`users/me`),
+  get: (): Promise<any> => service({ requiresAuth: true }).get(`users/me?populate=interests`),
   login: (login: string, password: string): Promise<any> =>
     service().post('auth/local', {
       identifier: login,

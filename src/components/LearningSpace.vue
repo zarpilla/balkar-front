@@ -104,7 +104,7 @@ const removeSubmission = async (id: string) => {
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
     <div :class="{ 'bg-balkar': authenticated }">
-      <div class="container">
+      <div class="zcontainer" :class="{ 'container': authenticated }">
         <RouterLink class="btn btn-primary mb-3" :to="`/space/${space.uid}`">
           {{ space.name }}
         </RouterLink>
@@ -115,7 +115,7 @@ const removeSubmission = async (id: string) => {
       </div>
     </div>
 
-    <div v-if="space.banner && space.banner.url" class="container mt-5">
+    <div v-if="space.banner && space.banner.url" class="mt-5" :class="{ 'container': authenticated }">
       <img :src="base + space.banner.url" class="w-100" />
     </div>
 
@@ -123,27 +123,29 @@ const removeSubmission = async (id: string) => {
       <div class="container bg-white mt-5">
         <vue-markdown
           v-if="space.publicDescription"
+          :linkify="true"
           class="mt-4 mb-4"
           :source="space.publicDescription"
         ></vue-markdown>
 
         <button class="btn btn-primary mt-4 mb-4" @click="enroll">
-          {{ $t('Apuntar-se') }}
+          {{ $t('apuntar-se') }}
         </button>
       </div>
     </div>
 
     <div class="not-enrolled" v-if="!authenticated">
-      <div class="container zbg-balkar zmt-5">
+      <div class="zcontainer zbg-balkar zmt-5">
         <vue-markdown
           v-if="space.publicDescription"
+          :linkify="true"
           class="mt-4 mb-4"
           :source="space.publicDescription"
         ></vue-markdown>
 
-        <RouterLink to="/login" class="btn btn-primary mt-4 mb-4">
-          {{ $t('Apuntar-se') }}
-        </RouterLink>
+        <!-- <RouterLink to="/login" class="btn btn-primary mt-4 mb-4">
+          {{ $t('apuntar-se') }}
+        </RouterLink> -->
       </div>
     </div>
 
@@ -152,6 +154,7 @@ const removeSubmission = async (id: string) => {
         <vue-markdown
           v-if="space.privateDescription"
           class="mt-4 mb-4"
+          :linkify="true"
           :source="space.privateDescription"
         ></vue-markdown>
       </div>
@@ -171,10 +174,28 @@ const removeSubmission = async (id: string) => {
               </RouterLink>
 
               <div v-if="moduleId === module.id.toString()">
+
+                <div
+                        v-for="content in module.contents"
+                        :key="`module.id-${module.id}-content-${content.id}`"
+                      >
+                        <div v-if="content.text" class="mt-4 mb-4">
+                          <vue-markdown class="mt-4 mb-4" :linkify="true" :source="content.text"></vue-markdown>
+                        </div>
+                        <div v-if="content.media" class="mt-4 mb-4">
+                          <div v-if="content.media.mime.startsWith('image')">
+                            <img :src="base + content.media.url" class="zw-100" />
+                          </div>
+                        </div>
+                      </div>
+
                 <div
                   v-for="(topic, j) in module.topics"
                   :key="`module.id-${module.id}-topic-${topic.id}`"
                 >
+
+                
+
                   <div class="d-block mt-3 mb-3 ms-3 ms-md-5">
                     <RouterLink
                       :to="`/space/${uid}/module/${module.id}/topic/${topic.id}`"
@@ -201,7 +222,7 @@ const removeSubmission = async (id: string) => {
                         :key="`module.id-${module.id}-topic-${topic.id}-content-${content.id}`"
                       >
                         <div v-if="content.text" class="mt-4 mb-4">
-                          <vue-markdown class="mt-4 mb-4" :source="content.text"></vue-markdown>
+                          <vue-markdown class="mt-4 mb-4" :linkify="true" :source="content.text"></vue-markdown>
                         </div>
                         <div v-if="content.media" class="mt-4 mb-4">
                           <div v-if="content.media.mime.startsWith('image')">
@@ -215,7 +236,7 @@ const removeSubmission = async (id: string) => {
                           class="btn btn-tertiary btn-medium mb-2 ms-auto"
                           @click="complete()"
                         >
-                          {{ $t('Set as completed') }}
+                          {{ $t('mark-as-completed') }}
                         </button>
                       </div>
                       <div class="d-flex w-100" v-if="topic.completed">
@@ -223,7 +244,7 @@ const removeSubmission = async (id: string) => {
                           class="btn btn-tertiary btn-medium mb-2 ms-auto"
                           @click="notcomplete()"
                         >
-                          {{ $t('Set as not completed') }}
+                          {{ $t('mark-as-not-completed') }}
                         </button>
                       </div>
                     </div>
@@ -289,7 +310,7 @@ const removeSubmission = async (id: string) => {
             </div>
           </div>
           <div class="col-12 col-md-3 order-0 order-md-1 mb-5" v-if="moduleId">
-            <div class="module">
+            <div class="module module-bordered">
               <h4 class="text-uppercase quick-access-name">
                 <RouterLink
                   :to="`/space/${uid}`"
@@ -304,7 +325,7 @@ const removeSubmission = async (id: string) => {
                 :key="`side.module.id-${module.id}`"
                 class="d-block mb-1"
               >
-                <RouterLink :to="`/space/${uid}/module/${module.id}`" class="d-block module">
+                <RouterLink :to="`/space/${uid}/module/${module.id}`" class="d-block module-item">
                   {{ module.name }}
                 </RouterLink>
 
@@ -325,6 +346,11 @@ const removeSubmission = async (id: string) => {
                   </div>
                 </div>
               </div>
+            </div>
+            <div v-if="space.forum" class="module mt-3 module-type-forum">
+              <RouterLink :to="`/forum/${uid}`" class="ms-auto btn btn-white w-100">
+                  {{ $t('FORUM ACCESS') }}
+                </RouterLink>
             </div>
           </div>
         </div>
@@ -356,6 +382,9 @@ const removeSubmission = async (id: string) => {
   cursor: pointer;
   text-decoration: none;
 }
+.module-bordered{
+  border-radius: 15px;
+}
 
 .topic {
   padding: 0.5rem 1rem;
@@ -371,9 +400,37 @@ const removeSubmission = async (id: string) => {
 .topic-name {
   text-decoration: underline;
 }
+
+.module-item{
+  padding: 0.3rem 0.5rem;
+  font-family: Athletics;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.module-item.router-link-exact-active{
+  text-decoration: underline;
+}
+
+.side-topic {
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 0.3rem 2rem;
+  text-decoration: none;
+  line-height: 24px;
+}
 .side-topic .topic-name {
   text-decoration: none;
-  font-weight: 300;
+  font-weight: 400;
+  line-height: 24px;
+}
+.side-topic.router-link-exact-active {
+  text-decoration: underline;
 }
 .quick-access {
   font-family: Athletics;

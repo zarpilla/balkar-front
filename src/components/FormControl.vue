@@ -146,7 +146,7 @@ const keypress = (e: any) => {
 const resize = () => {
   if (props.resizeWithContent && textareaEl && textareaEl.value) {
     textareaEl.value.style.height = '1px'
-    textareaEl.value.style.height = textareaEl.value.scrollHeight + 6 + 'px'
+    textareaEl.value.style.height = textareaEl.value.scrollHeight + 0 + 'px'
   }
 }
 

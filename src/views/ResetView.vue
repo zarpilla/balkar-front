@@ -29,9 +29,9 @@ const removeError = (event: any) => {
 }
 
 
-const { email, token } = route.query
+const { email, code } = route.query
 
-if (typeof email === 'undefined' || !email || typeof token === 'undefined' || !token) {
+if (typeof code === 'undefined' || !code) {
   status.error = true
   status.message = 'Invalid request, missing mandatory params'
 }
@@ -53,19 +53,21 @@ const submit = async () => {
       return
     }
 
-    const { email, token } = route.query
+    const { email, code } = route.query
 
-    if (typeof email === 'undefined' || !email || typeof token === 'undefined' || !token) {
+    console.log('code', code)
+
+    if (typeof code === 'undefined' || !code) {
       status.error = true
       status.message = 'Invalid request, missing mandatory params'
       return
     }
 
-    useAuthStore().setUser({
-      jwt: token
-    })
+    // useAuthStore().setUser({
+    //   jwt: token
+    // })
 
-    await Api.auth.resetPassword(token as string, form.password, form.password)
+    await Api.auth.resetPassword(code as string, form.password, form.password)
 
     setTimeout(() => {
       router.push('/login')
@@ -89,6 +91,7 @@ const submit = async () => {
       <h3 class="mb-5">{{ $t('reset-password') }}</h3>
 
       <form @submit.prevent="submit">
+        
         <FormField :label="$t('new-password-label')">
           <FormControl
             @click="removeError"

@@ -113,7 +113,7 @@ if (readQueryStringParameter('locale')) {
 
   <div v-if="props.loaded && applicationLoaded" class="zbg-balkar pt-3">
     <div class="container">
-      <div class="row align-items-start">
+      <div class="row align-items-start zcontent">
         <div :class="props.css">
           <div class="slot">
             <div class="slot-inner">
@@ -129,7 +129,7 @@ if (readQueryStringParameter('locale')) {
 .slot {
   display: flex;
   margin: 0 auto;
-  height: calc(100vh - 86px);
+  
   margin-top: 20px;
   margin-bottom: 20px;
 }

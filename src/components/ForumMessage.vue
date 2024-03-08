@@ -31,6 +31,10 @@ const messageDetail = (message: any) => {
   emit('message-detail', message)
 }
 const apiBase = import.meta.env.VITE_API_BASE
+
+const open = (url: string) => {
+  window.open(url, '_blank')
+}
 </script>
 
 <template>
@@ -49,16 +53,34 @@ const apiBase = import.meta.env.VITE_API_BASE
       </div>
       <div class="d-flex w-100 zmt-3" v-if="message.text">
         <div class="message">
-          <vue-markdown class="mt-1 mb-0" :source="message.text"></vue-markdown>
+          <div
+            class="mt-1 mb-0"
+            v-if="message.text"
+            v-linkify:options="{
+              target: '_blank'
+            }"
+            v-html="message.text.split('\n').join('<br>')"
+          ></div>
         </div>
       </div>
       <div class="d-flex w-100 mt-2 mb-2" v-if="message.file && message.file.url">
         <div class="message">
-          <img :src="apiBase + message.file.url" alt="file" class="forum-image" />
+          <img
+            v-if="message.file.mime.startsWith('image')"
+            :src="apiBase + message.file.url"
+            alt="file"
+            class="forum-image"
+          />
+          <div v-else class="file">
+            <a href="javascript:void(0)" @click="open(apiBase + message.file.url)">
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg> -->
+              {{ message.file.name }}
+            </a>
+          </div>
         </div>
       </div>
 
-      <div class="d-flex">
+      <div class="d-block d-md-flex">
         <div
           v-if="message.children && message.children.length && !detail"
           class="mt-0 clickable linkable"
@@ -71,7 +93,7 @@ const apiBase = import.meta.env.VITE_API_BASE
           }}</span>
           <span v-else>{{ $t('hi-ha-resposta', { n: message.children.length }) }}</span>
         </div>
-        <span class="ps-3" v-if="!detail && message.children && message.children.length">{{
+        <span class="ps-0 ps-md-3" v-if="!detail && message.children && message.children.length">{{
           timeAgo(message.children[message.children.length - 1].createdAt)
         }}</span>
       </div>
@@ -233,6 +255,14 @@ const apiBase = import.meta.env.VITE_API_BASE
   padding: 6px;
   max-width: 100%;
 }
+.file a, .message a {
+  color: rgb(27, 117, 208);
+}
 @media (min-width: 1024px) {
+}
+</style>
+<style>
+.file a, .message a {
+  color: rgb(27, 117, 208);
 }
 </style>

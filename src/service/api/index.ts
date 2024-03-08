@@ -8,6 +8,10 @@ import { forums } from './forums'
 import { messages } from './messages'
 import { channels } from './channels'
 import { avatars } from './avatars'
+import { preEnrollements } from './pre-enrollements'
+import { interests } from './interests'
+
+
 
 export const Api = {
   learningSpaces,
@@ -19,5 +23,7 @@ export const Api = {
   forums,
   messages,
   channels,
-  avatars
+  avatars,
+  preEnrollements,
+  interests
 }

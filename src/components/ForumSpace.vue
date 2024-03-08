@@ -101,7 +101,7 @@ const loadChannel = async (cid: number) => {
 
   const { data: forumData } = await Api.forums.get(props.uid)
 
-  const moreAll:any[] = []
+  const moreAll: any[] = []
 
   for await (const channel of forum.value.channels) {
     if (channel.id.toString() === cid.toString()) {
@@ -130,7 +130,6 @@ const loadChannel = async (cid: number) => {
   //     // channel.messages = moreAll
   //   }
   // })
-
 }
 
 load()
@@ -149,7 +148,7 @@ watch(
     } else {
       messagesPerChannel.value = messagesPerChannelHome
     }
-    
+
     await load()
   }
 )
@@ -175,10 +174,12 @@ const loadDetail = async (message: any) => {
 
 const getChildrenMessages = async (message: any) => {
   if (showChildrenMessagesParent.value) {
-    const { data } = await Api.messages.getChildren((showChildrenMessagesParent.value as any).id)  
+    const { data } = await Api.messages.getChildren((showChildrenMessagesParent.value as any).id)
     childrenMessages.value = data.data.children
     forum.value.channels.find((channel: any) => {
-      if (channel.id.toString() === (showChildrenMessagesParent.value as any).channelId.toString()) {
+      if (
+        channel.id.toString() === (showChildrenMessagesParent.value as any).channelId.toString()
+      ) {
         channel.messages.find((m: any) => {
           if (m.id.toString() === (showChildrenMessagesParent.value as any).id.toString()) {
             m.children = data.data.children
@@ -187,7 +188,6 @@ const getChildrenMessages = async (message: any) => {
       }
     })
   }
-  
 }
 
 const loadMessage = async (message: any) => {
@@ -210,7 +210,6 @@ const getLasMessageIdFromChannels = computed(() => {
   }
   return ids
 })
-
 
 const getLasMessageIdFromBackgroundChannels = computed(() => {
   const ids = []
@@ -248,7 +247,7 @@ const messagesAndBackgroundMessagesAreEqual = computed(() => {
   return JSON.stringify(ids) === JSON.stringify(idsBg)
 })
 
-const loadBackground = async () => {  
+const loadBackground = async () => {
   console.log('loadBackground')
   const { data: forumData } = await Api.forums.get(props.uid)
 
@@ -291,11 +290,11 @@ onMounted(() => {
   window.addEventListener('scroll', async () => {
     const scrollPosition = window.innerHeight + window.scrollY
     const documentHeight = document.documentElement.offsetHeight
-    console.log('scrollPosition', scrollPosition, documentHeight)
+    // console.log('scrollPosition', scrollPosition, documentHeight)
     if (scrollPosition >= documentHeight) {
       // Scroll is at the end of the page
       console.log('Scroll is at the end of the page')
-      if (channelId.value) {        
+      if (channelId.value) {
         await awaitUntilLoaded()
         start.value = start.value + messagesPerChannelChannel
         messagesPerChannel.value = start.value + messagesPerChannelChannel
@@ -312,12 +311,27 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(interval.value)
 })
+
+watch(
+  () => props.uid,
+  async (newUid, oldUid) => {
+    await load()
+  }
+)
 </script>
 
 <template>
   <div class="learning-space mb-5" v-if="forum && space">
     <div class="bg-balkar">
       <div class="container">
+        <RouterLink
+          v-if="space && !space.global"
+          class="btn btn-secondary mb-3 me-3"
+          :to="`/space/${uid}`"
+        >
+          {{ space.name }}
+        </RouterLink>
+
         <RouterLink class="btn btn-primary mb-3" :to="`/forum/${uid}`">
           {{ forum.name }}
         </RouterLink>
@@ -334,64 +348,84 @@ onUnmounted(() => {
 
     <div class="enrolled" v-if="forum.description">
       <div class="container bg-white mt-5">
-        <vue-markdown class="mt-4 mb-4" :source="forum.description"></vue-markdown>
+        <vue-markdown :linkify="true" class="mt-4 mb-4" :source="forum.description"></vue-markdown>
       </div>
     </div>
 
-    <!-- <pre>ids: {{ getLasMessageIdFromChannels }}</pre>
-    <pre>ids bg: {{ getLasMessageIdFromBackgroundChannels }}</pre>
-    <pre> messagesAndBackgroundMessagesAreEqual: {{ messagesAndBackgroundMessagesAreEqual }}</pre>
-    <pre>messagesAndBackgroundMessagesAreEqualArray: {{ messagesAndBackgroundMessagesAreEqualArray }}</pre> -->
+    <div class="container">
+      <div class="row">
+        <div class="col-12 order-1 order-md-0 col-md-9">
+          <div v-for="channel in forum.channels" :key="channel.id">
+            <div
+              class="bg-white mt-5"
+              v-if="!channelId || (channelId && channelId.toString() === channel.id.toString())"
+            >
+              <div class="d-flex w-100 mt-3 flex-wrap">
+                <div v-if="channelId">
+                  <RouterLink :to="`/forum/${uid}`" class="btn btn-tertiary mb-4 me-4">
+                    Tornar
+                  </RouterLink>
+                </div>
+                <RouterLink
+                  :to="`/forum/${uid}/channel/${channel.id}`"
+                  class="btn btn-secondary mb-4"
+                >
+                  {{ channel.name }}
+                </RouterLink>
+              </div>
 
-    <div v-for="channel in forum.channels" :key="channel.id">
-      <div
-        class="container bg-white mt-5"
-        v-if="!channelId || (channelId && channelId.toString() === channel.id.toString())"
-      >
-        <div class="d-flex w-100 mt-3 flex-wrap">
-          <div v-if="channelId">
-            <RouterLink :to="`/forum/${uid}`" class="btn btn-tertiary mb-4 me-4">
-              Tornar
-            </RouterLink>
+              <CommentInput
+                :channel="channel.id"
+                :parent="0"
+                @post="loadMessage"
+                :placeholder="$t('nou-missatge-al-canal')"
+                class="mb-3"
+              />
+
+              <div v-for="(message, i) in channel.messages" :key="message.id" class="mb-5">
+                <forum-message
+                  v-if="i < messagesPerChannel - 1"
+                  :message="message"
+                  :channel="channel.id"
+                  @post="load"
+                  @message-detail="messageDetail"
+                  :detail="false"
+                />
+
+                <div v-if="i === messagesPerChannel - 1 && !channelId">
+                  <RouterLink
+                    :to="`/forum/${uid}/channel/${channel.id}`"
+                    class="btn btn-tertiary mb-3"
+                  >
+                    {{ $t('veure-tots-els-missatges-del-canal') }}
+                  </RouterLink>
+                </div>
+              </div>
+
+              <div v-if="channel.messages && channel.messages.length === 0" class="mt-2 pb-2">
+                {{ $t('no-hi-ha-missatges-al-canal') }}
+              </div>
+            </div>
           </div>
-          <RouterLink :to="`/forum/${uid}/channel/${channel.id}`" class="btn btn-secondary mb-4">
-            {{ channel.name }}
-          </RouterLink>
         </div>
-
-        <CommentInput
-          :channel="channel.id"
-          :parent="0"
-          @post="loadMessage"
-          :placeholder="$t('nou-missatge-al-canal')"
-          class="mb-3"
-        />
-
-        <div v-for="(message, i) in channel.messages" :key="message.id" class="mb-5">
-          <forum-message
-            v-if="i < messagesPerChannel - 1"
-            :message="message"
-            :channel="channel.id"
-            @post="load"
-            @message-detail="messageDetail"
-            :detail="false"
-          />
-
-          <div v-if="i === messagesPerChannel - 1 && !channelId">
-            <RouterLink :to="`/forum/${uid}/channel/${channel.id}`" class="btn btn-tertiary mb-3">
-              {{ $t('veure-tots-els-missatges-del-canal') }}
-            </RouterLink>
+        <div class="col-12 col-md-3 order-0 order-md-1 mb-5">
+          <div class="module module-bordered">
+            <h2 class="mb-3">{{ $t('channels') }}</h2>
+            <div v-for="channel in forum.channels" :key="channel.id">
+              <RouterLink
+                :to="`/forum/${uid}/channel/${channel.id}`"
+                class="btn mb-3 w-100"
+                :class="{ 'btn-white': !channelId || (channelId && channel.id.toString() !== channelId.toString()), 'btn-primary': channelId && channel.id.toString() === channelId.toString() }">
+                {{ channel.name }}
+              </RouterLink>
+            </div>
           </div>
-        </div>
-
-        <div v-if="channel.messages && channel.messages.length === 0" class="mt-2 pb-2">
-          {{ $t('no-hi-ha-missatges-al-canal') }}
         </div>
       </div>
     </div>
   </div>
   <Teleport to="body">
-    <MessagesModal id="children-messages" :title="$t('thread')">      
+    <MessagesModal id="children-messages" :title="$t('thread')">
       <div v-if="showChildrenMessages">
         <forum-message
           :message="showChildrenMessagesParent"
@@ -414,6 +448,7 @@ onUnmounted(() => {
           :parent="(showChildrenMessagesParent as any).id"
           @post="loadDetail"
           :placeholder="$t('enviar-una-resposta')"
+          :modal="true"
         />
       </div>
     </MessagesModal>
@@ -440,6 +475,9 @@ onUnmounted(() => {
   line-height: 40px; /* 100% */
   cursor: pointer;
   text-decoration: none;
+}
+.module-bordered{
+  border-radius: 15px;
 }
 
 .topic {

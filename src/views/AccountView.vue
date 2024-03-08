@@ -7,7 +7,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
     <div class="space zpt-3">
       <div class="container mt-4">
         <RouterLink class="btn btn-tertiary me-3" to="/account/profile">{{ $t( 'profile') }}</RouterLink>
-        <RouterLink class="btn btn-tertiary" to="/account/profile/password">{{ $t( 'Change Password') }}</RouterLink>
+        <RouterLink class="btn btn-tertiary" to="/account/profile/password">{{ $t( 'change-password') }}</RouterLink>
       </div>
 
       <router-view></router-view>

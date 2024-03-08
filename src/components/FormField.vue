@@ -63,14 +63,15 @@ const wrapperClass = computed(() => {
   color: #f66;
   color: var(--danger-main, #a82525);
   color: #f57356;
-  
+
   line-height: 16px;
 }
 .information {
   font-size: 1rem;
   color: #0450cd !important;
 }
-label{
+label {
   font-size: 16px;
+  font-weight: bold;
 }
 </style>

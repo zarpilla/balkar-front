@@ -10,9 +10,16 @@ import CustomToast from '@/components/CustomToast.vue'
 import { useI18n } from 'vue-i18n'
 import { checkEmpty, checkIsEmail } from '@/utils/helper'
 import router from '@/router'
+import FormCheckRadio from '../FormCheckRadio.vue'
+import FormCheckRadioGroup from '../FormCheckRadioGroup.vue'
+
+interface Interest {
+  id: number
+  name: string
+}
+
 const { t } = useI18n()
 const authStore = useAuthStore()
-
 
 const props = defineProps({
   redirect: {
@@ -25,16 +32,33 @@ const account = ref<any>(null)
 
 const editedAccount = ref<any>({
   name: '',
-  lastname: ''
+  lastname: '',
+  interests: []
 })
 
 const avatar = ref<any>(null)
+
+const interests = ref<Interest[]>([])
+
+const locale = useI18n().locale.value
+
+const loadInterests = async () => {
+  const response = await Api.interests.list(locale)
+  interests.value = response.data.data.map((interest: any) => ({
+    id: interest.id,
+    name: interest.attributes[`name_${locale}`]
+  }))
+}
+
+loadInterests()
 
 const apiBase = import.meta.env.VITE_API_BASE
 const load = async () => {
   account.value = (await Api.auth.get()).data
   editedAccount.value.name = account.value.name
   editedAccount.value.lastname = account.value.lastname
+
+  editedAccount.value.interests = account.value.interests.map((interest: any) => interest.id)
   const myAvatar = await Api.avatars.mine()
   if (myAvatar.data && myAvatar.data.data) {
     editedAccount.value.pictureUrl = apiBase + myAvatar.data.data.avatar.url
@@ -52,7 +76,7 @@ const saveChanges = async () => {
 
   // Perform API call to save changes
   await Api.auth.update(account.value.id, { ...editedAccount.value })
-  toastMessage.value = t('Account uploaded successfully!')
+  toastMessage.value = t('account-updated-successfully')
   toastVisible.value = !toastVisible.value
   // Reload account data
 
@@ -81,14 +105,16 @@ const toastErrorVisible = ref(false)
 
 const toastVisible = ref(false)
 const uploaded = (fileImage: string) => {
-  editedAccount.value.pictureUrl = fileImage  
-  toastMessage.value = t('Avatar uploaded successfully!')
+  // console.log('fileImage', fileImage)
+  editedAccount.value.pictureUrl = fileImage
+  toastMessage.value = t('account-updated-successfully')
   toastVisible.value = !toastVisible.value
-  setTimeout(() => {
-    window.location.reload()
-  }, 1000)  
-}
 
+  authStore.pictureUrl = fileImage
+  // setTimeout(() => {
+  //   window.location.reload()
+  // }, 1000)
+}
 </script>
 
 <template>
@@ -97,12 +123,16 @@ const uploaded = (fileImage: string) => {
       <div class="col-12 col-md-9">
         <div class="bordered-card mb-4">
           <FormField :label="$t('avatar')" css="col-12 col-md-8 mb-3">
-            <div class="d-flex mb-5 position-relative">
+            <div class="d-flex mb-5 position-relative mt-2">
               <AvatarImage
                 class="me-1"
                 :size="96"
                 :url="editedAccount.pictureUrl"
-                :name="editedAccount.name + ' ' + editedAccount.lastname"
+                :name="
+                  editedAccount.name
+                    ? editedAccount.name + ' ' + editedAccount.lastname
+                    : account.email
+                "
               ></AvatarImage>
               <div class="upload">
                 <AvatarImageUpload
@@ -137,6 +167,14 @@ const uploaded = (fileImage: string) => {
                 :placeholder="$t('lastname')"
                 v-model="editedAccount.lastname"
                 name="lastname"
+              />
+            </FormField>
+            <FormField :label="$t('interests')" css="col-12 col-md-8 mb-3">
+              <FormCheckRadioGroup
+                type="checkbox"
+                :options="interests"
+                v-model="editedAccount.interests"
+                name="interests"
               />
             </FormField>
 

@@ -8,7 +8,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios';
-
+import Vue3linkify from 'vue-3-linkify'
 
 // @ts-ignore
 import { createI18n } from 'vue-i18n'
@@ -41,4 +41,5 @@ const i18n = createI18n({
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
+app.use(Vue3linkify)
 app.mount('#app')

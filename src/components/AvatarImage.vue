@@ -27,7 +27,7 @@ const firstLetterOfName = computed(() => {
 const apiBase = import.meta.env.VITE_API_BASE
 
 const urlWithApiBase = computed(() => {
-  return props.url ? (( props.url.startsWith(apiBase) ? '' : apiBase) + props.url) : ''
+  return props.url ? (( props.url.startsWith(apiBase) || props.url.includes(';base64') ? '' : apiBase) + props.url) : ''
 })
 
 
@@ -88,7 +88,7 @@ const urlWithApiBase = computed(() => {
 }
 
 .icon {
-  border-radius: 5px;
+  border-radius: 50%;
   background: var(--secondary-100, #edeef3);
   width: 100%;
   height: 100%;

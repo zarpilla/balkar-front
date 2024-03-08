@@ -1,5 +1,5 @@
 import service from '@/service/index'
-import CreateBaseApiService from '@/service/api/createBaseApiService'
+import { CreateBaseApiService } from '@/service/api/createBaseApiService'
 
 const resource: string = 'submissions'
 export const submissions = {

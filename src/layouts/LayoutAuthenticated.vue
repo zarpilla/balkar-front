@@ -83,6 +83,17 @@ if (localStorage.getItem('locale')) {
     locale.value = storedLocale
   }
 }
+
+const autoenroll = async () => {
+  await Api.enrollments.autoenroll()
+}
+
+if (!localStorage.getItem('enrollements')) {  
+  autoenroll()
+  localStorage.setItem('enrollements', 'done')
+}
+
+
 </script>
 
 <template>
@@ -112,7 +123,7 @@ if (localStorage.getItem('locale')) {
     </div>
   </header>
 
-  <div v-if="applicationLoaded" class="zbg-balkar zpt-5" :class="props.css">
+  <div v-if="applicationLoaded" class="content" :class="props.css">
     <div>
       <div class="slot">
         <div class="slot-inner">
@@ -124,6 +135,9 @@ if (localStorage.getItem('locale')) {
   <FooterBar></FooterBar>
 </template>
 <style scoped>
+.content{
+  min-height: calc(100vh - 353px);
+}
 .zslot {
   display: flex;
   margin: 0 auto;
@@ -158,8 +172,8 @@ header {
   background: #fbf7eb;
 }
 .auth-wrapper {
-  border-radius: 20px;
-  border: 1px solid var(--gray-0220, #f7f7f7);
+  border-radius: 0px;
+  border: 0px solid var(--gray-0220, #f7f7f7);
   background: var(--gray-0210, #fff);
   padding: 4px;
   height: 33px;

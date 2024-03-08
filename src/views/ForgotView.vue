@@ -89,7 +89,6 @@ const submit = async () => {
         <button
           class="mt-4 w-100 btn btn-primary"
           type="submit"
-          @click="submit"
           color="primary"
           label="Continue"
         >
