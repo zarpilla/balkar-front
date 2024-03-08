@@ -20,8 +20,8 @@ const props = defineProps({
 
 const data = reactive({
   fileType: '',
-  fileImage: new URL(`../assets/images/filetypes/no-image.jpg`, import.meta.url).href,
-  fileNoImage: new URL(`../assets/images/filetypes/no-image.jpg`, import.meta.url).href,
+  fileImage: new URL(`../assets/images/upload.svg`, import.meta.url).href,
+  fileNoImage: new URL(`../assets/images/upload.svg`, import.meta.url).href,
   uploadImages: false,
   uploadError: false,
   uploadErrorMessage: '',
