@@ -13,7 +13,7 @@ const authStore = useAuthStore()
   <div class="d-flex flex-row flex-wrap">
     <RouterLink to="/dashboard" class="btn btn-secondary me-4"> {{ $t('les-meves-formacions') }} </RouterLink>
 
-    <RouterLink :to="$t('agora-link')" class="btn btn-secondary me-auto"> {{ $t('agora') }}</RouterLink>
+    <RouterLink v-if="$t('agora-link') !== 'agora-link'" :to="$t('agora-link')" class="btn btn-secondary me-auto"> {{ $t('agora') }}</RouterLink>
   </div>
 </template>
 <style scoped>

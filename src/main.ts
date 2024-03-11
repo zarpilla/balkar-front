@@ -19,7 +19,7 @@ const app = createApp(App)
 const i18n = createI18n({
     legacy: false,
     locale: 'ca',
-    fallbackLocale: 'ca',
+    fallbackLocale: '',
   })
   
   axios.get(import.meta.env.VITE_API_URL + '/translations?_limit=1000')
