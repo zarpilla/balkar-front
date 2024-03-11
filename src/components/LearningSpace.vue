@@ -104,7 +104,7 @@ const removeSubmission = async (id: string) => {
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
     <div :class="{ 'bg-balkar': authenticated }">
-      <div class="zcontainer" :class="{ 'container': authenticated }">
+      <div class="zcontainer" :class="{ container: authenticated }">
         <RouterLink class="btn btn-primary mb-3" :to="`/space/${space.uid}`">
           {{ space.name }}
         </RouterLink>
@@ -115,7 +115,7 @@ const removeSubmission = async (id: string) => {
       </div>
     </div>
 
-    <div v-if="space.banner && space.banner.url" class="mt-5" :class="{ 'container': authenticated }">
+    <div v-if="space.banner && space.banner.url" class="mt-5" :class="{ container: authenticated }">
       <img :src="base + space.banner.url" class="w-100" />
     </div>
 
@@ -123,6 +123,7 @@ const removeSubmission = async (id: string) => {
       <div class="container bg-white mt-5">
         <vue-markdown
           v-if="space.publicDescription"
+          :options="{ html: true }"
           :linkify="true"
           class="mt-4 mb-4"
           :source="space.publicDescription"
@@ -139,6 +140,7 @@ const removeSubmission = async (id: string) => {
         <vue-markdown
           v-if="space.publicDescription"
           :linkify="true"
+          :options="{ html: true }"
           class="mt-4 mb-4"
           :source="space.publicDescription"
         ></vue-markdown>
@@ -154,6 +156,7 @@ const removeSubmission = async (id: string) => {
         <vue-markdown
           v-if="space.privateDescription"
           class="mt-4 mb-4"
+          :options="{ html: true }"
           :linkify="true"
           :source="space.privateDescription"
         ></vue-markdown>
@@ -174,28 +177,29 @@ const removeSubmission = async (id: string) => {
               </RouterLink>
 
               <div v-if="moduleId === module.id.toString()">
-
                 <div
-                        v-for="content in module.contents"
-                        :key="`module.id-${module.id}-content-${content.id}`"
-                      >
-                        <div v-if="content.text" class="mt-4 mb-4">
-                          <vue-markdown class="mt-4 mb-4" :linkify="true" :source="content.text"></vue-markdown>
-                        </div>
-                        <div v-if="content.media" class="mt-4 mb-4">
-                          <div v-if="content.media.mime.startsWith('image')">
-                            <img :src="base + content.media.url" class="zw-100" />
-                          </div>
-                        </div>
-                      </div>
+                  v-for="content in module.contents"
+                  :key="`module.id-${module.id}-content-${content.id}`"
+                >
+                  <div v-if="content.text" class="mt-4 mb-4">
+                    <vue-markdown                    
+                      class="mt-4 mb-4"
+                      :options="{ html: true }"
+                      :linkify="true"
+                      :source="content.text"
+                    ></vue-markdown>                    
+                  </div>
+                  <div v-if="content.media" class="mt-4 mb-4">
+                    <div v-if="content.media.mime.startsWith('image')">
+                      <img :src="base + content.media.url" class="zw-100" />
+                    </div>
+                  </div>
+                </div>
 
                 <div
                   v-for="(topic, j) in module.topics"
                   :key="`module.id-${module.id}-topic-${topic.id}`"
                 >
-
-                
-
                   <div class="d-block mt-3 mb-3 ms-3 ms-md-5">
                     <RouterLink
                       :to="`/space/${uid}/module/${module.id}/topic/${topic.id}`"
@@ -222,7 +226,12 @@ const removeSubmission = async (id: string) => {
                         :key="`module.id-${module.id}-topic-${topic.id}-content-${content.id}`"
                       >
                         <div v-if="content.text" class="mt-4 mb-4">
-                          <vue-markdown class="mt-4 mb-4" :linkify="true" :source="content.text"></vue-markdown>
+                          <vue-markdown
+                            class="mt-4 mb-4"
+                            :linkify="true"
+                            :options="{ html: true }"
+                            :source="content.text"
+                          ></vue-markdown>
                         </div>
                         <div v-if="content.media" class="mt-4 mb-4">
                           <div v-if="content.media.mime.startsWith('image')">
@@ -349,8 +358,8 @@ const removeSubmission = async (id: string) => {
             </div>
             <div v-if="space.forum" class="zmodule zmodule-bordered mt-3 zmodule-type-forum">
               <RouterLink :to="`/forum/${uid}`" class="ms-auto btn btn-secondary w-100">
-                  {{ $t('FORUM ACCESS') }}
-                </RouterLink>
+                {{ $t('FORUM ACCESS') }}
+              </RouterLink>
             </div>
           </div>
         </div>
@@ -382,7 +391,7 @@ const removeSubmission = async (id: string) => {
   cursor: pointer;
   text-decoration: none;
 }
-.module-bordered{
+.module-bordered {
   border-radius: 25px;
 }
 
@@ -401,7 +410,7 @@ const removeSubmission = async (id: string) => {
   text-decoration: underline;
 }
 
-.module-item{
+.module-item {
   padding: 0.3rem 0.5rem;
   font-family: Athletics;
   font-size: 18px;
@@ -412,7 +421,7 @@ const removeSubmission = async (id: string) => {
   text-decoration: none;
 }
 
-.module-item.router-link-exact-active{
+.module-item.router-link-exact-active {
   text-decoration: underline;
 }
 

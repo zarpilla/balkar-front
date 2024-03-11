@@ -412,16 +412,24 @@ watch(
           <div class="module module-bordered">
             <h3 class="mb-3">{{ $t('channels') }}</h3>
             <div>
-              <RouterLink class="btn mb-3 w-100" :to="`/forum/${uid}`"
-              :class="{ 'btn-white': channelId, 'btn-primary': !channelId }">
-                {{ forum.name }}
+              <RouterLink
+                class="btn mb-3 w-100"
+                :to="`/forum/${uid}`"
+                :class="{ 'btn-white': channelId, 'btn-primary': !channelId }"
+              >
+                {{ $t('all channels') }}
               </RouterLink>
             </div>
             <div v-for="channel in forum.channels" :key="channel.id">
               <RouterLink
                 :to="`/forum/${uid}/channel/${channel.id}`"
                 class="btn mb-3 w-100"
-                :class="{ 'btn-white': !channelId || (channelId && channel.id.toString() !== channelId.toString()), 'btn-primary': channelId && channel.id.toString() === channelId.toString() }">
+                :class="{
+                  'btn-white':
+                    !channelId || (channelId && channel.id.toString() !== channelId.toString()),
+                  'btn-primary': channelId && channel.id.toString() === channelId.toString()
+                }"
+              >
                 {{ channel.name }}
               </RouterLink>
             </div>
@@ -482,7 +490,7 @@ watch(
   cursor: pointer;
   text-decoration: none;
 }
-.module-bordered{
+.module-bordered {
   border-radius: 25px;
 }
 

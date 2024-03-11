@@ -14,7 +14,12 @@ const router = useRouter()
     <div class="about">
       <div class="container">
         <div class="row align-items-start">
-          <vue-markdown class="mt-4 mb-4" :linkify="true" :source="$t('balkar-main-description')"></vue-markdown>
+          <vue-markdown
+            class="mt-4 mb-4"
+            :linkify="true"
+            :source="$t('balkar-main-description')"
+            :options="{ html: true }"
+          ></vue-markdown>
 
           <learning-spaces state=""></learning-spaces>
         </div>
