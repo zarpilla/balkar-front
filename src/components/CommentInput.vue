@@ -58,7 +58,9 @@ export default {
 
       emit('post', message2)
       message.value = ''
-      resize()
+      setTimeout(() => {
+        resize()
+      }, 10)
     }
     const resize = () => {
       const textareaEl: any = textarea.value
@@ -84,6 +86,11 @@ export default {
         textareaEl.addEventListener('input', () => {
           resize()
         })
+        textareaEl.addEventListener('keydown', (event: any) => {
+          if (event.key === 'Enter' && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+            postMessage()
+          }
+        })
       }
     })
 
@@ -95,9 +102,6 @@ export default {
     }
   }
 }
-
-const upBack = ref(false)
-const disabled = ref(false)
 </script>
 
 <template>
@@ -111,19 +115,10 @@ const disabled = ref(false)
           ref="textarea"
         ></textarea>
         <span class="position-absolute send" @click="postMessage">
-          <svg
-            data-v-af8a87d7=""
-            width="19"
-            height="15"
-            viewBox="0 0 19 15"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path
-              data-v-af8a87d7=""
-              d="M1 6.5C0.447715 6.5 9.65645e-08 6.94772 0 7.5C-9.65645e-08 8.05228 0.447715 8.5 1 8.5L1 6.5ZM18.7071 8.20711C19.0976 7.81659 19.0976 7.18342 18.7071 6.7929L12.3431 0.428934C11.9526 0.0384097 11.3195 0.0384096 10.9289 0.428934C10.5384 0.819458 10.5384 1.45262 10.9289 1.84315L16.5858 7.5L10.9289 13.1569C10.5384 13.5474 10.5384 14.1805 10.9289 14.5711C11.3195 14.9616 11.9526 14.9616 12.3431 14.5711L18.7071 8.20711ZM1 8.5L18 8.5L18 6.5L1 6.5L1 8.5Z"
-              fill="#020034"
-            ></path>
+              d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"
+            />
           </svg>
         </span>
       </div>

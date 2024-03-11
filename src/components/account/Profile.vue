@@ -33,6 +33,7 @@ const account = ref<any>(null)
 const editedAccount = ref<any>({
   name: '',
   lastname: '',
+  location: '',
   interests: []
 })
 
@@ -57,6 +58,7 @@ const load = async () => {
   account.value = (await Api.auth.get()).data
   editedAccount.value.name = account.value.name
   editedAccount.value.lastname = account.value.lastname
+  editedAccount.value.location = account.value.location
 
   editedAccount.value.interests = account.value.interests.map((interest: any) => interest.id)
   const myAvatar = await Api.avatars.mine()
@@ -153,7 +155,7 @@ const uploaded = (fileImage: string) => {
                 readonly
               />
             </FormField>
-            <FormField :label="$t('name')" css="col-12 col-md-8 mb-3">
+            <FormField :label="$t('name') + '*'" css="col-12 col-md-8 mb-3">
               <FormControl
                 type="text"
                 :placeholder="$t('name')"
@@ -161,12 +163,20 @@ const uploaded = (fileImage: string) => {
                 name="name"
               />
             </FormField>
-            <FormField :label="$t('lastname')" css="col-12 col-md-8 mb-3">
+            <FormField :label="$t('lastname') + '*'" css="col-12 col-md-8 mb-3">
               <FormControl
                 type="text"
                 :placeholder="$t('lastname')"
                 v-model="editedAccount.lastname"
                 name="lastname"
+              />
+            </FormField>
+            <FormField :label="$t('location')" css="col-12 col-md-8 mb-3">
+              <FormControl
+                type="text"
+                :placeholder="$t('location')"
+                v-model="editedAccount.location"
+                name="location"
               />
             </FormField>
             <FormField :label="$t('interests')" css="col-12 col-md-8 mb-3">

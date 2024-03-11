@@ -11,6 +11,7 @@ import ForumMessage from '@/components/ForumMessage.vue'
 import { useAuthStore } from '@/stores/auth'
 import { format } from 'date-fns'
 import { onUnmounted } from 'vue'
+import ConfirmModal from './ConfirmModal.vue'
 
 const authStore = useAuthStore()
 
@@ -92,16 +93,10 @@ const awaitUntilLoaded = async () => {
 }
 
 const loadChannel = async (cid: number) => {
-  // loaded.value = false
-
-  console.log('loadChannel', start.value)
-
   // await until loaded.value is true
   await awaitUntilLoaded()
 
-  const { data: forumData } = await Api.forums.get(props.uid)
-
-  const moreAll: any[] = []
+  // const { data: forumData } = await Api.forums.get(props.uid)
 
   for await (const channel of forum.value.channels) {
     if (channel.id.toString() === cid.toString()) {
@@ -120,16 +115,6 @@ const loadChannel = async (cid: number) => {
       }
     }
   }
-
-  // forum.value.channels.find((channel: any) => {
-  //   if (channel.id.toString() === cid.toString()) {
-  //     console.log('channel.messages', channel.messages, moreAll)
-  //     for (let i = 0; i < moreAll.length; i++) {
-  //       channel.messages.push(moreAll[i])
-  //     }
-  //     // channel.messages = moreAll
-  //   }
-  // })
 }
 
 load()
@@ -137,6 +122,8 @@ load()
 const base = import.meta.env.VITE_API_BASE
 
 const toastVisible = ref(false)
+const channelConfigVisible = ref(false)
+const channelConfig = ref(null)
 
 watch(
   () => router.currentRoute.value.params.channelId,
@@ -159,9 +146,7 @@ const uploaded = async () => {
 }
 
 const messageDetail = async (message: any) => {
-  console.log('messageDetail', message)
   childrenMessages.value = message.children
-  // await getChildrenMessages(message)
   showChildrenMessagesParent.value = message
   showChildrenMessages.value = true
 }
@@ -286,6 +271,29 @@ const loadBackground = async () => {
 
 const interval = ref<any>(null)
 
+const publicChannels = computed(() => {
+  if (forum.value && forum.value.channels) {
+    return forum.value.channels.filter(
+      (channel: any) => channel.users_permissions_users.length === 0
+    )
+  }
+  return []
+})
+
+const privateChannels = computed(() => {
+  if (forum.value && forum.value.channels) {
+    return forum.value.channels.filter((channel: any) => channel.users_permissions_users.length > 0)
+  }
+  return []
+})
+
+const showConfig = () => {
+  channelConfig.value = forum.value.channels.find(
+    (channel: any) => channel.id.toString() === channelId.value
+  )
+  channelConfigVisible.value = true
+}
+
 onMounted(() => {
   window.addEventListener('scroll', async () => {
     const scrollPosition = window.innerHeight + window.scrollY
@@ -372,6 +380,26 @@ watch(
                 >
                   {{ channel.name }}
                 </RouterLink>
+
+                <svg
+                  @click="showConfig"
+                  data-bs-toggle="modal"
+                  data-bs-target="#confirm-modal-channel-settings"
+                  v-if="
+                    channelId &&
+                    channel.users_permissions_users &&
+                    channel.users_permissions_users.length > 0
+                  "
+                  class="channel-config clickable mt-2 ms-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24"
+                  viewBox="0 -960 960 960"
+                  width="24"
+                >
+                  <path
+                    d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"
+                  />
+                </svg>
               </div>
 
               <CommentInput
@@ -402,7 +430,7 @@ watch(
                 </div>
               </div>
 
-              <div v-if="channel.messages && channel.messages.length === 0" class="mt-2 pb-2">
+              <div v-if="channel.messages && channel.messages.length === 0" class="mt-2 pb-5">
                 {{ $t('no-hi-ha-missatges-al-canal') }}
               </div>
             </div>
@@ -410,7 +438,7 @@ watch(
         </div>
         <div class="col-12 col-md-3 order-0 order-md-1 mb-5">
           <div class="module module-bordered">
-            <h3 class="mb-3">{{ $t('channels') }}</h3>
+            <h3 v-if="publicChannels.length" class="mb-3">{{ $t('channels') }}</h3>
             <div>
               <RouterLink
                 class="btn mb-3 w-100"
@@ -420,7 +448,21 @@ watch(
                 {{ $t('all channels') }}
               </RouterLink>
             </div>
-            <div v-for="channel in forum.channels" :key="channel.id">
+            <div v-for="channel in publicChannels" :key="channel.id">
+              <RouterLink
+                :to="`/forum/${uid}/channel/${channel.id}`"
+                class="btn mb-3 w-100"
+                :class="{
+                  'btn-white':
+                    !channelId || (channelId && channel.id.toString() !== channelId.toString()),
+                  'btn-primary': channelId && channel.id.toString() === channelId.toString()
+                }"
+              >
+                {{ channel.name }}
+              </RouterLink>
+            </div>
+            <h3 v-if="privateChannels.length" class="mb-3">{{ $t('private-channels') }}</h3>
+            <div v-for="channel in privateChannels" :key="channel.id">
               <RouterLink
                 :to="`/forum/${uid}/channel/${channel.id}`"
                 class="btn mb-3 w-100"
@@ -466,6 +508,10 @@ watch(
         />
       </div>
     </MessagesModal>
+    <ConfirmModal id="channel-settings" :title="$t('channel-settings')" @confirm="() => {}">
+      channel-settings
+      <pre v-if="channelConfigVisible">{{ channelConfig }}</pre>
+    </ConfirmModal>
     <CustomToast
       :show="toastVisible"
       type="success"
@@ -617,6 +663,9 @@ watch(
   background: var(--secondary-100, #edeef3);
   border-radius: 4px;
   margin-top: 3px;
+}
+.channel-configz path {
+  fill: #666;
 }
 @media (min-width: 1024px) {
 }
