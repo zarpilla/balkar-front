@@ -182,12 +182,12 @@ const removeSubmission = async (id: string) => {
                   :key="`module.id-${module.id}-content-${content.id}`"
                 >
                   <div v-if="content.text" class="mt-4 mb-4">
-                    <vue-markdown                    
+                    <vue-markdown
                       class="mt-4 mb-4"
                       :options="{ html: true }"
                       :linkify="true"
                       :source="content.text"
-                    ></vue-markdown>                    
+                    ></vue-markdown>
                   </div>
                   <div v-if="content.media" class="mt-4 mb-4">
                     <div v-if="content.media.mime.startsWith('image')">
@@ -257,6 +257,19 @@ const removeSubmission = async (id: string) => {
                         </button>
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                <div v-if="module.topics.length === 0" class="mt-4 mb-4">
+                  <div class="d-flex w-100" v-if="!module.completed">
+                    <button class="btn btn-tertiary btn-medium mb-2 ms-auto" @click="complete()">
+                      {{ $t('mark-as-completed') }}
+                    </button>
+                  </div>
+                  <div class="d-flex w-100" v-if="module.completed">
+                    <button class="btn btn-tertiary btn-medium mb-2 ms-auto" @click="notcomplete()">
+                      {{ $t('mark-as-not-completed') }}
+                    </button>
                   </div>
                 </div>
 
@@ -335,7 +348,8 @@ const removeSubmission = async (id: string) => {
                 class="d-block mb-1"
               >
                 <RouterLink :to="`/space/${uid}/module/${module.id}`" class="d-block module-item">
-                  {{ module.name }}
+                  <svg class="module-progress-icon" v-if="module.completedPct == 1" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="green" d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>                  
+                  {{ module.name }}                  
                 </RouterLink>
 
                 <div v-if="moduleId === module.id.toString()">
@@ -532,6 +546,9 @@ const removeSubmission = async (id: string) => {
   font-style: normal;
   font-weight: normal;
   line-height: 28px; /* 140% */
+}
+.module-progress-icon{
+  vertical-align: -7px;
 }
 @media (min-width: 1024px) {
 }
