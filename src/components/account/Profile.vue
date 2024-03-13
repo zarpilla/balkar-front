@@ -34,6 +34,8 @@ const editedAccount = ref<any>({
   name: '',
   lastname: '',
   location: '',
+  organization: '',
+  country: '',
   interests: []
 })
 
@@ -59,6 +61,8 @@ const load = async () => {
   editedAccount.value.name = account.value.name
   editedAccount.value.lastname = account.value.lastname
   editedAccount.value.location = account.value.location
+  editedAccount.value.country = account.value.country
+  editedAccount.value.organization = account.value.organization
 
   editedAccount.value.interests = account.value.interests.map((interest: any) => interest.id)
   const myAvatar = await Api.avatars.mine()
@@ -171,12 +175,28 @@ const uploaded = (fileImage: string) => {
                 name="lastname"
               />
             </FormField>
+            <FormField :label="$t('organization')" css="col-12 col-md-8 mb-3">
+              <FormControl
+                type="text"
+                :placeholder="$t('organization')"
+                v-model="editedAccount.organization"
+                name="organization"
+              />
+            </FormField>
             <FormField :label="$t('location')" css="col-12 col-md-8 mb-3">
               <FormControl
                 type="text"
                 :placeholder="$t('location')"
                 v-model="editedAccount.location"
                 name="location"
+              />
+            </FormField>
+            <FormField :label="$t('country')" css="col-12 col-md-8 mb-3">
+              <FormControl
+                type="text"
+                :placeholder="$t('country')"
+                v-model="editedAccount.country"
+                name="country"
               />
             </FormField>
             <FormField :label="$t('interests')" css="col-12 col-md-8 mb-3">

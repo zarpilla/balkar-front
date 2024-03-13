@@ -21,6 +21,7 @@ const props = defineProps<{
 
 const router = useRouter()
 const channelId = ref(router.currentRoute.value.params.channelId as string)
+const userId = ref(router.currentRoute.value.params.userId as string)
 
 const apiBase = import.meta.env.VITE_API_BASE
 const showChildrenMessages = ref(false)
@@ -126,9 +127,14 @@ const channelConfigVisible = ref(false)
 const channelConfig = ref(null)
 
 watch(
-  () => router.currentRoute.value.params.channelId,
+  () => router.currentRoute.value.params,
   async () => {
     channelId.value = router.currentRoute.value.params.channelId as string
+    userId.value = router.currentRoute.value.params.userId as string
+
+    console.log('channelId', channelId.value)
+    console.log('userId', userId.value)
+
     start.value = 0
     if (channelId.value) {
       messagesPerChannel.value = messagesPerChannelChannel
@@ -139,6 +145,24 @@ watch(
     await load()
   }
 )
+
+
+// watch(
+//   () => router.currentRoute.value.params.userId,
+//   async () => {
+//     userId.value = router.currentRoute.value.params.userId as string
+
+//     console.log('userId', userId.value)
+//     // start.value = 0
+//     // if (channelId.value) {
+//     //   messagesPerChannel.value = messagesPerChannelChannel
+//     // } else {
+//     //   messagesPerChannel.value = messagesPerChannelHome
+//     // }
+
+//     // await load()
+//   }
+// )
 
 const uploaded = async () => {
   console.log('uploaded')
@@ -475,6 +499,15 @@ watch(
                 {{ channel.name }}
               </RouterLink>
             </div>
+            <!-- <div v-if="forum">
+              <div v-for="user in forum.users" :key="user.id">
+                <RouterLink
+                :to="`/forum/${uid}/user/${user.id}`"
+                class="btn mb-3 w-100 btn-white">
+                {{ user.name + ' ' + user.lastname }}
+              </RouterLink>
+              </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -511,6 +544,10 @@ watch(
     <ConfirmModal id="channel-settings" :title="$t('channel-settings')" @confirm="() => {}">
       channel-settings
       <pre v-if="channelConfigVisible">{{ channelConfig }}</pre>
+    </ConfirmModal>
+    <ConfirmModal id="private-channel-add" :title="$t('channel-settings')" @confirm="() => {}">
+      private-channel-add
+      <pre v-if="forum">{{ forum.users }}</pre>
     </ConfirmModal>
     <CustomToast
       :show="toastVisible"

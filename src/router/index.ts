@@ -97,6 +97,12 @@ const router = createRouter({
       component: () => import('../views/ForumView.vue')
     },
     {
+      path: '/forum/:uid/user/:userId',
+      name: 'forum-channel-user',
+      meta: { requiresAuth: true },
+      component: () => import('../views/ForumView.vue')
+    },
+    {
       path: '/account',
       name: 'account',
       meta: { requiresAuth: true },
