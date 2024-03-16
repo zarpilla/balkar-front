@@ -49,8 +49,7 @@ const hasOptions = computed(() => {
       (props.message.file !== null &&
         props.message.children &&
         props.message.children.length === 0) ||
-      (props.message.file !== null &&
-        !props.message.children))
+      (props.message.file !== null && !props.message.children))
   )
 })
 
@@ -71,7 +70,10 @@ const hasChildren = computed(() => {
     <div class="w-75">
       <div class="mt-1 d-flex">
         <span class="bold pe-2">{{ message.username }}</span>
-        {{ format(message.createdAt || new Date(), 'HH:mm dd/MM/yyyy') }}
+        {{ format(message.updatedAt || new Date(), 'HH:mm dd/MM/yyyy') }}
+        <span v-if="message.updatedAt !== message.createdAt" class="ms-2 edited">
+          {{ $t('Edited') }}
+        </span>
 
         <div class="dropdown" v-if="hasOptions">
           <svg
@@ -89,8 +91,12 @@ const hasChildren = computed(() => {
             />
           </svg>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li v-if="message.file === null"><a class="dropdown-item" @click="edit(message)">Edit</a></li>
-            <li v-if="!hasChildren"><a class="dropdown-item" @click="del(message)">Delete</a></li>
+            <li v-if="message.file === null">
+              <a class="dropdown-item" @click="edit(message)">{{ $t('Edit') }}</a>
+            </li>
+            <li v-if="!hasChildren">
+              <a class="dropdown-item" @click="del(message)">{{ $t('Delete') }}</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -126,7 +132,7 @@ const hasChildren = computed(() => {
       <div class="d-block d-md-flex">
         <div
           v-if="message.children && message.children.length && !detail"
-          class="mt-0 clickable linkable"
+          class="mt-1 clickable linkable"
           @click="messageDetail(message)"
           data-bs-toggle="modal"
           data-bs-target="#confirm-modal-children-messages"
@@ -136,17 +142,26 @@ const hasChildren = computed(() => {
           }}</span>
           <span v-else>{{ $t('hi-ha-resposta', { n: message.children.length }) }}</span>
         </div>
-        <span class="ps-0 ps-md-3" v-if="!detail && message.children && message.children.length">{{
-          timeAgo(message.children[message.children.length - 1].createdAt)
-        }}</span>
+        <span
+          class="mt-1 ps-0 ps-md-3"
+          v-if="!detail && message.children && message.children.length"
+          >{{ timeAgo(message.children[message.children.length - 1].createdAt) }}</span
+        >
       </div>
-      <div v-if="message.children && message.children.length === 0" class="mt-1">
-        <CommentInput
+      <div
+        v-if="message.children && message.children.length === 0 && !detail"
+        class="mt-1 clickable linkable"
+        @click="messageDetail(message)"
+        data-bs-toggle="modal"
+        data-bs-target="#confirm-modal-children-messages"
+      >
+        <!-- <CommentInput
           :channel="channel"
           :parent="message.id"
           @post="emit('post', $event)"
           :placeholder="$t('enviar-una-resposta')"
-        />
+        /> -->
+        {{ $t('enviar-una-resposta') }}
       </div>
       <!-- <pre>{{ message }}</pre> -->
     </div>
@@ -306,6 +321,9 @@ const hasChildren = computed(() => {
   margin-top: -6px;
 }
 @media (min-width: 1024px) {
+}
+.edited {
+  color: #666;
 }
 </style>
 <style>

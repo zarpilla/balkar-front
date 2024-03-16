@@ -368,12 +368,14 @@ const deleteMessage = async (message: any) => {
     (showChildrenMessagesParent.value as any).text = message.text
   }
 
-  await load()
+  // await load()
   // console.log('deleteMessage', message)
 }
 
 const editMessageModal = ref<Modal | null>(null)
 const editMessage = async (message: any) => {
+  message.updatedAt = new Date()
+
   editingMessage.value = message
   showEditingMessage.value = true
 
@@ -395,7 +397,7 @@ const loadAfterEdit = async (message: any) => {
     (showChildrenMessagesParent.value as any).text = message.text
   }
 
-  await load()
+  // await load()
 }
 </script>
 
@@ -573,7 +575,7 @@ const loadAfterEdit = async (message: any) => {
           @delete="deleteMessage"
           :detail="true"
         />
-        <div v-for="message in childrenMessages" :key="(message as any).id" class="mb-1">
+        <div v-for="message in childrenMessages" :key="(message as any).id" class="mt-2 mb-2">
           <forum-message
             :message="message"
             :channel="(showChildrenMessagesParent as any).channelId"

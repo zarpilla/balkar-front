@@ -90,7 +90,13 @@ export default {
     const resize = () => {
       const textareaEl: any = textarea.value
       textareaEl.style.height = 'auto'
-      textareaEl.style.height = `${textareaEl.scrollHeight - 30}px`
+      console.log('textareaEl.scrollHeight', textareaEl.scrollHeight)
+      if (message.value && message.value.length > 80) {
+        textareaEl.style.height = `${textareaEl.scrollHeight}px`
+      } else {
+        textareaEl.style.height = `${textareaEl.scrollHeight - 30}px`
+      }
+      
     }
 
     const uploaded = (payload: any) => {
