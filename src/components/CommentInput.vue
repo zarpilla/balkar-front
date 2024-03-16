@@ -3,6 +3,7 @@ import { ref, defineEmits, onMounted } from 'vue'
 import { Api } from '@/service/api'
 import { useAuthStore } from '@/stores/auth'
 import FileUploadMessage from '@/components/FileUploadMessage.vue'
+import { id } from 'date-fns/locale'
 
 export default {
   props: {
@@ -21,13 +22,21 @@ export default {
     modal: {
       type: Boolean,
       default: false
+    },
+    text: {
+      type: String,
+      default: ''
+    },
+    id: {
+      type: Number,
+      default: 0
     }
   },
   components: {
     FileUploadMessage
   },
   setup(props, { emit }) {
-    const message = ref('')
+    const message = ref(props.text)
     const textarea = ref(null)
 
     const authStore = useAuthStore()
@@ -43,20 +52,36 @@ export default {
       if (!message.value) {
         return
       }
-      const response = await Api.messages.create({
-        channel: props.channel,
-        parent: props.parent > 0 ? props.parent : null,
-        text: message.value
-      })
-      const message2 = {
-        id: response.data.data.id,
-        ...response.data.data.attributes,
-        channel: props.channel,
-        userId: authStore.userId,
-        username: authStore.userName
+      if (props.id === 0) {
+        const response = await Api.messages.create({
+          channel: props.channel,
+          parent: props.parent > 0 ? props.parent : null,
+          text: message.value
+        })
+
+        const message2 = {
+          id: response.data.data.id,
+          ...response.data.data.attributes,
+          channel: props.channel,
+          userId: authStore.userId,
+          username: authStore.userName
+        }
+        emit('post', message2)
+      } else {
+        const response = await Api.messages.update(props.id.toString(), {
+          text: message.value
+        })
+
+        const message2 = {
+          id: response.data.data.id,
+          ...response.data.data.attributes,
+          channel: props.channel,
+          userId: authStore.userId,
+          username: authStore.userName
+        }
+        emit('post', message2)
       }
 
-      emit('post', message2)
       message.value = ''
       setTimeout(() => {
         resize()
@@ -69,7 +94,6 @@ export default {
     }
 
     const uploaded = (payload: any) => {
-      console.log('uploaded', payload)
       emit('post', {
         id: payload.id,
         file: payload.file,
@@ -91,6 +115,11 @@ export default {
             postMessage()
           }
         })
+        if (props.text) {
+          setTimeout(() => {
+            resize()
+          }, 1000)
+        }
       }
     })
 
@@ -122,7 +151,7 @@ export default {
           </svg>
         </span>
       </div>
-      <span class="ms-auto">
+      <span class="ms-auto" v-if="id === 0">
         <file-upload-message :channel="channel" :parent="parent" @uploaded="uploaded">
         </file-upload-message>
       </span>

@@ -23,6 +23,11 @@ defineProps({
   disclaimer: {
     type: String,
     required: false
+  },
+  showFooter: {
+    type: Boolean,
+    required: false,
+    default: true
   }
 })
 
@@ -46,14 +51,14 @@ const emit = defineEmits<{
     data-bs-backdrop="static"
     data-bs-keyboard="false"
     tabindex="-1"
-    aria-labelledby="edit-kpi-modal-label"
+    aria-labelledby="confirm-modal-label"
     aria-hidden="true"
   >
     <div class="modal-dialog zmodal-dialog-centered modal-lg zmodal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <div class="modal-hr">
-            <h5 class="modal-title" id="edit-kpi-modal-label">
+            <h5 class="modal-title" id="confirm-modal-label">
               {{ title }}
             </h5>
           </div>
@@ -72,7 +77,7 @@ const emit = defineEmits<{
           <slot />
           
         </div>
-        <div class="modal-footer justify-content-start">
+        <div class="modal-footer justify-content-start" v-if="showFooter">
                    <button
             type="button"
             class="btn btn-primary"

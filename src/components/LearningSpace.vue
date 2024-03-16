@@ -171,7 +171,7 @@ const removeSubmission = async (id: string) => {
                 :class="'module-type-' + module.moduleType.toLowerCase()"
               >
                 {{ module.name }}
-                <span class="ms-auto completed-pct">
+                <span class="ms-auto completed-pct" v-if="module.moduleType.toLowerCase() !== 'monitoring'">
                   {{ (module.completedPct * 100).toFixed(0) }}%
                 </span>
               </RouterLink>
@@ -240,7 +240,7 @@ const removeSubmission = async (id: string) => {
                         </div>
                       </div>
 
-                      <div class="d-flex w-100" v-if="!topic.completed">
+                      <div class="d-flex w-100" v-if="!topic.completed && module.moduleType !== 'Monitoring' ">
                         <button
                           class="btn btn-tertiary btn-medium mb-2 ms-auto"
                           @click="complete()"
@@ -248,7 +248,7 @@ const removeSubmission = async (id: string) => {
                           {{ $t('mark-as-completed') }}
                         </button>
                       </div>
-                      <div class="d-flex w-100" v-if="topic.completed">
+                      <div class="d-flex w-100" v-if="topic.completed && module.moduleType !== 'Monitoring' ">
                         <button
                           class="btn btn-tertiary btn-medium mb-2 ms-auto"
                           @click="notcomplete()"
@@ -260,13 +260,13 @@ const removeSubmission = async (id: string) => {
                   </div>
                 </div>
 
-                <div v-if="module.topics.length === 0" class="mt-4 mb-4">
+                <div v-if="module.topics.length === 0 && module.moduleType !== 'Monitoring' " class="mt-4 mb-4">
                   <div class="d-flex w-100" v-if="!module.completed">
                     <button class="btn btn-tertiary btn-medium mb-2 ms-auto" @click="complete()">
                       {{ $t('mark-as-completed') }}
                     </button>
                   </div>
-                  <div class="d-flex w-100" v-if="module.completed">
+                  <div class="d-flex w-100" v-if="module.completed && module.moduleType !== 'Monitoring' ">
                     <button class="btn btn-tertiary btn-medium mb-2 ms-auto" @click="notcomplete()">
                       {{ $t('mark-as-not-completed') }}
                     </button>
@@ -317,14 +317,15 @@ const removeSubmission = async (id: string) => {
               v-if="!moduleId && space.forum && space.enrolled"
               class="forum module module-type-forum"
             >
+            <div class="d-flex w-100 zmt-3">
               <RouterLink :to="`/forum/${uid}`" class="d-flex">
                 {{ space.forum.name }}
               </RouterLink>
-              <div class="description">
+              <!-- <div class="description">
                 {{ space.forum.description }}
-              </div>
+              </div> -->
 
-              <div class="d-flex w-100 mt-3">
+              
                 <RouterLink :to="`/forum/${uid}`" class="ms-auto btn btn-white">
                   {{ $t('FORUM ACCESS') }}
                 </RouterLink>
@@ -348,7 +349,7 @@ const removeSubmission = async (id: string) => {
                 class="d-block mb-1"
               >
                 <RouterLink :to="`/space/${uid}/module/${module.id}`" class="d-block module-item">
-                  <svg class="module-progress-icon" v-if="module.completedPct == 1" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="green" d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>                  
+                  <svg class="module-progress-icon" v-if="module.moduleType !== 'Monitoring' && module.completedPct == 1" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="green" d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>                  
                   {{ module.name }}                  
                 </RouterLink>
 

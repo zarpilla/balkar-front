@@ -23,11 +23,11 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'message-detail', msg: any): any
   (e: 'post', msg: any): any
+  (e: 'edit', msg: any): any
+  (e: 'delete', msg: any): any
 }>()
 
 const messageDetail = (message: any) => {
-  console.log('messageDetail', message)
-
   emit('message-detail', message)
 }
 const apiBase = import.meta.env.VITE_API_BASE
@@ -35,6 +35,28 @@ const apiBase = import.meta.env.VITE_API_BASE
 const open = (url: string) => {
   window.open(url, '_blank')
 }
+
+const edit = (message: any) => {
+  emit('edit', message)
+}
+const del = (message: any) => {
+  emit('delete', message)
+}
+const hasOptions = computed(() => {
+  return (
+    props.message.userId === authStore.userId &&
+    (props.message.file === null ||
+      (props.message.file !== null &&
+        props.message.children &&
+        props.message.children.length === 0) ||
+      (props.message.file !== null &&
+        !props.message.children))
+  )
+})
+
+const hasChildren = computed(() => {
+  return props.message.children && props.message.children.length
+})
 </script>
 
 <template>
@@ -47,9 +69,30 @@ const open = (url: string) => {
     ></AvatarImage>
 
     <div class="w-75">
-      <div class="mt-1">
+      <div class="mt-1 d-flex">
         <span class="bold pe-2">{{ message.username }}</span>
         {{ format(message.createdAt || new Date(), 'HH:mm dd/MM/yyyy') }}
+
+        <div class="dropdown" v-if="hasOptions">
+          <svg
+            class="clickable ms-2 options"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+          >
+            <path
+              d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"
+            />
+          </svg>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li v-if="message.file === null"><a class="dropdown-item" @click="edit(message)">Edit</a></li>
+            <li v-if="!hasChildren"><a class="dropdown-item" @click="del(message)">Delete</a></li>
+          </ul>
+        </div>
       </div>
       <div class="d-flex w-100 zmt-3" v-if="message.text">
         <div class="message">
@@ -255,14 +298,19 @@ const open = (url: string) => {
   padding: 6px;
   max-width: 100%;
 }
-.file a, .message a {
+.file a,
+.message a {
   color: rgb(27, 117, 208);
+}
+.options {
+  margin-top: -6px;
 }
 @media (min-width: 1024px) {
 }
 </style>
 <style>
-.file a, .message a {
+.file a,
+.message a {
   color: rgb(27, 117, 208);
 }
 </style>

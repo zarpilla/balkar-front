@@ -12,6 +12,7 @@ import { useAuthStore } from '@/stores/auth'
 import { format } from 'date-fns'
 import { onUnmounted } from 'vue'
 import ConfirmModal from './ConfirmModal.vue'
+import { Modal } from 'bootstrap'
 
 const authStore = useAuthStore()
 
@@ -145,7 +146,6 @@ watch(
     await load()
   }
 )
-
 
 // watch(
 //   () => router.currentRoute.value.params.userId,
@@ -350,6 +350,53 @@ watch(
     await load()
   }
 )
+
+const editingMessage = ref<any>(null)
+const showEditingMessage = ref(false)
+
+const deleteMessage = async (message: any) => {
+  await Api.messages.remove(message.id)
+
+  editMessageModal.value?.hide()
+  showEditingMessage.value = false
+  
+  const index = childrenMessages.value.findIndex((m: any) => m.id === message.id)
+  if (index > -1) {
+    childrenMessages.value.splice(index, 1)
+  }
+  if (showChildrenMessagesParent && showChildrenMessagesParent.value && (showChildrenMessagesParent.value as any).id === message.id) {
+    (showChildrenMessagesParent.value as any).text = message.text
+  }
+
+  await load()
+  // console.log('deleteMessage', message)
+}
+
+const editMessageModal = ref<Modal | null>(null)
+const editMessage = async (message: any) => {
+  editingMessage.value = message
+  showEditingMessage.value = true
+
+  const el = document.getElementById('confirm-modal-edit-message')
+  editMessageModal.value = new Modal(el as any, { keyboard: false })
+  editMessageModal.value.show()
+}
+
+const loadAfterEdit = async (message: any) => {
+
+  editMessageModal.value?.hide()
+  showEditingMessage.value = false
+  
+  const index = childrenMessages.value.findIndex((m: any) => m.id === message.id)
+  if (index > -1) {
+    (childrenMessages.value[index] as any).text = message.text
+  }
+  if (showChildrenMessagesParent && showChildrenMessagesParent.value && (showChildrenMessagesParent.value as any).id === message.id) {
+    (showChildrenMessagesParent.value as any).text = message.text
+  }
+
+  await load()
+}
 </script>
 
 <template>
@@ -442,6 +489,8 @@ watch(
                   @post="load"
                   @message-detail="messageDetail"
                   :detail="false"
+                  @delete="deleteMessage"
+                  @edit="editMessage"
                 />
 
                 <div v-if="i === messagesPerChannel - 1 && !channelId">
@@ -515,11 +564,13 @@ watch(
   </div>
   <Teleport to="body">
     <MessagesModal id="children-messages" :title="$t('thread')">
-      <div v-if="showChildrenMessages">
+      <div v-if="showChildrenMessages" v-show="!showEditingMessage">
         <forum-message
           :message="showChildrenMessagesParent"
           :channel="(showChildrenMessagesParent as any).channelId"
           @post="load"
+          @edit="editMessage"
+          @delete="deleteMessage"
           :detail="true"
         />
         <div v-for="message in childrenMessages" :key="(message as any).id" class="mb-1">
@@ -527,6 +578,8 @@ watch(
             :message="message"
             :channel="(showChildrenMessagesParent as any).channelId"
             @post="load"
+            @edit="editMessage"
+            @delete="deleteMessage"
             :detail="true"
           />
         </div>
@@ -541,13 +594,35 @@ watch(
         />
       </div>
     </MessagesModal>
-    <ConfirmModal id="channel-settings" :title="$t('channel-settings')" @confirm="() => {}">
+    <!-- <ConfirmModal id="channel-settings" :title="$t('channel-settings')" @confirm="() => {}">
       channel-settings
       <pre v-if="channelConfigVisible">{{ channelConfig }}</pre>
     </ConfirmModal>
     <ConfirmModal id="private-channel-add" :title="$t('channel-settings')" @confirm="() => {}">
       private-channel-add
       <pre v-if="forum">{{ forum.users }}</pre>
+    </ConfirmModal> -->
+    <ConfirmModal
+      id="edit-message"
+      :title="$t('Edit message')"
+      @confirm="showEditingMessage = false"
+      @cancel="showEditingMessage = false"
+      :show-footer="false"
+    >
+      <div v-if="showEditingMessage">
+        <div v-if="editingMessage && editingMessage.file === null">
+          <CommentInput
+            :channel="editingMessage.channelId"
+            :parent="editingMessage.parent"
+            @post="loadAfterEdit"
+            placeholder=""
+            class="mb-3"
+            :text="editingMessage.text"
+            :id="editingMessage.id"
+          >
+          </CommentInput>
+        </div>
+      </div>
     </ConfirmModal>
     <CustomToast
       :show="toastVisible"
