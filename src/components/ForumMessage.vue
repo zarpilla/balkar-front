@@ -18,6 +18,7 @@ const props = defineProps<{
   message: any
   channel: number
   detail: boolean
+  first: boolean
 }>()
 
 const emit = defineEmits<{
@@ -94,7 +95,7 @@ const hasChildren = computed(() => {
             <li v-if="message.file === null">
               <a class="dropdown-item" @click="edit(message)">{{ $t('Edit') }}</a>
             </li>
-            <li v-if="!hasChildren">
+            <li v-if="!hasChildren && !first">
               <a class="dropdown-item" @click="del(message)">{{ $t('Delete') }}</a>
             </li>
           </ul>

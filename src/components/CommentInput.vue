@@ -89,8 +89,7 @@ export default {
     }
     const resize = () => {
       const textareaEl: any = textarea.value
-      textareaEl.style.height = 'auto'
-      console.log('textareaEl.scrollHeight', textareaEl.scrollHeight)
+      textareaEl.style.height = 'auto'      
       if (message.value && message.value.length > 80) {
         textareaEl.style.height = `${textareaEl.scrollHeight}px`
       } else {

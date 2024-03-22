@@ -176,9 +176,8 @@ const messageDetail = async (message: any) => {
 }
 
 const loadDetail = async (message: any) => {
-  await getChildrenMessages(message)
-  console.log('message loadDetail', message, childrenMessages.value)
-  // childrenMessages.value.push(message as never)
+
+  await getChildrenMessages(message)  
 }
 
 const getChildrenMessages = async (message: any) => {
@@ -359,22 +358,32 @@ const deleteMessage = async (message: any) => {
 
   editMessageModal.value?.hide()
   showEditingMessage.value = false
-  
+
   const index = childrenMessages.value.findIndex((m: any) => m.id === message.id)
   if (index > -1) {
     childrenMessages.value.splice(index, 1)
   }
-  if (showChildrenMessagesParent && showChildrenMessagesParent.value && (showChildrenMessagesParent.value as any).id === message.id) {
-    (showChildrenMessagesParent.value as any).text = message.text
+  if (
+    showChildrenMessagesParent &&
+    showChildrenMessagesParent.value &&
+    (showChildrenMessagesParent.value as any).id === message.id
+  ) {
+    ;(showChildrenMessagesParent.value as any).text = message.text
+  } else {
+    const index = forum.value.channels
+      .find((channel: any) => channel.id.toString() === message.channelId.toString())
+      .messages.findIndex((m: any) => m.id === message.id)
+    if (index > -1) {
+      forum.value.channels
+        .find((channel: any) => channel.id.toString() === message.channelId.toString())
+        .messages.splice(index, 1)
+    }
   }
-
-  // await load()
-  // console.log('deleteMessage', message)
 }
 
 const editMessageModal = ref<Modal | null>(null)
 const editMessage = async (message: any) => {
-  message.updatedAt = new Date()
+  // message.updatedAt = new Date()
 
   editingMessage.value = message
   showEditingMessage.value = true
@@ -386,15 +395,29 @@ const editMessage = async (message: any) => {
 
 const loadAfterEdit = async (message: any) => {
 
+  message.updatedAt = new Date()
   editMessageModal.value?.hide()
   showEditingMessage.value = false
-  
+
   const index = childrenMessages.value.findIndex((m: any) => m.id === message.id)
   if (index > -1) {
-    (childrenMessages.value[index] as any).text = message.text
+    ;(childrenMessages.value[index] as any).text = message.text
   }
-  if (showChildrenMessagesParent && showChildrenMessagesParent.value && (showChildrenMessagesParent.value as any).id === message.id) {
-    (showChildrenMessagesParent.value as any).text = message.text
+  if (
+    showChildrenMessagesParent &&
+    showChildrenMessagesParent.value &&
+    (showChildrenMessagesParent.value as any).id === message.id
+  ) {
+    ;(showChildrenMessagesParent.value as any).text = message.text
+  } else {
+    const index = forum.value.channels
+      .find((channel: any) => channel.id.toString() === message.channel.toString())
+      .messages.findIndex((m: any) => m.id === message.id)
+    if (index > -1) {
+      forum.value.channels
+        .find((channel: any) => channel.id.toString() === message.channel.toString())
+        .messages[index].text = message.text //splice(index, 1, message)
+    }
   }
 
   // await load()
@@ -429,7 +452,12 @@ const loadAfterEdit = async (message: any) => {
 
     <div class="enrolled" v-if="forum.description">
       <div class="container bg-white mt-5">
-        <vue-markdown :linkify="true" class="mt-4 mb-4" :source="forum.description"></vue-markdown>
+        <vue-markdown
+          :linkify="true"
+          :options="{ html: true, linkTarget: '_blank' }"
+          class="mt-4 mb-4"
+          :source="forum.description"
+        ></vue-markdown>
       </div>
     </div>
 
@@ -493,6 +521,7 @@ const loadAfterEdit = async (message: any) => {
                   :detail="false"
                   @delete="deleteMessage"
                   @edit="editMessage"
+                  :first="false"
                 />
 
                 <div v-if="i === messagesPerChannel - 1 && !channelId">
@@ -574,6 +603,7 @@ const loadAfterEdit = async (message: any) => {
           @edit="editMessage"
           @delete="deleteMessage"
           :detail="true"
+          :first="true"
         />
         <div v-for="message in childrenMessages" :key="(message as any).id" class="mt-2 mb-2">
           <forum-message
@@ -583,6 +613,7 @@ const loadAfterEdit = async (message: any) => {
             @edit="editMessage"
             @delete="deleteMessage"
             :detail="true"
+            :first="false"
           />
         </div>
 

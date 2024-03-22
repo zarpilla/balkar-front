@@ -18,7 +18,7 @@ const router = useRouter()
             class="mt-4 mb-4"
             :linkify="true"
             :source="$t('balkar-main-description')"
-            :options="{ html: true }"
+            :options="{ html: true, linkTarget: '_blank' }"
           ></vue-markdown>
 
           <learning-spaces state=""></learning-spaces>
