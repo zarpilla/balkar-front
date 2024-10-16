@@ -220,3 +220,10 @@ select[disabled] {
 img {
   max-width: 100%;
 }
+.mention-item {
+  padding: 0.25rem;
+}
+.mention-selected{
+  background-color: #f2f2f2!important;
+  border-radius: 4px;
+}

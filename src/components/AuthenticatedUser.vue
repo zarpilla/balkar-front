@@ -38,7 +38,7 @@ const userText = computed(() =>
       <AvatarImage
         :bordered="false"
         :size="24"
-        class="me-0 me-md-3"
+        class="me-0 me-md-3 s-24"
         v-if="authStore"
         :name="userText"
         :url="authStore.pictureUrl"

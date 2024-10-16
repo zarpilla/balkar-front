@@ -11,6 +11,7 @@ import { useAuthStore } from '@/stores/auth'
 import { format } from 'date-fns'
 import { timeAgo } from '@/utils/helper'
 import AvatarImage from '@/components/AvatarImage.vue'
+import { replaceMentionValues } from '@/utils/mentions'
 
 const authStore = useAuthStore()
 
@@ -109,8 +110,9 @@ const hasChildren = computed(() => {
             v-linkify:options="{
               target: '_blank'
             }"
-            v-html="message.text.split('\n').join('<br>')"
-          ></div>
+            v-html="replaceMentionValues(message.text.split('\n').join('<br>'), ({ name }: any) => `<b>@${name}</b>`)"
+          >        
+        </div>
         </div>
       </div>
       <div class="d-flex w-100 mt-2 mb-2" v-if="message.file && message.file.url">
@@ -156,12 +158,6 @@ const hasChildren = computed(() => {
         data-bs-toggle="modal"
         data-bs-target="#confirm-modal-children-messages"
       >
-        <!-- <CommentInput
-          :channel="channel"
-          :parent="message.id"
-          @post="emit('post', $event)"
-          :placeholder="$t('enviar-una-resposta')"
-        /> -->
         {{ $t('enviar-una-resposta') }}
       </div>
       <!-- <pre>{{ message }}</pre> -->

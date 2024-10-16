@@ -4,6 +4,10 @@ import { Api } from '@/service/api'
 import { useAuthStore } from '@/stores/auth'
 import FileUploadMessage from '@/components/FileUploadMessage.vue'
 import { id } from 'date-fns/locale'
+import MentionableInput from '@/components/MentionableInput.vue'
+import AvatarImage from '@/components/AvatarImage.vue'
+import { computed } from 'vue'
+import 'floating-vue/dist/style.css'
 
 export default {
   props: {
@@ -30,10 +34,16 @@ export default {
     id: {
       type: Number,
       default: 0
+    },
+    users: {
+      type: Array,
+      default: []
     }
   },
   components: {
-    FileUploadMessage
+    FileUploadMessage,
+    MentionableInput,
+    AvatarImage
   },
   setup(props, { emit }) {
     const message = ref(props.text)
@@ -45,6 +55,10 @@ export default {
       (e: 'post', msg: any): any
     }>()
 
+    const replaceAll = (string: string, search: string, replace: string) => {
+      return string.split(search).join(replace)
+    }
+
     const postMessage = async () => {
       // Send the message to the API
       // You can use axios or any other HTTP library to make the request
@@ -52,11 +66,25 @@ export default {
       if (!message.value) {
         return
       }
+
+      const mentioned = []
+      let commentValue = message.value + ' '
+      console.log('commentValue', commentValue)
+      for (let i = 0; i < props.users.length; i++) {
+        const user:any = props.users[i]
+        if (commentValue.includes(`@${user.name} `)) {
+          commentValue = replaceAll(commentValue, `@${user.name} ${user.lastname}`, `@[${user.name} ${user.lastname}](${user.id}) `)
+          mentioned.push(user.id)
+        }
+      }
+
       if (props.id === 0) {
+
         const response = await Api.messages.create({
           channel: props.channel,
           parent: props.parent > 0 ? props.parent : null,
-          text: message.value
+          text: commentValue,
+          mentioned: mentioned
         })
 
         const message2 = {
@@ -69,7 +97,7 @@ export default {
         emit('post', message2)
       } else {
         const response = await Api.messages.update(props.id.toString(), {
-          text: message.value
+          text: commentValue
         })
 
         const message2 = {
@@ -89,13 +117,12 @@ export default {
     }
     const resize = () => {
       const textareaEl: any = textarea.value
-      textareaEl.style.height = 'auto'      
+      textareaEl.style.height = 'auto'
       if (message.value && message.value.length > 80) {
         textareaEl.style.height = `${textareaEl.scrollHeight}px`
       } else {
         textareaEl.style.height = `${textareaEl.scrollHeight - 30}px`
       }
-      
     }
 
     const uploaded = (payload: any) => {
@@ -108,6 +135,20 @@ export default {
         parent: props.parent
       })
     }
+
+    const onApply = (item: any, key: any, replacedWith: any) => {
+      console.log(item, `has been replaced with ${replacedWith}`, key)
+    }
+
+    const mentionables = computed(() => {
+      return props.users.map((user: any) => {
+        return {
+          key: user.id,
+          value: `${user.name} ${user.lastname}`,
+          avatar: user.avatar
+        }
+      })
+    })
 
     onMounted(() => {
       if (textarea.value) {
@@ -132,7 +173,9 @@ export default {
       message,
       postMessage,
       textarea,
-      uploaded
+      uploaded,
+      onApply,
+      mentionables,
     }
   }
 }
@@ -142,12 +185,46 @@ export default {
   <div class="zposition-relative">
     <div class="d-flex">
       <div class="w-100 position-relative zmt-5" :class="{ 'mt-3': true, 'zmt-2': !modal }">
-        <textarea
+        <!-- <textarea
           class="w-100"
           v-model="message"
           :placeholder="placeholder"
           ref="textarea"
-        ></textarea>
+        ></textarea> -->
+
+        <MentionableInput
+          placeholder="Comment..."
+          @apply="onApply"
+          :keys="['@']"
+          :items="mentionables"
+          offset="6"
+          insert-space
+          :empty-text="
+            message !== undefined && message !== null && (message === '' || message === '<br>')
+              ? true
+              : false
+          "
+        >
+          <textarea id="mention" class="mention" tag="div" v-model="message"></textarea>
+
+          <template #no-result> </template>
+
+          <template #item-thekey="{ item }">
+            <div class="d-flex person-name involved-user zmb-2">
+              <AvatarImage
+                class="me-2 mb-0"
+                :size="24"
+                :url="item.avatar"
+                :name="item.value"
+              ></AvatarImage>
+              
+              <span class="mt-0 item-val" >
+                {{ item.value }}
+              </span>
+            </div>
+          </template>
+        </MentionableInput>
+
         <span class="position-absolute send" @click="postMessage">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path
@@ -187,5 +264,12 @@ textarea:focus {
   bottom: 18px;
   cursor: pointer;
   z-index: 100;
+}
+.item-val{
+  padding-top: 2px;
+}
+.involved-user:hover {
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>

@@ -13,6 +13,7 @@ import { format } from 'date-fns'
 import { onUnmounted } from 'vue'
 import ConfirmModal from './ConfirmModal.vue'
 import { Modal } from 'bootstrap'
+import { replaceMentionValues } from '@/utils/mentions'
 
 const authStore = useAuthStore()
 
@@ -385,6 +386,10 @@ const editMessageModal = ref<Modal | null>(null)
 const editMessage = async (message: any) => {
   // message.updatedAt = new Date()
 
+  const body = replaceMentionValues(message.text.split('\n').join('<br>'), ({ name }: any) => `@${name}`)
+
+  message.text = body
+
   editingMessage.value = message
   showEditingMessage.value = true
 
@@ -472,7 +477,7 @@ const loadAfterEdit = async (message: any) => {
               <div class="d-flex w-100 zmt-3 flex-wrap">
                 <div v-if="channelId">
                   <RouterLink :to="`/forum/${uid}`" class="btn btn-tertiary mb-4 me-4">
-                    Tornar
+                    {{ $t('tornar') }}                    
                   </RouterLink>
                 </div>
                 <RouterLink
@@ -502,13 +507,13 @@ const loadAfterEdit = async (message: any) => {
                   />
                 </svg>
               </div>
-
               <CommentInput
                 :channel="channel.id"
                 :parent="0"
                 @post="loadMessage"
                 :placeholder="$t('nou-missatge-al-canal')"
                 class="mb-3"
+                :users="forum.users"
               />
 
               <div v-for="(message, i) in channel.messages" :key="message.id" class="mb-5">
@@ -616,7 +621,6 @@ const loadAfterEdit = async (message: any) => {
             :first="false"
           />
         </div>
-
         <CommentInput
           v-if="showChildrenMessagesParent"
           :channel="(showChildrenMessagesParent as any).channelId"
@@ -624,6 +628,7 @@ const loadAfterEdit = async (message: any) => {
           @post="loadDetail"
           :placeholder="$t('enviar-una-resposta')"
           :modal="true"
+          :users="forum.users"
         />
       </div>
     </MessagesModal>
@@ -652,6 +657,7 @@ const loadAfterEdit = async (message: any) => {
             class="mb-3"
             :text="editingMessage.text"
             :id="editingMessage.id"
+            :users="forum.users"
           >
           </CommentInput>
         </div>

@@ -4,9 +4,9 @@ import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior(to, from, savedPosition) {
-    return { top: 0 }
-  },
+  // scrollBehavior(to, from, savedPosition) {
+  //   return { top: 0 }
+  // },
   routes: [
     {
       path: '/',
@@ -135,6 +135,8 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   if (to.meta.requiresAuth && !authStore.isAuthenticated()) next({ name: 'login' })
+
+  to.meta.transition = 'slide-right' 
 
   next()
 })

@@ -116,6 +116,7 @@ const urlWithApiBase = computed(() => {
   width: 24px;
   height: 24px;
   line-height: 24px;
+  vertical-align: -2px;
 }
 
 .s-30 {
