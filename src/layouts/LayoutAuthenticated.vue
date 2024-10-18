@@ -85,12 +85,18 @@ if (localStorage.getItem('locale')) {
 }
 
 const autoenroll = async () => {
-  await Api.enrollments.autoenroll()
+  const resp = await Api.enrollments.autoenroll().then((r) => r.data)
+  if (resp && resp.enrollements) {
+    applicationLoaded.value = false
+    applicationStore.load().then(async () => {
+      applicationLoaded.value = true
+    })
+  }
 }
 
-if (!localStorage.getItem('enrollements')) {  
-  autoenroll()
-  localStorage.setItem('enrollements', 'done')
+if (!sessionStorage.getItem('autoenroll')) {  
+  sessionStorage.setItem('autoenroll', 'done')
+  autoenroll()  
 }
 
 

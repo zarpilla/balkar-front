@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
 import { checkEmpty, checkIsEmail } from '@/utils/helper'
@@ -11,6 +11,7 @@ import FormControl from '@/components/FormControl.vue'
 import CustomToast from '@/components/CustomToast.vue'
 import PasswordMeter from 'vue-simple-password-meter'
 
+
 const props = defineProps({
   buttonText: {
     type: String,
@@ -20,10 +21,27 @@ const props = defineProps({
   enroll: {
     type: String,
     required: false
+  },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  forceEmail: {
+    type: String,
+    required: false
+  },  
+  checkoutSession: {
+    type: String,
+    required: false
   }
 })
 
 const { t } = useI18n()
+
+const emit = defineEmits<{
+  (e: 'email-valid', msg: any): { valid: boolean, email: string }
+}>()
 
 const authStore = useAuthStore()
 const loading = ref(false)
@@ -35,7 +53,8 @@ const form = reactive({
   // name: '',
   email: '',
   password: '',
-  passwordRepeat: ''
+  passwordRepeat: '',
+  checkoutSession: props.checkoutSession
 })
 
 const status = reactive({
@@ -146,6 +165,24 @@ const onScore = (payload: any) => {
   // console.log(payload.strength); // one of : 'risky', 'guessable', 'weak', 'safe' , 'secure'
   score.value = payload.score
 }
+
+watch(
+  () => form.email,
+  () => {
+    emit('email-valid', { valid: checkIsEmail(form.email), email: form.email })
+  }
+)
+
+watch(
+  () => props.forceEmail,
+  () => {
+    if (props.forceEmail) {
+      console.log('props.forceEmail!', props.forceEmail)
+      form.email = props.forceEmail
+    }    
+  }
+)
+
 </script>
 
 <template>
@@ -174,10 +211,11 @@ const onScore = (payload: any) => {
         name="email"
         autocomplete="username"
         maxlength="200"
+        :readonly="props.forceEmail !== ''"
       />
     </FormField>
 
-    <FormField :help="status.messagePwd" :label="$t('password-label')" class="mb-4">
+    <FormField :help="status.messagePwd" :label="$t('password-label')" class="mb-4" v-if="!disabled">
       <FormControl
         @click="removeError"
         :placeholderEffect="false"
@@ -192,7 +230,7 @@ const onScore = (payload: any) => {
       <password-meter @score="onScore" :password="form.password" />
     </FormField>
 
-    <FormField :help="status.messagePwdRepeat" :label="$t('repeat-password-label')" class="mb-4">
+    <FormField :help="status.messagePwdRepeat" :label="$t('repeat-password-label')" class="mb-4" v-if="!disabled">
       <FormControl
         @click="removeError"
         :placeholderEffect="false"
@@ -206,7 +244,7 @@ const onScore = (payload: any) => {
       />
     </FormField>
 
-    <button class="mt-4 w-100z btn btn-primary" type="submit" color="primary">
+    <button class="mt-4 w-100z btn btn-primary" type="submit" color="primary" :disabled="disabled" v-if="!disabled">
       {{ $t(buttonText) }}
 
       <svg

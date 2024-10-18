@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { Api } from '@/service/api'
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import VueMarkdown from 'vue-markdown-render'
 import { useRouter } from 'vue-router'
 import CustomToast from '@/components/CustomToast.vue'
 import FileUpload from '@/components/FileUploadSubmission.vue'
 import { useAuthStore } from '@/stores/auth'
+import RegisterForm from '@/components/RegisterForm.vue'
+import { ca } from 'date-fns/locale'
 
 const authStore = useAuthStore()
 
 const props = defineProps<{
   uid: string
+}>()
+
+const emit = defineEmits<{
+  (e: 'loaded', space: any): { space: any }
 }>()
 
 const router = useRouter()
@@ -24,8 +30,13 @@ const load = async () => {
   const response = await Api.learningSpaces.get(props.uid)
   if (response.data) {
     space.value = response.data
+
+    if (!space.value.enrolled) {
+      canPay.value = true
+    }
   }
   loaded.value = true
+  emit('loaded', space.value)
 }
 
 load()
@@ -33,6 +44,42 @@ load()
 const base = import.meta.env.VITE_API_BASE
 
 const toastVisible = ref(false)
+
+const paymentIsSuccessfully = ref(false)
+const paymentIsChecking = ref(false)
+const paymentHasResponse = ref(false)
+const checkoutSession = ref('')
+
+onMounted(async () => {
+  const queryParams = new URLSearchParams(window.location.search)
+  if (queryParams.has('success')) {
+    try {
+      paymentIsChecking.value = true
+      const paymentIntentId = queryParams.get('success')
+      if (paymentIntentId && paymentIntentId !== 'false') {
+        const response = await Api.payment.check(paymentIntentId).then((r) => r.data)
+        console.log(response)
+        paymentIsSuccessfully.value = response.ok
+        paymentHasResponse.value = true
+        paymentIsChecking.value = false
+        canPayEmail.value = response.email
+        if (paymentIsSuccessfully.value) {
+          checkoutSession.value = paymentIntentId
+        }        
+      } else {
+        paymentIsSuccessfully.value = false
+        paymentHasResponse.value = true
+        paymentIsChecking.value = false
+      }
+    } catch (e) {
+      console.log('3')
+      paymentHasResponse.value = true
+      paymentIsSuccessfully.value = false
+      paymentIsChecking.value = false
+      console.error(e)
+    }
+  }
+})
 
 watch(
   () => router.currentRoute.value.params.moduleId,
@@ -59,6 +106,24 @@ const enroll = async () => {
   await Api.enrollments.enroll({ uid: props.uid })
   toastVisible.value = true
   space.value.enrolled = true
+}
+
+const pay = async () => {
+  if (authStore.isAuthenticated()) {
+    canPayEmail.value = authStore.userEmail
+  }
+  const response = await Api.payment
+    .createCheckoutSession(props.uid, canPayEmail.value)
+    .then((r) => r.data)
+  location.href = response.url
+}
+
+const canPay = ref(false)
+const canPayEmail = ref('')
+
+const emailIsValid = (msg: any) => {
+  canPay.value = msg.valid
+  canPayEmail.value = msg.email
 }
 
 const pageModules = computed(() => {
@@ -95,10 +160,20 @@ const authenticated = computed(() => {
 })
 
 const removeSubmission = async (id: string) => {
-  console.log('removeSubmission')
   await Api.submissions.remove(id)
   await load()
 }
+
+const spaceNeedsPayment = computed(() => {
+  return (
+    space.value &&
+    space.value.product !== null &&
+    !space.value.enrolled &&
+    !paymentIsSuccessfully.value
+  )
+})
+
+
 </script>
 
 <template>
@@ -129,7 +204,37 @@ const removeSubmission = async (id: string) => {
           :source="space.publicDescription"
         ></vue-markdown>
 
-        <button class="btn btn-primary mt-4 mb-4" @click="enroll">
+        <div
+          v-if="!paymentIsChecking && paymentHasResponse && paymentIsSuccessfully"
+          class="alert alert-success mt-4 mb-4"
+        >
+          {{ $t('payment-successful') }}
+        </div>
+        <div
+          v-else-if="!paymentIsChecking && paymentHasResponse && !paymentIsSuccessfully"
+          class="alert alert-danger mt-4 mb-4"
+        >
+          {{ $t('payment-error') }}
+        </div>
+
+        <button class="btn btn-primary mt-4 mb-4" @click="pay" v-if="spaceNeedsPayment"
+        :disabled="!canPay">
+          {{ $t('pay') }}
+          <svg
+            width="37"
+            height="16"
+            viewBox="0 0 37 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.10156 7.20868C0.549278 7.20868 0.101563 7.65639 0.101562 8.20868C0.101562 8.76096 0.549278 9.20868 1.10156 9.20868L1.10156 7.20868ZM36.2985 8.91579C36.6891 8.52527 36.6891 7.8921 36.2985 7.50158L29.9346 1.13762C29.5441 0.747091 28.9109 0.747091 28.5204 1.13762C28.1298 1.52814 28.1298 2.1613 28.5204 2.55183L34.1772 8.20868L28.5204 13.8655C28.1298 14.2561 28.1298 14.8892 28.5204 15.2798C28.9109 15.6703 29.5441 15.6703 29.9346 15.2798L36.2985 8.91579ZM1.10156 9.20868L35.5914 9.20868L35.5914 7.20868L1.10156 7.20868L1.10156 9.20868Z"
+              fill="#fff"
+            />
+          </svg>
+        </button>
+
+        <button class="btn btn-primary mt-4 mb-4" @click="enroll" v-else="spaceNeedsPayment">
           {{ $t('apuntar-se') }}
         </button>
       </div>
@@ -144,6 +249,54 @@ const removeSubmission = async (id: string) => {
           class="mt-4 mb-4"
           :source="space.publicDescription"
         ></vue-markdown>
+
+        <div
+          v-if="!paymentIsChecking && paymentHasResponse && paymentIsSuccessfully"
+          class="alert alert-success mt-4 mb-4"
+        >
+          {{ $t('payment-successful') }}
+        </div>
+        <div
+          v-else-if="!paymentIsChecking && paymentHasResponse && !paymentIsSuccessfully"
+          class="alert alert-danger mt-4 mb-4"
+        >
+          {{ $t('payment-error') }}
+        </div>
+        
+        <div class="row mt-4 mb-3">
+          <div class="col-lg-6 zoffset-lg-3">
+            <RegisterForm
+              button-text="apuntar-se"
+              :enroll="uid"
+              :disabled="spaceNeedsPayment"
+              @email-valid="emailIsValid"              
+              :force-email="canPayEmail && paymentIsSuccessfully ? canPayEmail : ''"
+              :checkout-session="checkoutSession"
+            ></RegisterForm>
+          </div>
+        </div>
+
+        <button
+          class="btn btn-primary zmt-4 mb-4"
+          @click="pay"
+          v-if="spaceNeedsPayment"
+          :disabled="!canPay"
+        >
+          {{ $t('pay') }}
+
+          <svg
+            width="37"
+            height="16"
+            viewBox="0 0 37 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.10156 7.20868C0.549278 7.20868 0.101563 7.65639 0.101562 8.20868C0.101562 8.76096 0.549278 9.20868 1.10156 9.20868L1.10156 7.20868ZM36.2985 8.91579C36.6891 8.52527 36.6891 7.8921 36.2985 7.50158L29.9346 1.13762C29.5441 0.747091 28.9109 0.747091 28.5204 1.13762C28.1298 1.52814 28.1298 2.1613 28.5204 2.55183L34.1772 8.20868L28.5204 13.8655C28.1298 14.2561 28.1298 14.8892 28.5204 15.2798C28.9109 15.6703 29.5441 15.6703 29.9346 15.2798L36.2985 8.91579ZM1.10156 9.20868L35.5914 9.20868L35.5914 7.20868L1.10156 7.20868L1.10156 9.20868Z"
+              fill="#fff"
+            />
+          </svg>
+        </button>
 
         <!-- <RouterLink to="/login" class="btn btn-primary mt-4 mb-4">
           {{ $t('apuntar-se') }}
@@ -171,7 +324,10 @@ const removeSubmission = async (id: string) => {
                 :class="'module-type-' + module.moduleType.toLowerCase()"
               >
                 {{ module.name }}
-                <span class="ms-auto completed-pct" v-if="module.moduleType.toLowerCase() !== 'monitoring'">
+                <span
+                  class="ms-auto completed-pct"
+                  v-if="module.moduleType.toLowerCase() !== 'monitoring'"
+                >
                   {{ (module.completedPct * 100).toFixed(0) }}%
                 </span>
               </RouterLink>
@@ -240,7 +396,10 @@ const removeSubmission = async (id: string) => {
                         </div>
                       </div>
 
-                      <div class="d-flex w-100" v-if="!topic.completed && module.moduleType !== 'Monitoring' ">
+                      <div
+                        class="d-flex w-100"
+                        v-if="!topic.completed && module.moduleType !== 'Monitoring'"
+                      >
                         <button
                           class="btn btn-tertiary btn-medium mb-2 ms-auto"
                           @click="complete()"
@@ -248,7 +407,10 @@ const removeSubmission = async (id: string) => {
                           {{ $t('mark-as-completed') }}
                         </button>
                       </div>
-                      <div class="d-flex w-100" v-if="topic.completed && module.moduleType !== 'Monitoring' ">
+                      <div
+                        class="d-flex w-100"
+                        v-if="topic.completed && module.moduleType !== 'Monitoring'"
+                      >
                         <button
                           class="btn btn-tertiary btn-medium mb-2 ms-auto"
                           @click="notcomplete()"
@@ -260,13 +422,19 @@ const removeSubmission = async (id: string) => {
                   </div>
                 </div>
 
-                <div v-if="module.topics.length === 0 && module.moduleType !== 'Monitoring' " class="mt-4 mb-4">
+                <div
+                  v-if="module.topics.length === 0 && module.moduleType !== 'Monitoring'"
+                  class="mt-4 mb-4"
+                >
                   <div class="d-flex w-100" v-if="!module.completed">
                     <button class="btn btn-tertiary btn-medium mb-2 ms-auto" @click="complete()">
                       {{ $t('mark-as-completed') }}
                     </button>
                   </div>
-                  <div class="d-flex w-100" v-if="module.completed && module.moduleType !== 'Monitoring' ">
+                  <div
+                    class="d-flex w-100"
+                    v-if="module.completed && module.moduleType !== 'Monitoring'"
+                  >
                     <button class="btn btn-tertiary btn-medium mb-2 ms-auto" @click="notcomplete()">
                       {{ $t('mark-as-not-completed') }}
                     </button>
@@ -317,15 +485,14 @@ const removeSubmission = async (id: string) => {
               v-if="!moduleId && space.forum && space.enrolled"
               class="forum module module-type-forum"
             >
-            <div class="d-flex w-100 zmt-3">
-              <RouterLink :to="`/forum/${uid}`" class="d-flex">
-                {{ space.forum.name }}
-              </RouterLink>
-              <!-- <div class="description">
+              <div class="d-flex w-100 zmt-3">
+                <RouterLink :to="`/forum/${uid}`" class="d-flex">
+                  {{ space.forum.name }}
+                </RouterLink>
+                <!-- <div class="description">
                 {{ space.forum.description }}
               </div> -->
 
-              
                 <RouterLink :to="`/forum/${uid}`" class="ms-auto btn btn-white">
                   {{ $t('FORUM ACCESS') }}
                 </RouterLink>
@@ -349,8 +516,17 @@ const removeSubmission = async (id: string) => {
                 class="d-block mb-1"
               >
                 <RouterLink :to="`/space/${uid}/module/${module.id}`" class="d-block module-item">
-                  <svg class="module-progress-icon" v-if="module.moduleType !== 'Monitoring' && module.completedPct == 1" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path fill="green" d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>                  
-                  {{ module.name }}                  
+                  <svg
+                    class="module-progress-icon"
+                    v-if="module.moduleType !== 'Monitoring' && module.completedPct == 1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24"
+                    viewBox="0 -960 960 960"
+                    width="24"
+                  >
+                    <path fill="green" d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+                  </svg>
+                  {{ module.name }}
                 </RouterLink>
 
                 <div v-if="moduleId === module.id.toString()">
@@ -548,7 +724,7 @@ const removeSubmission = async (id: string) => {
   font-weight: normal;
   line-height: 28px; /* 140% */
 }
-.module-progress-icon{
+.module-progress-icon {
   vertical-align: -7px;
 }
 @media (min-width: 1024px) {

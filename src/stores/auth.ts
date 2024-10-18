@@ -63,6 +63,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('user.email')
       localStorage.removeItem('user.jwt')
       localStorage.removeItem('user.pictureUrl')      
+      sessionStorage.removeItem('autoenroll')
     }
   }
 })
