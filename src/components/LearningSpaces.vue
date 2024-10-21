@@ -33,9 +33,9 @@ const otherSpaces = computed(() => {
 })
 </script>
 
-<template>
+<template>  
   <div class="learning-spaces" v-if="loaded">    
-    <div v-if="authStore.name">
+    <div v-if="authStore.createdAt !== authStore.updatedAt">
       <h3 class="mb-4" v-if="mySpaces.length > 0">{{ $t('els-meus-espais-formatius') }}</h3>
 
       <div v-for="space in mySpaces" :key="space.id">

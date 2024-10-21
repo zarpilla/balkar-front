@@ -8,11 +8,13 @@ export const auth = {
       identifier: login,
       password: password
     }),
-    register: (email: string, password: string): Promise<any> =>
+    register: (email: string, password: string, name: string, lastname: string): Promise<any> =>
     service().post('auth/local/register', {
       username: email,
       email: email,
-      password: password
+      password: password,
+      name: name,
+      lastname: lastname
     }),
   resetPassword: (code: string, password: string, passwordConfirmation: string) =>
     service({ requiresAuth: true }).post(`auth/reset-password`, {

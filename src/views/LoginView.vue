@@ -29,7 +29,9 @@ const tryIfUserIsLogged = () => {
               username: meResponse.data.username,
               email: meResponse.data.email,
               name: meResponse.data.name,
-              lastname: meResponse.data.lastname
+              lastname: meResponse.data.lastname,
+              createdAt: meResponse.data.createdAt,
+              updatedAt: meResponse.data.updatedAt,
             })
             loading.value = false
 

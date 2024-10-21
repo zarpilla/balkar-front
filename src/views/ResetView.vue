@@ -7,7 +7,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
 import { useAuthStore } from '@/stores/auth.js'
 import { Api } from '@/service/api'
-import PasswordMeter from 'vue-simple-password-meter';
+import PasswordMeter from 'vue-simple-password-meter'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
@@ -29,7 +29,6 @@ const removeError = (event: any) => {
   const item = event.target.classList
   item.remove(['border-error'])
 }
-
 
 const { email, code } = route.query
 
@@ -65,12 +64,8 @@ const submit = async () => {
 
     if (score.value < 3) {
       status.message = t('password-is-not-safe')
-        return
-      }
-
-    // useAuthStore().setUser({
-    //   jwt: token
-    // })
+      return
+    }
 
     await Api.auth.resetPassword(code as string, form.password, form.password)
 
@@ -79,21 +74,18 @@ const submit = async () => {
     }, 1500)
   } catch (err: any) {
     //showToast()
-    if (
-      err &&
-      err.message
-    ) {
+    if (err && err.message) {
       status.message = t(err.message)
       status.error = true
     }
   }
 }
-const score = ref(0);
+const score = ref(0)
 const onScore = (payload: any) => {
-      // console.log(payload.score); // from 0 to 4
-      // console.log(payload.strength); // one of : 'risky', 'guessable', 'weak', 'safe' , 'secure'
-      score.value = payload.score;
-    };
+  // console.log(payload.score); // from 0 to 4
+  // console.log(payload.strength); // one of : 'risky', 'guessable', 'weak', 'safe' , 'secure'
+  score.value = payload.score
+}
 </script>
 
 <template>
@@ -102,7 +94,6 @@ const onScore = (payload: any) => {
       <h3 class="mb-5">{{ $t('reset-password') }}</h3>
 
       <form @submit.prevent="submit">
-        
         <FormField :label="$t('new-password-label')">
           <FormControl
             @click="removeError"
@@ -129,7 +120,7 @@ const onScore = (payload: any) => {
             maxlength="200"
           />
         </FormField>
-        
+
         <BaseButton
           class="mt-4 w-100 btn btn-primary"
           type="submit"

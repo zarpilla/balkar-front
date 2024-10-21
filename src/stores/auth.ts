@@ -10,6 +10,8 @@ export const useAuthStore = defineStore('auth', {
     userEmail: '' as string,
     pictureUrl: '' as string,
     jwt: '' as string,
+    createdAt: '' as string,
+    updatedAt: '' as string
   }),
   actions: {
     setUser(payload: any) {
@@ -41,12 +43,19 @@ export const useAuthStore = defineStore('auth', {
         this.pictureUrl = payload.pictureUrl
         localStorage.setItem('user.pictureUrl', payload.pictureUrl)
       }
+      if (payload.createdAt) {
+        this.createdAt = payload.createdAt
+        localStorage.setItem('user.createdAt', payload.createdAt)
+      }
+      if (payload.updatedAt) {
+        this.updatedAt = payload.updatedAt
+        localStorage.setItem('user.updatedAt', payload.updatedAt)
+      }
     },
 
     isAuthenticated() {
       return localStorage.getItem('user.id')
     },
-
 
     logout() {
       this.userId = ''
@@ -62,7 +71,9 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('user.username')
       localStorage.removeItem('user.email')
       localStorage.removeItem('user.jwt')
-      localStorage.removeItem('user.pictureUrl')      
+      localStorage.removeItem('user.pictureUrl')
+      localStorage.removeItem('user.createdAt')
+      localStorage.removeItem('user.updatedAt')
       sessionStorage.removeItem('autoenroll')
     }
   }

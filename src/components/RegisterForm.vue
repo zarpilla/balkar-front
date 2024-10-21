@@ -29,8 +29,19 @@ const props = defineProps({
   },
   forceEmail: {
     type: String,
-    required: false
-  },  
+    required: false,
+    default: ''
+  },
+  forceName: {
+    type: String,
+    required: false,
+    default: ''
+  },
+  forceLastname: {
+    type: String,
+    required: false,
+    default: ''
+  },
   checkoutSession: {
     type: String,
     required: false
@@ -40,7 +51,7 @@ const props = defineProps({
 const { t } = useI18n()
 
 const emit = defineEmits<{
-  (e: 'email-valid', msg: any): { valid: boolean, email: string }
+  (e: 'email-valid', msg: any): { valid: boolean, email: string, name: string, lastname: string }
 }>()
 
 const authStore = useAuthStore()
@@ -50,7 +61,8 @@ const toastVisible = ref(false)
 const toastErrorVisible = ref(false)
 const toastErrorMessage = ref('')
 const form = reactive({
-  // name: '',
+  name: '',
+  lastname: '',
   email: '',
   password: '',
   passwordRepeat: '',
@@ -59,10 +71,12 @@ const form = reactive({
 
 const status = reactive({
   messageName: '',
+  messageLast: '',
   messageEmail: '',
   messagePwd: '',
   messagePwdRepeat: '',
   errorName: false,
+  errorLastName: false,
   errorEmail: false,
   errorPwd: false,
   errorPwdRepeat: false,
@@ -82,20 +96,28 @@ const removeError = (event: any) => {
 const submit = async () => {
   try {
     status.errorName = false
+    status.errorLastName = false
     status.errorEmail = false
     status.errorPwd = false
     status.errorPwdRepeat = false
     status.errorOther = false
     status.messageName = ''
+    status.messageLast = ''
     status.messageEmail = ''
     status.messagePwd = ''
-    status.messagePwdRepeat = ''
+    status.messagePwdRepeat = ''    
 
-    // if (checkEmpty(form.name)) {
-    //   status.errorName = true
-    //   status.messageName = t('name-is-mandatory')
-    //   return
-    // }
+    if (checkEmpty(form.name)) {
+      status.errorName = true
+      status.messageName = t('name-is-mandatory')
+      return
+    }
+
+    if (checkEmpty(form.lastname)) {
+      status.errorLastName = true
+      status.messageLast = t('lastname-is-mandatory')
+      return
+    }
 
     if (checkEmpty(form.email)) {
       status.errorEmail = true
@@ -127,14 +149,16 @@ const submit = async () => {
       return
     }
 
-    const response: any = (await Api.auth.register(form.email, form.password)).data
+    const response: any = (await Api.auth.register(form.email, form.password, form.name, form.lastname)).data
 
     if (response && response.user) {
       toastVisible.value = !toastVisible.value
 
       await Api.preEnrollements.create({
         email: form.email,
-        uid: props.enroll
+        uid: props.enroll,
+        name: form.name,
+        lastname: form.lastname
       })
 
       setTimeout(() => {
@@ -167,9 +191,9 @@ const onScore = (payload: any) => {
 }
 
 watch(
-  () => form.email,
+  () => [form.email, form.name, form.lastname],
   () => {
-    emit('email-valid', { valid: checkIsEmail(form.email), email: form.email })
+    emit('email-valid', { valid: checkIsEmail(form.email), email: form.email, name: form.name, lastname: form.lastname })
   }
 )
 
@@ -177,12 +201,28 @@ watch(
   () => props.forceEmail,
   () => {
     if (props.forceEmail) {
-      console.log('props.forceEmail!', props.forceEmail)
       form.email = props.forceEmail
     }    
   }
 )
 
+watch(
+  () => props.forceName,
+  () => {
+    if (props.forceName) {
+      form.name = props.forceName
+    }    
+  }
+)
+
+watch(
+  () => props.forceLastname,
+  () => {
+    if (props.forceLastname) {
+      form.lastname = props.forceLastname
+    }    
+  }
+)
 </script>
 
 <template>
@@ -200,6 +240,29 @@ watch(
       maxlength="200"
     />
   </FormField> -->
+
+    <FormField :help="status.messageName" :label="$t('name') + '*'" css="mb-4">
+      <FormControl
+        type="text"
+        :placeholder="$t('name')"
+        v-model="form.name"
+        :placeholderEffect="false"
+        :validationError="status.errorName"
+        name="name"
+        :readonly="props.forceName !== ''"
+      />
+    </FormField>
+    <FormField :label="$t('lastname') + '*'" css="mb-4" :help="status.messageLast">
+      <FormControl
+        type="text"
+        :placeholder="$t('lastname')"
+        v-model="form.lastname"
+        :placeholderEffect="false"
+        :validationError="status.errorLastName"
+        name="lastname"
+        :readonly="props.forceLastname !== ''"
+      />
+    </FormField>
 
     <FormField :help="status.messageEmail" :label="$t('email-label')" class="mb-4">
       <FormControl

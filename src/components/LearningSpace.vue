@@ -8,6 +8,7 @@ import FileUpload from '@/components/FileUploadSubmission.vue'
 import { useAuthStore } from '@/stores/auth'
 import RegisterForm from '@/components/RegisterForm.vue'
 import { ca } from 'date-fns/locale'
+import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()
 
@@ -19,6 +20,7 @@ const emit = defineEmits<{
   (e: 'loaded', space: any): { space: any }
 }>()
 
+const locale = useI18n().locale.value
 const router = useRouter()
 const moduleId = ref(router.currentRoute.value.params.moduleId as string)
 const topicId = ref(router.currentRoute.value.params.topicId as string)
@@ -31,7 +33,7 @@ const load = async () => {
   if (response.data) {
     space.value = response.data
 
-    if (!space.value.enrolled) {
+    if (!space.value.enrolled && authStore.isAuthenticated()) {
       canPay.value = true
     }
   }
@@ -63,6 +65,8 @@ onMounted(async () => {
         paymentHasResponse.value = true
         paymentIsChecking.value = false
         canPayEmail.value = response.email
+        canPayName.value = response.name
+        canPayLastname.value = response.lastname
         if (paymentIsSuccessfully.value) {
           checkoutSession.value = paymentIntentId
         }        
@@ -113,17 +117,22 @@ const pay = async () => {
     canPayEmail.value = authStore.userEmail
   }
   const response = await Api.payment
-    .createCheckoutSession(props.uid, canPayEmail.value)
+    .createCheckoutSession(props.uid, 
+    { email: canPayEmail.value, name: canPayName.value, lastname: canPayLastname.value, locale: locale })
     .then((r) => r.data)
   location.href = response.url
 }
 
 const canPay = ref(false)
 const canPayEmail = ref('')
+const canPayName = ref('')
+const canPayLastname = ref('')
 
 const emailIsValid = (msg: any) => {
   canPay.value = msg.valid
   canPayEmail.value = msg.email
+  canPayName.value = msg.name
+  canPayLastname.value = msg.lastname
 }
 
 const pageModules = computed(() => {
@@ -271,6 +280,8 @@ const spaceNeedsPayment = computed(() => {
               :disabled="spaceNeedsPayment"
               @email-valid="emailIsValid"              
               :force-email="canPayEmail && paymentIsSuccessfully ? canPayEmail : ''"
+              :force-name="canPayName && paymentIsSuccessfully ? canPayName : ''"
+              :force-lastname="canPayLastname && paymentIsSuccessfully ? canPayLastname : ''"
               :checkout-session="checkoutSession"
             ></RegisterForm>
           </div>

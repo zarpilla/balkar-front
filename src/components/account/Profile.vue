@@ -209,8 +209,8 @@ const uploaded = (fileImage: string) => {
             </FormField>
 
             <div class="col-12 col-md-8">
-              <div class="actions d-flex mt-4">
-                <button class="btn btn-primary btn-medium ms-auto" type="submit">
+              <div class="actions d-flex mt-4 mb-4">
+                <button class="btn btn-primary zbtn-medium ms-auto mb-4" type="submit">
                   {{ $t('changePassword.submitButton') }}
                 </button>
               </div>

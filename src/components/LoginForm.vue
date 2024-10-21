@@ -98,7 +98,9 @@ const submit = async () => {
           email: meResponse.data.email,
           jwt: meResponse.jwt,
           name: meResponse.data.name,
-          lastname: meResponse.data.lastname
+          lastname: meResponse.data.lastname,
+          createdAt: meResponse.data.createdAt,
+          updatedAt: meResponse.data.updatedAt,
         })
 
         if (props.enroll) {

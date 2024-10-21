@@ -37,7 +37,9 @@ try {
           username: me.data.username,
           email: me.data.email,
           name: me.data.name,
-          lastname: me.data.lastname
+          lastname: me.data.lastname,
+          createdAt: me.data.createdAt,
+          updatedAt: me.data.updatedAt,
         })
 
         const myAvatar = await Api.avatars.mine()

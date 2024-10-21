@@ -93,11 +93,11 @@ const onScore = (payload: any) => {
             </FormField>
 
             <div class="col-12 col-md-8">
-              <div class="actions d-flex mt-4">
-                <RouterLink to="/account/profile" class="btn btn-tertiary btn-medium me-auto">
+              <div class="actions d-flex mt-5 mb-4">
+                <RouterLink to="/account/profile" class="btn btn-tertiary zbtn-medium me-auto">
                   {{ $t('changePassword.cancelButton') }}
                 </RouterLink>
-                <button class="btn btn-primary btn-medium ms-auto" type="submit">
+                <button class="btn btn-primary zbtn-medium ms-auto" type="submit">
                   {{ $t('changePassword.submitButton') }}
                 </button>
               </div>
