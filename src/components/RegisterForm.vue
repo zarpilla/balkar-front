@@ -241,7 +241,7 @@ watch(
     />
   </FormField> -->
 
-    <FormField :help="status.messageName" :label="$t('name') + '*'" css="mb-4">
+    <FormField :help="status.messageName" :label="$t('name')" css="mb-4">
       <FormControl
         type="text"
         :placeholder="$t('name')"
@@ -252,7 +252,7 @@ watch(
         :readonly="props.forceName !== ''"
       />
     </FormField>
-    <FormField :label="$t('lastname') + '*'" css="mb-4" :help="status.messageLast">
+    <FormField :label="$t('lastname')" css="mb-4" :help="status.messageLast">
       <FormControl
         type="text"
         :placeholder="$t('lastname')"
