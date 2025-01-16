@@ -4,15 +4,18 @@ import { useAuthStore } from '@/stores/auth'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import Profile from '@/components/account/Profile.vue'
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   state: string
 }>()
 
+const locale = useI18n().locale
+
 const loaded = ref(false)
 const spaces = ref<any>([])
 const load = async () => {
-  const response = await Api.learningSpaces.mine()
+  const response = await Api.learningSpaces.mine(locale.value)
   console.log(response.data)
   if (response.data && response.data.data) {
     spaces.value = response.data.data

@@ -12,6 +12,7 @@ const localeText = computed(() => (locale.value === 'en' ? 'EN' : 'CA'))
 const setLocale = (loc: string) => {
   locale.value = loc
   localStorage.setItem('locale', loc)
+  location.reload()
 }
 </script>
 

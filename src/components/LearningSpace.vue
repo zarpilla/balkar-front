@@ -20,7 +20,7 @@ const emit = defineEmits<{
   (e: 'loaded', space: any): { space: any }
 }>()
 
-const locale = useI18n().locale.value
+const locale = useI18n().locale
 const router = useRouter()
 const moduleId = ref(router.currentRoute.value.params.moduleId as string)
 const topicId = ref(router.currentRoute.value.params.topicId as string)
@@ -29,7 +29,7 @@ const apiBase = import.meta.env.VITE_API_BASE
 const loaded = ref(false)
 const space = ref<any>(null)
 const load = async () => {
-  const response = await Api.learningSpaces.get(props.uid)
+  const response = await Api.learningSpaces.get(props.uid, locale.value)
   if (response.data) {
     space.value = response.data
 
@@ -118,7 +118,7 @@ const pay = async () => {
   }
   const response = await Api.payment
     .createCheckoutSession(props.uid, 
-    { email: canPayEmail.value, name: canPayName.value, lastname: canPayLastname.value, locale: locale })
+    { email: canPayEmail.value, name: canPayName.value, lastname: canPayLastname.value, locale: locale.value })
     .then((r) => r.data)
   location.href = response.url
 }
@@ -137,7 +137,7 @@ const emailIsValid = (msg: any) => {
 
 const pageModules = computed(() => {
   return moduleId.value
-    ? space.value.modules.filter((m: any) => m.id.toString() === moduleId.value)
+    ? space.value.modules.filter((m: any) => m.moduleId.toString() === moduleId.value)
     : space.value.modules
 })
 
@@ -328,9 +328,9 @@ const spaceNeedsPayment = computed(() => {
       <div class="container bg-white mt-5">
         <div class="row">
           <div class="col-12 order-1 order-md-0" :class="{ 'col-md-9': moduleId, z: !moduleId }">
-            <div v-for="module in pageModules" :key="`module.id-${module.id}`" class="d-block mb-3">
+            <div v-for="module in pageModules" :key="`module.id-${module.moduleId}`" class="d-block mb-3">
               <RouterLink
-                :to="`/space/${uid}/module/${module.id}`"
+                :to="`/space/${uid}/module/${module.moduleId}`"
                 class="d-flex module"
                 :class="'module-type-' + module.moduleType.toLowerCase()"
               >
@@ -343,10 +343,10 @@ const spaceNeedsPayment = computed(() => {
                 </span>
               </RouterLink>
 
-              <div v-if="moduleId === module.id.toString()">
+              <div v-if="moduleId === module.moduleId">
                 <div
                   v-for="content in module.contents"
-                  :key="`module.id-${module.id}-content-${content.id}`"
+                  :key="`module.id-${module.moduleId}-content-${content.id}`"
                 >
                   <div v-if="content.text" class="mt-4 mb-4">
                     <vue-markdown
@@ -365,11 +365,11 @@ const spaceNeedsPayment = computed(() => {
 
                 <div
                   v-for="(topic, j) in module.topics"
-                  :key="`module.id-${module.id}-topic-${topic.id}`"
+                  :key="`module.id-${module.moduleId}-topic-${topic.topicId}`"
                 >
                   <div class="d-block mt-3 mb-3 ms-3 ms-md-5">
                     <RouterLink
-                      :to="`/space/${uid}/module/${module.id}/topic/${topic.id}`"
+                      :to="`/space/${uid}/module/${module.moduleId}/topic/${topic.topicId}`"
                       class="d-flex topic"
                     >
                       <span class="pe-1">{{ j + 1 }}.</span>
@@ -387,10 +387,10 @@ const spaceNeedsPayment = computed(() => {
                       </svg>
                     </RouterLink>
 
-                    <div v-if="topicId === topic.id.toString()">
+                    <div v-if="topicId === topic.topicId">
                       <div
                         v-for="content in topic.contents"
-                        :key="`module.id-${module.id}-topic-${topic.id}-content-${content.id}`"
+                        :key="`module.id-${module.moduleId}-topic-${topic.topicId}-content-${content.id}`"
                       >
                         <div v-if="content.text" class="mt-4 mb-4">
                           <vue-markdown
@@ -523,10 +523,10 @@ const spaceNeedsPayment = computed(() => {
               </h4>
               <div
                 v-for="module in space.modules"
-                :key="`side.module.id-${module.id}`"
+                :key="`side.module.id-${module.moduleId}`"
                 class="d-block mb-1"
               >
-                <RouterLink :to="`/space/${uid}/module/${module.id}`" class="d-block module-item">
+                <RouterLink :to="`/space/${uid}/module/${module.moduleId}`" class="d-block module-item">
                   <svg
                     class="module-progress-icon"
                     v-if="module.moduleType !== 'Monitoring' && module.completedPct == 1"
@@ -540,14 +540,14 @@ const spaceNeedsPayment = computed(() => {
                   {{ module.name }}
                 </RouterLink>
 
-                <div v-if="moduleId === module.id.toString()">
+                <div v-if="moduleId === module.moduleId.toString()">
                   <div
                     v-for="(topic, j) in module.topics"
-                    :key="`side.module.id-${module.id}-topic-${topic.id}`"
+                    :key="`side.module.id-${module.moduleId}-topic-${topic.topicId}`"
                   >
                     <div class="d-block mt-1 mb-1 ms-1">
                       <RouterLink
-                        :to="`/space/${uid}/module/${module.id}/topic/${topic.id}`"
+                        :to="`/space/${uid}/module/${module.moduleId}/topic/${topic.topicId}`"
                         class="d-block topic side-topic"
                       >
                         <span class="topic-name pe-1">{{ j + 1 }}.</span>

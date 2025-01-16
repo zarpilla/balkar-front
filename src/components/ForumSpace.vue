@@ -14,8 +14,11 @@ import { onUnmounted } from 'vue'
 import ConfirmModal from './ConfirmModal.vue'
 import { Modal } from 'bootstrap'
 import { replaceMentionValues } from '@/utils/mentions'
+import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()
+
+const locale = useI18n().locale
 
 const props = defineProps<{
   uid: string
@@ -77,7 +80,7 @@ const load = async () => {
     forum.value = forumData
   }
 
-  const { data: spaceData } = await Api.learningSpaces.get(props.uid)
+  const { data: spaceData } = await Api.learningSpaces.get(props.uid, locale.value)
   if (spaceData) {
     space.value = spaceData
   }
