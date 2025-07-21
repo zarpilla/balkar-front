@@ -69,7 +69,7 @@ onMounted(async () => {
         canPayLastname.value = response.lastname
         if (paymentIsSuccessfully.value) {
           checkoutSession.value = paymentIntentId
-        }        
+        }
       } else {
         paymentIsSuccessfully.value = false
         paymentHasResponse.value = true
@@ -117,8 +117,12 @@ const pay = async () => {
     canPayEmail.value = authStore.userEmail
   }
   const response = await Api.payment
-    .createCheckoutSession(props.uid, 
-    { email: canPayEmail.value, name: canPayName.value, lastname: canPayLastname.value, locale: locale.value })
+    .createCheckoutSession(props.uid, {
+      email: canPayEmail.value,
+      name: canPayName.value,
+      lastname: canPayLastname.value,
+      locale: locale.value
+    })
     .then((r) => r.data)
   location.href = response.url
 }
@@ -181,71 +185,148 @@ const spaceNeedsPayment = computed(() => {
     !paymentIsSuccessfully.value
   )
 })
-
-
 </script>
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
-    <div :class="{ 'bg-balkar': authenticated }">
-      <div class="zcontainer" :class="{ container: authenticated }">
-        <RouterLink class="btn btn-primary mb-3" :to="`/space/${space.uid}`">
+    <div
+      v-if="space.bannerIntro && space.bannerIntro.url && space.enrolled === false"
+      class="mt-5"
+      :class="{ container: authenticated }"
+    >
+      <div class="banner-full d-flex flex-column align-items-center">
+        <div class="overlay"></div>
+        <img :src="base + space.bannerIntro.url" class="w-100" />
+        <h1 class="mt-3 mb-0">
+          <div class="free">{{ space.free ? $t('free-course') : $t('paid-course') }}</div>
           {{ space.name }}
-        </RouterLink>
-
-        <span v-if="authenticated && space.enrolled" class="ms-3 completed-pct completed-pct-space">
-          {{ (space.completedPct * 100).toFixed(0) }}%
-        </span>
+        </h1>
       </div>
     </div>
 
-    <div v-if="space.banner && space.banner.url" class="mt-5" :class="{ container: authenticated }">
-      <img :src="base + space.banner.url" class="w-100" />
+    <div
+      v-if="space.banner && space.banner.url && space.enrolled === true"
+      class="mt-5"
+      :class="{ container: authenticated }"
+    >
+      <div class="banner-small d-flex flex-column align-items-center">
+        <div class="overlay"></div>
+        <img :src="base + space.banner.url" class="w-100" />
+        <h1 class="mt-3 mb-0">
+          {{ space.name }}
+        </h1>
+      </div>
+    </div>
+
+    <div :class="{ 'bg-balkar': authenticated }" v-if="authenticated && space.enrolled">
+      <div class="content-info" :class="{ container: authenticated }">
+        <div class="row">
+          <div class="col-12 col-lg-4">
+            <div class="d-flex">
+              <div class="progress-bar w-50">
+                <div
+                  class="progress-bar-inner"
+                  :style="{ width: space.completedPct * 100 + '%' }"
+                ></div>
+              </div>
+
+              <div class="progress-bar-text">
+                {{ (space.completedPct * 100).toFixed(0) }}% {{ $t('completed') }}
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-8 content-menu" v-if="space.forum">
+            <div class="d-flex">
+              <RouterLink :to="`/space/${uid}`" class="d-flex">
+                {{ $t('content') }}
+              </RouterLink>
+              <RouterLink :to="`/forum/${uid}`" class="d-flex">
+                {{ $t('community') }}
+              </RouterLink>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="not-enrolled" v-if="authenticated && space.enrolled === false">
       <div class="container bg-white mt-5">
-        <vue-markdown
-          v-if="space.publicDescription"
-          :options="{ html: true }"
-          :linkify="true"
-          class="mt-4 mb-4"
-          :source="space.publicDescription"
-        ></vue-markdown>
+        <div class="row">
+          <div class="col-lg-8 offset-lg-2">
+            <vue-markdown
+              v-if="space.publicDescription"
+              :options="{ html: true }"
+              :linkify="true"
+              class="mt-4 mb-4"
+              :source="space.publicDescription"
+            ></vue-markdown>
 
-        <div
-          v-if="!paymentIsChecking && paymentHasResponse && paymentIsSuccessfully"
-          class="alert alert-success mt-4 mb-4"
-        >
-          {{ $t('payment-successful') }}
+            <div
+              v-if="!paymentIsChecking && paymentHasResponse && paymentIsSuccessfully"
+              class="alert alert-success mt-4 mb-4"
+            >
+              {{ $t('payment-successful') }}
+            </div>
+            <div
+              v-else-if="!paymentIsChecking && paymentHasResponse && !paymentIsSuccessfully"
+              class="alert alert-danger mt-4 mb-4"
+            >
+              {{ $t('payment-error') }}
+            </div>
+
+            <button
+              class="btn btn-primary mt-4 mb-4"
+              @click="pay"
+              v-if="spaceNeedsPayment"
+              :disabled="!canPay"
+            >
+              {{ $t('pay') }}
+              <svg
+                width="37"
+                height="16"
+                viewBox="0 0 37 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1.10156 7.20868C0.549278 7.20868 0.101563 7.65639 0.101562 8.20868C0.101562 8.76096 0.549278 9.20868 1.10156 9.20868L1.10156 7.20868ZM36.2985 8.91579C36.6891 8.52527 36.6891 7.8921 36.2985 7.50158L29.9346 1.13762C29.5441 0.747091 28.9109 0.747091 28.5204 1.13762C28.1298 1.52814 28.1298 2.1613 28.5204 2.55183L34.1772 8.20868L28.5204 13.8655C28.1298 14.2561 28.1298 14.8892 28.5204 15.2798C28.9109 15.6703 29.5441 15.6703 29.9346 15.2798L36.2985 8.91579ZM1.10156 9.20868L35.5914 9.20868L35.5914 7.20868L1.10156 7.20868L1.10156 9.20868Z"
+                  fill="#fff"
+                />
+              </svg>
+            </button>
+
+            <div class="w-100 text-center" v-else>
+              <button class="btn btn-secondary mt-4 mb-4" @click="enroll">
+                {{ $t('apuntar-se') }}
+                <svg
+                  width="24"
+                  height="25"
+                  viewBox="0 0 24 25"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <mask
+                    id="mask0_64_2203"
+                    style="mask-type: alpha"
+                    maskUnits="userSpaceOnUse"
+                    x="0"
+                    y="0"
+                    width="24"
+                    height="25"
+                  >
+                    <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+                  </mask>
+                  <g mask="url(#mask0_64_2203)">
+                    <path
+                      d="M12 21.3126C10.75 21.3126 9.57917 21.0751 8.4875 20.6001C7.39583 20.1251 6.44583 19.4835 5.6375 18.6751C4.82917 17.8668 4.1875 16.9168 3.7125 15.8251C3.2375 14.7335 3 13.5626 3 12.3126C3 11.0626 3.2375 9.89179 3.7125 8.80012C4.1875 7.70846 4.82917 6.75846 5.6375 5.95012C6.44583 5.14179 7.39583 4.50012 8.4875 4.02512C9.57917 3.55012 10.75 3.31262 12 3.31262V5.31262C10.05 5.31262 8.39583 5.99179 7.0375 7.35012C5.67917 8.70846 5 10.3626 5 12.3126C5 14.2626 5.67917 15.9168 7.0375 17.2751C8.39583 18.6335 10.05 19.3126 12 19.3126V21.3126ZM16 17.3126L14.6 15.8876L17.175 13.3126H9V11.3126H17.175L14.6 8.71262L16 7.31262L21 12.3126L16 17.3126Z"
+                      fill="black"
+                    />
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <div
-          v-else-if="!paymentIsChecking && paymentHasResponse && !paymentIsSuccessfully"
-          class="alert alert-danger mt-4 mb-4"
-        >
-          {{ $t('payment-error') }}
-        </div>
-
-        <button class="btn btn-primary mt-4 mb-4" @click="pay" v-if="spaceNeedsPayment"
-        :disabled="!canPay">
-          {{ $t('pay') }}
-          <svg
-            width="37"
-            height="16"
-            viewBox="0 0 37 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1.10156 7.20868C0.549278 7.20868 0.101563 7.65639 0.101562 8.20868C0.101562 8.76096 0.549278 9.20868 1.10156 9.20868L1.10156 7.20868ZM36.2985 8.91579C36.6891 8.52527 36.6891 7.8921 36.2985 7.50158L29.9346 1.13762C29.5441 0.747091 28.9109 0.747091 28.5204 1.13762C28.1298 1.52814 28.1298 2.1613 28.5204 2.55183L34.1772 8.20868L28.5204 13.8655C28.1298 14.2561 28.1298 14.8892 28.5204 15.2798C28.9109 15.6703 29.5441 15.6703 29.9346 15.2798L36.2985 8.91579ZM1.10156 9.20868L35.5914 9.20868L35.5914 7.20868L1.10156 7.20868L1.10156 9.20868Z"
-              fill="#fff"
-            />
-          </svg>
-        </button>
-
-        <button class="btn btn-primary mt-4 mb-4" @click="enroll" v-else="spaceNeedsPayment">
-          {{ $t('apuntar-se') }}
-        </button>
       </div>
     </div>
 
@@ -271,14 +352,14 @@ const spaceNeedsPayment = computed(() => {
         >
           {{ $t('payment-error') }}
         </div>
-        
+
         <div class="row mt-4 mb-3">
           <div class="col-lg-6 zoffset-lg-3">
             <RegisterForm
               button-text="apuntar-se"
               :enroll="uid"
               :disabled="spaceNeedsPayment"
-              @email-valid="emailIsValid"              
+              @email-valid="emailIsValid"
               :force-email="canPayEmail && paymentIsSuccessfully ? canPayEmail : ''"
               :force-name="canPayName && paymentIsSuccessfully ? canPayName : ''"
               :force-lastname="canPayLastname && paymentIsSuccessfully ? canPayLastname : ''"
@@ -328,7 +409,11 @@ const spaceNeedsPayment = computed(() => {
       <div class="container bg-white mt-5">
         <div class="row">
           <div class="col-12 order-1 order-md-0" :class="{ 'col-md-9': moduleId, z: !moduleId }">
-            <div v-for="module in pageModules" :key="`module.id-${module.moduleId}`" class="d-block mb-3">
+            <div
+              v-for="module in pageModules"
+              :key="`module.id-${module.moduleId}`"
+              class="d-block mb-3"
+            >
               <RouterLink
                 :to="`/space/${uid}/module/${module.moduleId}`"
                 class="d-flex module"
@@ -526,7 +611,10 @@ const spaceNeedsPayment = computed(() => {
                 :key="`side.module.id-${module.moduleId}`"
                 class="d-block mb-1"
               >
-                <RouterLink :to="`/space/${uid}/module/${module.moduleId}`" class="d-block module-item">
+                <RouterLink
+                  :to="`/space/${uid}/module/${module.moduleId}`"
+                  class="d-block module-item"
+                >
                   <svg
                     class="module-progress-icon"
                     v-if="module.moduleType !== 'Monitoring' && module.completedPct == 1"
@@ -584,8 +672,8 @@ const spaceNeedsPayment = computed(() => {
   background: rgba(242, 90, 1, 0.8);
   background: #efdda2;
   padding: 0.8rem 1rem;
-  color: var(--Nabiu, #020034);
-  font-family: Athletics;
+  color: var(--Nabiu, #000000);
+  font-family: Inter;
   font-size: 26px;
   font-style: normal;
   font-weight: 700;
@@ -600,7 +688,7 @@ const spaceNeedsPayment = computed(() => {
 .topic {
   padding: 0.5rem 1rem;
   background: var(--Canya, #efdda2);
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
@@ -614,7 +702,7 @@ const spaceNeedsPayment = computed(() => {
 
 .module-item {
   padding: 0.3rem 0.5rem;
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -644,20 +732,20 @@ const spaceNeedsPayment = computed(() => {
   text-decoration: underline;
 }
 .quick-access {
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #020034);
+  color: var(--Nabiu, #000000);
 }
 .quick-access-name {
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #020034);
+  color: var(--Nabiu, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -678,8 +766,8 @@ const spaceNeedsPayment = computed(() => {
   margin-top: 5rem;
   background-color: #bbdff7;
 
-  color: var(--Nabiu, #020034);
-  font-family: Athletics;
+  color: var(--Nabiu, #000000);
+  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: normal;
@@ -694,7 +782,7 @@ const spaceNeedsPayment = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  border: 2px solid #020034;
+  border: 2px solid #000000;
   border-radius: 16px;
   line-height: 30px;
   height: 30px;
@@ -728,8 +816,8 @@ const spaceNeedsPayment = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #020034);
-  font-family: Athletics;
+  color: var(--Nabiu, #000000);
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: normal;
@@ -739,5 +827,151 @@ const spaceNeedsPayment = computed(() => {
   vertical-align: -7px;
 }
 @media (min-width: 1024px) {
+}
+.banner-full {
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 42.31%, rgba(68, 176, 142, 0) 100%);
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+
+  h1 {
+    width: 40%;
+    position: absolute;
+    top: 120px;
+    color: #fff;
+    font-size: 36px;
+    font-weight: bold;
+    margin: auto;
+
+    color: #fff;
+    text-align: center;
+    font-family: 'DM Sans';
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 100%; /* 50px */
+    letter-spacing: -0.5px;
+
+    .free {
+      color: var(--White, #fff);
+      text-align: center;
+      font-family: 'DM Sans';
+      font-size: 16.971px;
+      font-style: normal;
+      font-weight: 800;
+      line-height: 110%; /* 18.669px */
+      letter-spacing: 1.697px;
+      text-transform: uppercase;
+
+      margin-bottom: 8px;
+    }
+  }
+  img {
+    border-radius: 20px;
+    width: 100%;
+    height: 650px;
+    object-fit: cover;
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1200px;
+    background: linear-gradient(180deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%);
+    overflow: hidden;
+    pointer-events: none;
+  }
+}
+
+.banner-small {
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 42.31%, rgba(68, 176, 142, 0) 100%);
+  overflow: hidden;
+  position: relative;
+  text-align: left;
+
+  h1 {
+    width: 40%;
+    position: absolute;
+    top: 34px;
+    color: #fff;
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0;
+    left: 0;
+    padding-left: 45px;
+
+    color: var(--White, #fff);
+
+    /* Title H1 */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%; /* 36px */
+    letter-spacing: 0.3px;
+  }
+  img {
+    border-radius: 20px;
+    width: 100%;
+    height: 165px;
+    object-fit: cover;
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1200px;
+    background: linear-gradient(90deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%);
+    overflow: hidden;
+    pointer-events: none;
+  }
+}
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: rgba(240, 192, 90, 0.5);
+  border-radius: 5px;
+  margin-top: 20px;
+
+  .progress-bar-inner {
+    height: 100%;
+    background-color: rgba(240, 192, 90, 1);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+}
+.progress-bar-text {
+  color: var(--Dark-grey, #797979);
+
+  /* Footnotes */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 19.6px */
+  margin-top: 15px;
+  margin-left: 15px;
+}
+.content-info .row{
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(81, 81, 81, 0.50);
+}
+.content-menu a {
+  margin-top: 16px;
+  color: var(--Dark-grey, #000);
+
+  /* Sidebar - Module */
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 110%; /* 16.5px */
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+  margin-right: 30px;
 }
 </style>

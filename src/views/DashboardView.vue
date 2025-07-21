@@ -14,12 +14,12 @@ const router = useRouter()
     <div class="about">
       <div class="container">
         <div class="row align-items-start">
-          <vue-markdown
+          <!-- <vue-markdown
             class="mt-4 mb-4"
             :linkify="true"
             :source="$t('balkar-main-description')"
             :options="{ html: true, linkTarget: '_blank' }"
-          ></vue-markdown>
+          ></vue-markdown> -->
 
           <learning-spaces state=""></learning-spaces>
         </div>
@@ -29,6 +29,8 @@ const router = useRouter()
 </template>
 
 <style>
-@media (min-width: 1024px) {
+.about{
+  background: #CFE0FC;
+  margin-top: 3rem;
 }
 </style>

@@ -58,7 +58,7 @@ if (readQueryStringParameter('locale')) {
 
           <div class="col-6 col-md-2 order-0 order-md-0">
             <RouterLink to="/" class="logo">
-              <img src="@/assets/logo.svg" alt="Balkar" />
+              <img src="@/assets/logo-color.svg" alt="" />
             </RouterLink>
           </div>
 
@@ -87,7 +87,7 @@ if (readQueryStringParameter('locale')) {
           >
             <path
               d="M8.83496 1C8.83496 0.447715 8.38725 1.30493e-08 7.83496 0C7.28268 -1.30493e-08 6.83496 0.447715 6.83496 1L8.83496 1ZM7.12785 18.7071C7.51838 19.0976 8.15154 19.0976 8.54207 18.7071L14.906 12.3431C15.2966 11.9526 15.2966 11.3195 14.906 10.9289C14.5155 10.5384 13.8823 10.5384 13.4918 10.9289L7.83496 16.5858L2.17811 10.9289C1.78758 10.5384 1.15442 10.5384 0.763892 10.9289C0.373368 11.3195 0.373368 11.9526 0.763892 12.3431L7.12785 18.7071ZM6.83496 1L6.83496 18L8.83496 18L8.83496 1L6.83496 1Z"
-              fill="#020034"
+              fill="#000000"
             />
           </svg>
         </RouterLink>
@@ -103,7 +103,7 @@ if (readQueryStringParameter('locale')) {
           >
             <path
               d="M9 1C9 0.447715 8.55228 1.43769e-08 8 0C7.44772 -1.43769e-08 7 0.447715 7 1L9 1ZM7.29289 18.7071C7.68342 19.0976 8.31658 19.0976 8.70711 18.7071L15.0711 12.3431C15.4616 11.9526 15.4616 11.3195 15.0711 10.9289C14.6805 10.5384 14.0474 10.5384 13.6569 10.9289L8 16.5858L2.34315 10.9289C1.95262 10.5384 1.31946 10.5384 0.928931 10.9289C0.538407 11.3195 0.538407 11.9526 0.928931 12.3431L7.29289 18.7071ZM7 1L7 18L9 18L9 1L7 1Z"
-              fill="#020034"
+              fill="#000000"
             />
           </svg>
         </RouterLink>
@@ -147,11 +147,11 @@ if (readQueryStringParameter('locale')) {
 }
 
 .logo-outter {
-  color: #0e0f11;
+  color: #000000;
 
   /* Headings/h6 */
   font-size: 18px;
-  font-family: Athletics;
+  font-family: Inter;
   font-weight: 700;
   line-height: 24px;
 }
@@ -159,19 +159,10 @@ if (readQueryStringParameter('locale')) {
   height: 80px;
 }
 header {
-  background: #fbf7eb;
+  /* background: #fbf7eb; */
 }
 
-@media (min-width: 1024px) {
-  h1 {
-    color: var(--Resilience-fosc, #020034);
-    font-family: Athletics;
-    font-size: 70px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 90px; /* 100% */
-  }
-}
+
 
 @media (min-width: 1024px) and (max-height: 700px) {
   .slot {
@@ -180,8 +171,8 @@ header {
 }
 .router-link-exact-active:not(.logo), .router-link-exact-active:not(.logo):hover, .router-link-exact-active:not(.logo):focus{
   color: #fff;
-  background-color: #020034;
-  border-color: #020034;
+  background-color: #000000;
+  border-color: #000000;
 }
 .router-link-exact-active svg path, .router-link-exact-active:hover svg path, .router-link-exact-active:focus svg path{
   fill: #fff;

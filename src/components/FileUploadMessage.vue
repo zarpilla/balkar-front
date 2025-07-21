@@ -215,7 +215,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .dropbox {  
   background: transparent;
-  color: #020034;
+  color: #000000;
   padding: 0px;
   position: relative;
   cursor: pointer;

@@ -66,12 +66,12 @@ const setLocale = (loc: string) => {
 }
 
 .dropdown-toggle {
-  color: var(--text-default-800, #0e0f11);
+  color: var(--text-default-800, #000000);
   color: #8891a0;
 
   /* Text/Headline Semibold */
   font-size: 16px;
-  font-family: Athletics;
+  font-family: Inter;
   font-weight: 600;
   line-height: 20px;
 }
@@ -81,16 +81,16 @@ const setLocale = (loc: string) => {
 }
 
 .dropdown-toggle:hover {
-  color: var(--text-default-800, #0e0f11);
+  color: var(--text-default-800, #000000);
 }
 
 .dropdown-toggle:hover svg path,
 .dropdown-toggle:hover svg circle {
-  stroke: #0e0f11 !important;
+  stroke: #000000 !important;
 }
 
 .locale{
-  color: #0e0f11;
+  color: #000000;
   cursor: pointer;
 }
 .locale span{
@@ -116,11 +116,11 @@ const setLocale = (loc: string) => {
 
 .dropdown-menu li a {
   padding: 0;
-  color: #0e0f11;
+  color: #000000;
 
   /* Text/Headline Regular */
   font-size: 16px;
-  font-family: Athletics;
+  font-family: Inter;
   line-height: 20px;
   font-weight: 400;
 }
@@ -139,7 +139,7 @@ a .user-name,
 .user-name {
   text-decoration: none !important;
   color: var(--gray-0270, #757575);
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

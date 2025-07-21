@@ -124,6 +124,13 @@ const urlWithApiBase = computed(() => {
   height: 30px;
 }
 
+.s-40 {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 24px;
+}
+
 .s-32 {
   width: 32px;
   height: 32px;
@@ -152,7 +159,7 @@ const urlWithApiBase = computed(() => {
 .first-letter{
   text-decoration: none;
   font-weight: bold;
-  color: var(--Nabiu, #020034);
+  color: var(--Nabiu, #000000);
   text-transform: uppercase;
   color: #fff;
 }

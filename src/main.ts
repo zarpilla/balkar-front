@@ -18,7 +18,7 @@ const app = createApp(App)
 
 const i18n = createI18n({
     legacy: false,
-    locale: 'ca',
+    locale: 'en',
     fallbackLocale: '',
   })
   
@@ -26,10 +26,10 @@ const i18n = createI18n({
   .then(response => {
     
     const translations = response.data
-    const ca = translations.data.map((t: any) => ({ [t.attributes.key]: t.attributes.ca || t.attributes.caHtml })).reduce((acc: any, cur: any) => ({ ...acc, ...cur }), {})
+    //const ca = translations.data.map((t: any) => ({ [t.attributes.key]: t.attributes.ca || t.attributes.caHtml })).reduce((acc: any, cur: any) => ({ ...acc, ...cur }), {})
     const en = translations.data.map((t: any) => ({ [t.attributes.key]: t.attributes.en || t.attributes.enHtml })).reduce((acc: any, cur: any) => ({ ...acc, ...cur }), {})
 
-    i18n.global.setLocaleMessage('ca', ca);
+    // i18n.global.setLocaleMessage('ca', ca);
     i18n.global.setLocaleMessage('en', en);
 
     

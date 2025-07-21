@@ -111,7 +111,7 @@ if (!sessionStorage.getItem('autoenroll')) {
         <div class="row w-100">
           <div class="col-6 col-md-2 order-0 order-md-0">
             <RouterLink to="/">
-              <img src="@/assets/logo.svg" alt="Balkar" />
+              <img src="@/assets/logo-color.svg" alt="" />
             </RouterLink>
           </div>
 
@@ -119,13 +119,13 @@ if (!sessionStorage.getItem('autoenroll')) {
             <div class="auth-wrapper mt-4 d-flex ms-auto">
               <AuthenticatedUser></AuthenticatedUser>
 
-              <LanguageSwitcher class="ms-4"></LanguageSwitcher>
+              <!-- <LanguageSwitcher class="ms-4"></LanguageSwitcher> -->
             </div>
           </div>
         </div>
       </div>
 
-      <h1 class="mt-3 pb-3 mb-0">{{ $t('benvinguda-al-teu-balkar') }}</h1>
+      <!-- <h1 class="mt-3 pb-3 mb-0">{{ $t('benvinguda-al-teu-balkar') }}</h1> -->
 
       <AuthenticatedMenu class="pb-4"></AuthenticatedMenu>
     </div>
@@ -165,11 +165,11 @@ if (!sessionStorage.getItem('autoenroll')) {
 }
 
 .logo-outter {
-  color: #0e0f11;
+  color: #000000;
 
   /* Headings/h6 */
   font-size: 18px;
-  font-family: Athletics;
+  font-family: Inter;
   font-weight: 700;
   line-height: 24px;
 }
@@ -177,22 +177,18 @@ if (!sessionStorage.getItem('autoenroll')) {
   height: 80px;
 }
 header {
-  background: #fbf7eb;
+  /*background: #fbf7eb;*/
 }
 .auth-wrapper {
   border-radius: 0px;
   border: 0px solid var(--gray-0220, #f7f7f7);
   background: var(--gray-0210, #fff);
   padding: 4px;
-  height: 33px;
+  height: auto;
   width: fit-content;
 }
 .w-100 {
   width: 100%;
 }
-@media (min-width: 1024px) {
-  .logo-outter {
-    padding: 0 3rem;
-  }
-}
+
 </style>

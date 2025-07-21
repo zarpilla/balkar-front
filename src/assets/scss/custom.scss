@@ -3,97 +3,157 @@
 
 
 body {
-  font-family: Athletics;
+  color: var(--Negre, #000);
+
+  /* Text */
+  font-family: Inter;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  /* 25.5px */
+}
+
+h1 {
+  color: var(--Negre, #000);
+
+  /* Title H1 */
+  font-family: Inter;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
+  /* 36px */
+  letter-spacing: 0.3px;
+
+  margin: 20px 0;
+}
+
+h2 {
+  color: var(--Negre, #000);
+
+  /* Subtitle H2 */
+  font-family: Inter;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 130%;
+  /* 33.8px */
+  letter-spacing: 0.26px;
+  margin: 20px 0;
+}
+
+h3 {
+  color: var(--Negre, #000);
+
+  /* Subtitle H3 */
+  font-family: Inter;
+  font-size: 23px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
+  /* 29.9px */
+  margin: 20px 0;
+  margin: 20px 0;
+}
+
+h4 {
+  color: var(--Negre, #000);
+
+  /* Subtitle H4 */
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
+  /* 26px */
+  letter-spacing: 0.2px;
+  margin: 20px 0;
+}
+
+a {
+  color: var(--Green, #44B08E);
+  text-decoration: none;
+}
+
+
+cite,
+.quote,
+.cite {
+  color: var(--Negre, #000);
+
+  /* Quote */
+  font-family: Inter;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%;
+  /* 36.4px */
+}
+
+.btn {
+  color: var(--Black, #000);
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 23px;
+  /* 153.333% */
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+
+
+  padding: 14px 44px 14px 45px;
+  border-radius: 30px;
+  border: 1px solid var(--Green, #44B08E);
+  background: var(--Green, #44B08E);
 }
 
 .btn.btn-primary {
-  border-radius: 25px;
-  border: 0;
-  border: 2px solid var(--Resilience-fosc, #020034);
-  background: var(--Resilience-fosc, #020034);
-  color: var(--blanc, #FFF);
-  text-align: center;
-  font-family: Athletics;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 900;
-  line-height: normal;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 40px;
-  line-height: 26px;
+  background: var(--Green, #44B08E);
 }
 
-.btn.btn-primary:hover {
-  background: var(--Balkar, #F3C857);
-  border: 2px solid var(--Resilience-fosc, #F3C857);
-  color: var(--Resilience-fosc, #020034);
-}
 
 .btn.btn-primary:hover svg path {
-  fill: var(--Resilience-fosc, #020034);
+  fill: var(--Resilience-fosc, #000);
 }
 
 .btn.btn-secondary {
-  border: 0;
-  border-radius: 25px;
-  background: var(--Balkar, #EFDDA2);
-  color: var(--Resilience-fosc, #020034);
-  text-align: center;
-  font-family: Athletics;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 900;
-  line-height: normal;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 40px;
-  line-height: 26px;
+  border-radius: 30px;
+  background: var(--Mimosa, #F0C05A);
+  border: 1px solid var(--Mimosa, #F0C05A);
 }
 
 .btn.btn-secondary:hover {
   background: var(--Resilience-fosc, #F3C857);
-  color: var(--blanc, #020034);
 }
 
 .btn.btn-primary svg,
 .btn.btn-secondary svg {
   margin-left: 10px;
-  vertical-align: -4px;
+  vertical-align: -7px;
 }
 
 .btn.btn-secondary:hover svg path {
-  fill: var(--blanc, #020034);
+  fill: var(--blanc, #000000);
 }
 
 .btn.btn-primary.icon-left svg,
 .btn.btn-secondary.icon-left svg,
 .btn.btn-tertiary.icon-left svg {
   margin-right: 10px;
-  vertical-align: -4px;
+  vertical-align: -7px;
 }
 
 
 .btn.btn-tertiary {
-  border: 2px solid var(--Resilience-fosc, #020034);
-  border-radius: 25px;
-  background: transparent;
-  color: var(--Resilience-fosc, #020034);
-  text-align: center;
-  font-family: Athletics;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 900;
-  line-height: normal;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 40px;
-  line-height: 26px;
+  background: var(--Blue-Grey, #CFE0FC);
+  border: 1px solid var(--Blue-Grey, #CFE0FC);
 }
 
 .btn.btn.btn-tertiary:hover {
   background: var(--Resilience-fosc, #F3C857);
-  color: var(--blanc, #020034);
+  color: var(--blanc, #000000);
 }
 
 
@@ -101,9 +161,9 @@ body {
   border: 2px solid var(--Resilience-fosc, #fff);
   border-radius: 25px;
   background: var(--Resilience-fosc, #fff);
-  color: var(--Resilience-fosc, #020034);
+  color: var(--Resilience-fosc, #000);
   text-align: center;
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 900;
@@ -114,18 +174,13 @@ body {
   line-height: 26px;
 }
 
-.btn.btn.btn-white:hover {
-  background: var(--Resilience-fosc, #F3C857);
-  color: var(--blanc, #020034);
-  border: 2px solid var(--Resilience-fosc, #fff);
-  border: 2px solid var(--Resilience-fosc, #F3C857);
-}
+.btn.btn.btn-white:hover {}
 
 .btn.btn-primary svg,
 .btn.btn-secondary svg,
 .btn.btn-tertiary svg {
   margin-left: 10px;
-  vertical-align: -4px;
+  vertical-align: -7px;
 }
 
 .btn.btn-medium {
@@ -135,7 +190,6 @@ body {
 }
 
 .bg-balkar {
-  background: var(--Balkar-bg, #FBF7EB);
 }
 
 .bg-white {
@@ -162,7 +216,7 @@ textarea {
   padding: 6px 12px !important;
 
   color: var(--gray-02100, #0A0A0A);
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -186,7 +240,7 @@ textarea {
 select {
   color: var(--gray-02100, #0A0A0A);
   /* Body Text/SF Pro/14/Regular */
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -220,10 +274,12 @@ select[disabled] {
 img {
   max-width: 100%;
 }
+
 .mention-item {
   padding: 0.25rem;
 }
-.mention-selected{
-  background-color: #f2f2f2!important;
+
+.mention-selected {
+  background-color: #f2f2f2 !important;
   border-radius: 4px;
 }

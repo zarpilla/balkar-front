@@ -170,8 +170,8 @@ const hasChildren = computed(() => {
   background: rgba(242, 90, 1, 0.8);
   background: #efdda2;
   padding: 0.8rem 1rem;
-  color: var(--Nabiu, #020034);
-  font-family: Athletics;
+  color: var(--Nabiu, #000000);
+  font-family: Inter;
   font-size: 26px;
   font-style: normal;
   font-weight: 700;
@@ -183,7 +183,7 @@ const hasChildren = computed(() => {
 .topic {
   padding: 0.5rem 1rem;
   background: var(--Canya, #efdda2);
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
@@ -199,20 +199,20 @@ const hasChildren = computed(() => {
   font-weight: 300;
 }
 .quick-access {
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #020034);
+  color: var(--Nabiu, #000000);
 }
 .quick-access-name {
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #020034);
+  color: var(--Nabiu, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -233,8 +233,8 @@ const hasChildren = computed(() => {
   margin-top: 5rem;
   background-color: #bbdff7;
 
-  color: var(--Nabiu, #020034);
-  font-family: Athletics;
+  color: var(--Nabiu, #000000);
+  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: normal;
@@ -249,7 +249,7 @@ const hasChildren = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  border: 2px solid #020034;
+  border: 2px solid #000000;
   border-radius: 16px;
   line-height: 30px;
   height: 30px;
@@ -283,8 +283,8 @@ const hasChildren = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #020034);
-  font-family: Athletics;
+  color: var(--Nabiu, #000000);
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: normal;

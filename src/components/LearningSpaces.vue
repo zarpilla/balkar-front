@@ -4,7 +4,8 @@ import { useAuthStore } from '@/stores/auth'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import Profile from '@/components/account/Profile.vue'
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
+import { RouterLink, useRouter } from 'vue-router'
 
 const props = defineProps<{
   state: string
@@ -16,9 +17,12 @@ const loaded = ref(false)
 const spaces = ref<any>([])
 const load = async () => {
   const response = await Api.learningSpaces.mine(locale.value)
-  console.log(response.data)
   if (response.data && response.data.data) {
     spaces.value = response.data.data
+
+    // if (mySpaces.value.length === 0 && otherSpaces.value.length === 1) {
+    //   router.push(`/space/${otherSpaces.value[0].uid}`)
+    // }
   }
   loaded.value = true
 }
@@ -34,66 +38,118 @@ const mySpaces = computed(() => {
 const otherSpaces = computed(() => {
   return spaces.value.filter((space: any) => space.enrolled === false)
 })
+
+const router = useRouter()
+
+const base = import.meta.env.VITE_API_BASE
+// console.log('mySpaces', mySpaces.value)
+// console.log('otherSpaces', otherSpaces.value)
 </script>
 
-<template>  
-  <div class="learning-spaces" v-if="loaded">    
+<template>
+  <div class="learning-spaces mb-4" v-if="loaded">
     <div v-if="authStore.createdAt !== authStore.updatedAt">
       <h3 class="mb-4" v-if="mySpaces.length > 0">{{ $t('els-meus-espais-formatius') }}</h3>
 
-      <div v-for="space in mySpaces" :key="space.id">
-        <RouterLink :to="`/space/${space.uid}`" class="btn btn-tertiary mb-4">
-          {{ space.name }}
-          <span v-if="space.completedPct !== null">{{
-            '(' + (space.completedPct * 100).toFixed(0) + '%)'
-          }}</span>
-          <svg
-            width="19"
-            height="15"
-            viewBox="0 0 19 15"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 6.5C0.447715 6.5 9.65645e-08 6.94772 0 7.5C-9.65645e-08 8.05228 0.447715 8.5 1 8.5L1 6.5ZM18.7071 8.20711C19.0976 7.81659 19.0976 7.18342 18.7071 6.7929L12.3431 0.428934C11.9526 0.0384097 11.3195 0.0384096 10.9289 0.428934C10.5384 0.819458 10.5384 1.45262 10.9289 1.84315L16.5858 7.5L10.9289 13.1569C10.5384 13.5474 10.5384 14.1805 10.9289 14.5711C11.3195 14.9616 11.9526 14.9616 12.3431 14.5711L18.7071 8.20711ZM1 8.5L18 8.5L18 6.5L1 6.5L1 8.5Z"
-              fill="#020034"
-            />
-          </svg>
-        </RouterLink>
+      <div v-for="space in mySpaces" :key="space.id" class="col-4">
+        <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
+          <div class="overlay"></div>
+          <RouterLink :to="`/space/${space.uid}`" class="z">
+            <img :src="base + space.bannerOther.url" class="w-100" />
+          </RouterLink>
+        </div>
+        <div class="banner-name mb-4">
+          <RouterLink :to="`/space/${space.uid}`" class="z">
+            <div class="name zms-3">{{ space.name }}</div>
+            <div class="name-more zms-3">{{ space.nameMore }}</div>
+          </RouterLink>
+        </div>
       </div>
 
-      <h3 v-if="otherSpaces.length > 0" class="mt-5 mb-4">
-        {{ $t('tots-els-espais-d-aprenentatge') }}
-      </h3>
+      <h1 v-if="otherSpaces.length > 0" class="mt-5 mb-4 h1-40">
+        {{ $t('all-courses') }}
+      </h1>
 
-      <div v-for="space in otherSpaces" :key="space.id">
-        <RouterLink :to="`/space/${space.uid}`" class="btn btn-tertiary mb-4">
-          {{ space.name }}
-          <svg
-            width="19"
-            height="15"
-            viewBox="0 0 19 15"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 6.5C0.447715 6.5 9.65645e-08 6.94772 0 7.5C-9.65645e-08 8.05228 0.447715 8.5 1 8.5L1 6.5ZM18.7071 8.20711C19.0976 7.81659 19.0976 7.18342 18.7071 6.7929L12.3431 0.428934C11.9526 0.0384097 11.3195 0.0384096 10.9289 0.428934C10.5384 0.819458 10.5384 1.45262 10.9289 1.84315L16.5858 7.5L10.9289 13.1569C10.5384 13.5474 10.5384 14.1805 10.9289 14.5711C11.3195 14.9616 11.9526 14.9616 12.3431 14.5711L18.7071 8.20711ZM1 8.5L18 8.5L18 6.5L1 6.5L1 8.5Z"
-              fill="#020034"
-            />
-          </svg>
-        </RouterLink>
+      <div v-for="space in otherSpaces" :key="space.id" class="col-4">
+        <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
+          <div class="overlay"></div>
+          <RouterLink :to="`/space/${space.uid}`" class="z">
+            <img :src="base + space.bannerOther.url" class="w-100" />
+          </RouterLink>
+        </div>
+        <div class="banner-name mb-4">
+          <RouterLink :to="`/space/${space.uid}`" class="z">
+            <div class="name zms-3">{{ space.name }}</div>
+            <div class="name-more zms-3">{{ space.nameMore }}</div>
+          </RouterLink>
+        </div>
       </div>
     </div>
-    <div v-else>      
+    <div v-else>
       <h3>{{ $t('omple-perfil') }}</h3>
-      <div class="mt-4 text" v-html="$t('omple-perfil-desc')">
-      </div>
+      <div class="mt-4 text" v-html="$t('omple-perfil-desc')"></div>
       <Profile redirect="/dashboard"></Profile>
     </div>
   </div>
 </template>
 
 <style scoped>
-@media (min-width: 1024px) {
+h1-40 {
+  color: var(--Black, #000);
+  font-family: Inter;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 45px; /* 112.5% */
+}
+.banner-other {
+  border-radius: 20px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%),
+    lightgray 50% / cover no-repeat;
+  position: relative;
+
+  img {
+    height: 320px;
+    object-fit: cover;
+  }
+}
+.banner-name {
+  border-radius: 20px;
+  background: var(--White, #fff);
+  text-decoration: none;
+  padding: 30px;
+
+  .name {
+    color: var(--Black, #000);
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: 'DM Sans';
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%; /* 26.4px */
+    letter-spacing: 0.22px;
+    margin-bottom: 10px;
+  }
+  .name-more {
+    color: var(--Black, #000);
+
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 130%; /* 23.4px */
+    letter-spacing: 0.18px;
+  }
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 500px;
+  background: linear-gradient(180deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%);
+  overflow: hidden;
+  pointer-events: none;
 }
 </style>

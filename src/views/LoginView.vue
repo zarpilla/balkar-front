@@ -78,7 +78,7 @@ form {
   color: var(--gray-02100, #0a0a0a);
   text-align: center;
   /* Body Text/SF Pro/14/Medium */
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   line-height: 20px; /* 142.857% */

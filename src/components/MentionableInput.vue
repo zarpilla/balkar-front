@@ -496,7 +496,7 @@ export default defineComponent({
 .fake-mentionable-text {
   pointer-events: none;
   margin-bottom: 0;
-  color: var(--text-default-800, #0e0f11);
+  color: var(--text-default-800, #000000);
   font-family: SF Pro Rounded;
   font-size: 14px;
   font-style: normal;

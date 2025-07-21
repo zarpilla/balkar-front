@@ -126,10 +126,10 @@ const emit = defineEmits<{
 }
 
 .texts .title {
-  color: var(--text-default-800, #0e0f11);
+  color: var(--text-default-800, #000000);
 
   /* Text/Body Bold */
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -141,7 +141,7 @@ const emit = defineEmits<{
   color: var(--text-subdued-500, #8891a0);
 
   /* Text/Body Regular */
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -155,7 +155,7 @@ const emit = defineEmits<{
   color: var(--text-subdued-500, #8891a0);
 
   /* Text/Mini Bold */
-  font-family: Athletics;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: normal;

@@ -37,8 +37,8 @@ const userText = computed(() =>
     >
       <AvatarImage
         :bordered="false"
-        :size="24"
-        class="me-0 me-md-3 s-24"
+        :size="40"
+        class="me-0 me-md-3 s-40"
         v-if="authStore"
         :name="userText"
         :url="authStore.pictureUrl"
@@ -48,32 +48,31 @@ const userText = computed(() =>
         {{ userText }}
       </span>
 
-      <svg
-        class="arrow ms-0 ms-md-1 mt-1"
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M9.99997 12.6007C9.89052 12.6008 9.78213 12.5793 9.68102 12.5374C9.57991 12.4955 9.48808 12.434 9.41081 12.3565L5.87521 8.82139C5.71895 8.66512 5.63116 8.45318 5.63116 8.23219C5.63117 8.0112 5.71895 7.79926 5.87522 7.643C6.03148 7.48674 6.24342 7.39895 6.46441 7.39895C6.6854 7.39895 6.89734 7.48674 7.05361 7.643L9.99997 10.5889L12.9463 7.64298C13.1026 7.48672 13.3145 7.39893 13.5355 7.39893C13.7565 7.39893 13.9685 7.48671 14.1247 7.64298C14.281 7.79924 14.3688 8.01118 14.3688 8.23217C14.3688 8.45316 14.281 8.6651 14.1247 8.82136L10.5891 12.3565C10.5119 12.434 10.42 12.4955 10.3189 12.5374C10.2178 12.5793 10.1094 12.6008 9.99997 12.6007Z"
-          fill="#757575"
-        />
-      </svg>
+      <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <mask id="mask0_64_2174" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="41">
+    <rect y="0.688797" width="40" height="40" fill="#D9D9D9"/>
+  </mask>
+  <g mask="url(#mask0_64_2174)">
+    <path d="M5 11.8V9.02213H35V11.8H5ZM5 32.3555V29.5775H35V32.3555H5ZM5 22.0775V19.3H35V22.0775H5Z" fill="#1C1B1F"/>
+  </g>
+</svg>
     </span>
 
     <ul class="dropdown-menu">
       <li class="email">
+        <RouterLink class="dropdown-item clickable" to="/dashboard">
+          {{ $t('My courses') }}
+        </RouterLink> 
+      </li>
+      <li class="sep"></li>
+      <li class="email">
         <RouterLink class="dropdown-item clickable" to="/account/profile">
-          <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
           {{ $t('profile-details') }}
         </RouterLink> 
       </li>
       <li class="sep"></li>
       <li>
         <a class="dropdown-item clickable" @click="logOut">
-          <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
           {{ $t('log-out') }}
         </a>
       </li>
@@ -91,12 +90,12 @@ const userText = computed(() =>
 }
 
 .dropdown-toggle {
-  color: var(--text-default-800, #0e0f11);
+  color: var(--text-default-800, #000000);
   color: #8891a0;
 
   /* Text/Headline Semibold */
   font-size: 16px;
-  font-family: Athletics;
+  font-family: Inter;
   font-weight: 600;
   line-height: 20px;
 }
@@ -106,12 +105,12 @@ const userText = computed(() =>
 }
 
 .dropdown-toggle:hover {
-  color: var(--text-default-800, #0e0f11);
+  color: var(--text-default-800, #000000);
 }
 
 .dropdown-toggle:hover svg path,
 .dropdown-toggle:hover svg circle {
-  stroke: #0e0f11 !important;
+  stroke: #000000 !important;
 }
 
 .user-logo {
@@ -133,11 +132,11 @@ const userText = computed(() =>
 
 .dropdown-menu li a {
   padding: 0;
-  color: #0e0f11;
+  color: #000000;
 
   /* Text/Headline Regular */
   font-size: 16px;
-  font-family: Athletics;
+  font-family: Inter;
   line-height: 20px;
   font-weight: 400;
 }
@@ -154,13 +153,17 @@ const userText = computed(() =>
 }
 a .user-name,
 .user-name {
-  text-decoration: none !important;
-  color: var(--gray-0270, #757575);
-  font-family: Athletics;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px; /* 171.429% */
+  color: #000;
+font-family: "Inter";
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: 110%; /* 17.6px */
+letter-spacing: 0.32px;
+text-transform: uppercase;
+
+padding-top: 12px;
+margin-right: 36px;
 }
 .notifications {
   padding-top: 5px;

@@ -245,7 +245,7 @@ export default {
 textarea {
   width: 100%;
   height: 100px;
-  border: 1px solid var(--Nabiu, #020034);
+  border: 1px solid var(--Nabiu, #000000);
   height: 42px;
   border-radius: 20px;
   line-height: 30px;
@@ -257,7 +257,7 @@ textarea {
 }
 textarea:focus {
   outline: none;
-  border: 1px solid var(--Nabiu, #020034);
+  border: 1px solid var(--Nabiu, #000000);
 }
 .send {
   right: 20px;

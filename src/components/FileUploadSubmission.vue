@@ -215,10 +215,10 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .dropbox {
-  outline: 2px dashed #020034; /* the dash box */
+  outline: 2px dashed #000000; /* the dash box */
   outline-offset: -10px;
   background: #BBDFF7;
-  color: #020034;
+  color: #000000;
   padding: 10px 10px;
   min-height: 80px; /* minimum height */
   position: relative;

@@ -252,7 +252,7 @@ textarea:not(:focus):valid ~ .floating-label,
 textarea:not(:focus):disabled ~ .floating-label {
   color: var(--text-subdued-500, #8891a0);
   /* Text/Headline Semibold */
-  font-family: Athletics;
+  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   line-height: 20px; /* 125% */
@@ -267,7 +267,7 @@ textarea:not(:focus):disabled ~ .floating-label {
 .floating-label {
   color: var(--text-subdued-500, #8891a0);
   /* Text/Headline Semibold */
-  font-family: Athletics;
+  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   line-height: 20px; /* 125% */

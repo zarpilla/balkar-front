@@ -23,7 +23,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 
 <style scoped>
 .router-link-exact-active, .router-link-exact-active:hover{
-  background:  var(--blanc, #020034)!important;
+  background:  var(--blanc, #000000)!important;
   color: #fff!important; 
 }
 </style>
