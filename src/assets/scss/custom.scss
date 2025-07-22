@@ -145,6 +145,25 @@ cite,
   vertical-align: -7px;
 }
 
+.btn-primary-outlined {
+  background: transparent;
+  border: 2px solid var(--Green, #44B08E);
+  color: var(--Green, #44B08E);
+  padding: 14px 44px 14px 45px;
+}
+
+.btn-primary-outlined svg path {
+  fill: var(--Green, #44B08E);
+}
+
+.btn-primary-outlined:hover {
+  background: var(--Green, #44B08E);
+  color: var(--blanc, #000000);
+}
+
+.btn-primary-outlined:hover svg path {
+  fill: var(--blanc, #000000);
+}
 
 .btn.btn-tertiary {
   background: var(--Blue-Grey, #CFE0FC);

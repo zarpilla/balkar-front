@@ -73,8 +73,14 @@ const router = createRouter({
       component: () => import('../views/SpaceView.vue')
     },
     {
-      path: '/space/:uid/module/:moduleId/topic/:topicId',
-      name: 'spaces-module-topic',
+      path: '/space/:uid/module/:moduleId/unit/:unitId',
+      name: 'spaces-module-unit',
+      meta: { requiresAuth: true },
+      component: () => import('../views/SpaceView.vue')
+    },
+    {
+      path: '/space/:uid/module/:moduleId/unit/:unitId/lesson/:lessonId',
+      name: 'spaces-module-unit-lesson',
       meta: { requiresAuth: true },
       component: () => import('../views/SpaceView.vue')
     },
@@ -85,19 +91,31 @@ const router = createRouter({
       component: () => import('../views/SpaceView.vue')
     },
     {
-      path: '/forum/:uid',
+      path: '/space/:uid/bookmarks',
+      name: 'bookmarks',
+      meta: { requiresAuth: true },
+      component: () => import('../views/BookmarksView.vue')
+    },
+    {
+      path: '/space/:uid/progress',
+      name: 'progress',
+      meta: { requiresAuth: true },
+      component: () => import('../views/ProgressView.vue')
+    },
+    {
+      path: '/space/:uid/forum',
       name: 'forum',
       meta: { requiresAuth: true },
       component: () => import('../views/ForumView.vue')
     },
     {
-      path: '/forum/:uid/channel/:channelId',
+      path: '/space/:uid/forum/channel/:channelId',
       name: 'forum-channel',
       meta: { requiresAuth: true },
       component: () => import('../views/ForumView.vue')
     },
     {
-      path: '/forum/:uid/user/:userId',
+      path: '/space/:uid/forum/user/:userId',
       name: 'forum-channel-user',
       meta: { requiresAuth: true },
       component: () => import('../views/ForumView.vue')

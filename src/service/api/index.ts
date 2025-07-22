@@ -11,6 +11,7 @@ import { avatars } from './avatars'
 import { preEnrollements } from './pre-enrollements'
 import { interests } from './interests'
 import { payment } from './payments'
+import { bookmarks } from './bookmarks'
 
 
 
@@ -27,5 +28,6 @@ export const Api = {
   avatars,
   preEnrollements,
   interests,
-  payment
+  payment,
+  bookmarks
 }

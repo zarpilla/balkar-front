@@ -6,7 +6,7 @@
       <RouterLink class="me-5" to="/">
         <img class="img-1" src="@/assets/logo.svg" alt="" />
       </RouterLink>
-      <a class="ms-50" href="https://resilience.earth" target="_blank">
+      <a class="ms-50" href="#" target="_blank">
         <img class="img-2" src="@/assets/logo-2.svg" alt="" />
       </a>
     </div>

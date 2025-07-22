@@ -15,6 +15,8 @@ import ConfirmModal from './ConfirmModal.vue'
 import { Modal } from 'bootstrap'
 import { replaceMentionValues } from '@/utils/mentions'
 import { useI18n } from 'vue-i18n'
+import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
+import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 
 const authStore = useAuthStore()
 
@@ -180,8 +182,7 @@ const messageDetail = async (message: any) => {
 }
 
 const loadDetail = async (message: any) => {
-
-  await getChildrenMessages(message)  
+  await getChildrenMessages(message)
 }
 
 const getChildrenMessages = async (message: any) => {
@@ -368,7 +369,7 @@ const deleteMessage = async (message: any) => {
     childrenMessages.value.splice(index, 1)
   }
   if (
-    showChildrenMessagesParent &&
+    showChildrenMessagesParent.value &&
     showChildrenMessagesParent.value &&
     (showChildrenMessagesParent.value as any).id === message.id
   ) {
@@ -389,7 +390,10 @@ const editMessageModal = ref<Modal | null>(null)
 const editMessage = async (message: any) => {
   // message.updatedAt = new Date()
 
-  const body = replaceMentionValues(message.text.split('\n').join('<br>'), ({ name }: any) => `@${name}`)
+  const body = replaceMentionValues(
+    message.text.split('\n').join('<br>'),
+    ({ name }: any) => `@${name}`
+  )
 
   message.text = body
 
@@ -402,7 +406,6 @@ const editMessage = async (message: any) => {
 }
 
 const loadAfterEdit = async (message: any) => {
-
   message.updatedAt = new Date()
   editMessageModal.value?.hide()
   showEditingMessage.value = false
@@ -412,7 +415,7 @@ const loadAfterEdit = async (message: any) => {
     ;(childrenMessages.value[index] as any).text = message.text
   }
   if (
-    showChildrenMessagesParent &&
+    showChildrenMessagesParent.value &&
     showChildrenMessagesParent.value &&
     (showChildrenMessagesParent.value as any).id === message.id
   ) {
@@ -422,9 +425,9 @@ const loadAfterEdit = async (message: any) => {
       .find((channel: any) => channel.id.toString() === message.channel.toString())
       .messages.findIndex((m: any) => m.id === message.id)
     if (index > -1) {
-      forum.value.channels
-        .find((channel: any) => channel.id.toString() === message.channel.toString())
-        .messages[index].text = message.text //splice(index, 1, message)
+      forum.value.channels.find(
+        (channel: any) => channel.id.toString() === message.channel.toString()
+      ).messages[index].text = message.text //splice(index, 1, message)
     }
   }
 
@@ -434,58 +437,111 @@ const loadAfterEdit = async (message: any) => {
 
 <template>
   <div class="learning-space mb-5" v-if="forum && space">
-    <div class="bg-balkar">
-      <div class="container">
-        <RouterLink
-          v-if="space && !space.global"
-          class="btn btn-secondary mb-3 me-3"
-          :to="`/space/${uid}`"
-        >
-          {{ space.name }}
-        </RouterLink>
+    <LearningSpaceBanner :space="space" :base="base" :authenticated="true" />
 
-        <RouterLink class="btn btn-primary mb-3" :to="`/forum/${uid}`">
-          {{ forum.name }}
-        </RouterLink>
-      </div>
-    </div>
-
-    <div class="container mt-5">
-      <h1 class="ztext-uppercase">{{ forum.name }}</h1>
-    </div>
-
-    <div v-if="space.banner && space.banner.url" class="container mt-5">
-      <img :src="base + space.banner.url" class="w-100" />
-    </div>
-
-    <div class="enrolled" v-if="forum.description">
-      <div class="container bg-white mt-5">
-        <vue-markdown
-          :linkify="true"
-          :options="{ html: true, linkTarget: '_blank' }"
-          class="mt-4 mb-4"
-          :source="forum.description"
-        ></vue-markdown>
-      </div>
-    </div>
+    <LearningSpaceHeader :space="space" :uid="uid" :authenticated="true" selected="community" />
 
     <div class="container">
       <div class="row mt-5">
-        <div class="col-12 order-1 order-md-0 col-md-9">
+        <div class="col-12 col-md-4 mb-5 pe-0 pe-md-5">
+          <div class="module">
+            <h2 class="mb-4">{{ $t('channels') }}</h2>
+            <div class="module-item">
+              <RouterLink
+                class="forum-link d-flex mb-3 w-100"
+                :to="`/space/${uid}/forum`"
+                :class="{ 'forum-link': channelId, 'forum-selected': !channelId }"
+              >
+                {{ $t('all-channels') }}
+                <svg
+                v-if="!channelId"
+                  class="rotate-90 ms-auto mt-1"
+                  width="12"
+                  height="8"
+                  viewBox="0 0 12 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 3.14879L1.4 7.74879L0 6.34879L6 0.348785L12 6.34879L10.6 7.74879L6 3.14879Z"
+                    fill="#44B08E"
+                  />
+                </svg>
+              </RouterLink>
+            </div>
+            <div v-for="channel in publicChannels" :key="channel.id" class="module-item">
+              <RouterLink
+                :to="`/space/${uid}/forum/channel/${channel.id}`"
+                class="forum-link d-flex mb-3 w-100"
+                :class="{
+                  'forum-link':
+                    !channelId || (channelId && channel.id.toString() !== channelId.toString()),
+                  'forum-selected': channelId && channel.id.toString() === channelId.toString()
+                }"
+              >
+                {{ channel.name }}
+                <svg
+                v-if="channelId && channel.id.toString() === channelId.toString()"
+                  class="rotate-90 ms-auto mt-1"
+                  width="12"
+                  height="8"
+                  viewBox="0 0 12 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 3.14879L1.4 7.74879L0 6.34879L6 0.348785L12 6.34879L10.6 7.74879L6 3.14879Z"
+                    fill="#44B08E"
+                  />
+                </svg>
+              </RouterLink>
+            </div>
+            <h3 v-if="privateChannels.length" class="mb-3">{{ $t('private-channels') }}</h3>
+            <div v-for="channel in privateChannels" :key="channel.id">
+              <RouterLink
+                :to="`/space/${uid}/forum/channel/${channel.id}`"
+                class="forum-link d-flex  mb-3 w-100"
+                :class="{
+                  'forum-link':
+                    !channelId || (channelId && channel.id.toString() !== channelId.toString()),
+                  'forum-selected': channelId && channel.id.toString() === channelId.toString()
+                }"
+              >
+                {{ channel.name }}
+                <svg
+                v-if="channelId && channel.id.toString() === channelId.toString()"
+                  class="rotate-90 ms-auto"
+                  width="12"
+                  height="8"
+                  viewBox="0 0 12 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 3.14879L1.4 7.74879L0 6.34879L6 0.348785L12 6.34879L10.6 7.74879L6 3.14879Z"
+                    fill="#44B08E"
+                  />
+                </svg>
+              </RouterLink>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-8">
           <div v-for="channel in forum.channels" :key="channel.id">
             <div
               class="bg-white zmt-5"
               v-if="!channelId || (channelId && channelId.toString() === channel.id.toString())"
             >
               <div class="d-flex w-100 zmt-3 flex-wrap">
-                <div v-if="channelId">
-                  <RouterLink :to="`/forum/${uid}`" class="btn btn-tertiary mb-4 me-4">
-                    {{ $t('tornar') }}                    
+                <div v-if="channelId && false">
+                  <RouterLink :to="`/space/${uid}/forum`" class="btn btn-tertiary mb-4 me-4">
+                    {{ $t('tornar') }}
                   </RouterLink>
                 </div>
                 <RouterLink
-                  :to="`/forum/${uid}/channel/${channel.id}`"
-                  class="btn btn-secondary mb-4"
+                  :to="`/space/${uid}/forum/channel/${channel.id}`"
+                  class="forum-link forum-link-individual"
                 >
                   {{ channel.name }}
                 </RouterLink>
@@ -534,7 +590,7 @@ const loadAfterEdit = async (message: any) => {
 
                 <div v-if="i === messagesPerChannel - 1 && !channelId">
                   <RouterLink
-                    :to="`/forum/${uid}/channel/${channel.id}`"
+                    :to="`/space/${uid}/forum/channel/${channel.id}`"
                     class="btn btn-tertiary mb-3"
                   >
                     {{ $t('veure-tots-els-missatges-del-canal') }}
@@ -546,56 +602,6 @@ const loadAfterEdit = async (message: any) => {
                 {{ $t('no-hi-ha-missatges-al-canal') }}
               </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12 col-md-3 order-0 order-md-1 mb-5">
-          <div class="module module-bordered">
-            <h3 v-if="publicChannels.length" class="mb-3">{{ $t('channels') }}</h3>
-            <div>
-              <RouterLink
-                class="btn mb-3 w-100"
-                :to="`/forum/${uid}`"
-                :class="{ 'btn-white': channelId, 'btn-primary': !channelId }"
-              >
-                {{ $t('all channels') }}
-              </RouterLink>
-            </div>
-            <div v-for="channel in publicChannels" :key="channel.id">
-              <RouterLink
-                :to="`/forum/${uid}/channel/${channel.id}`"
-                class="btn mb-3 w-100"
-                :class="{
-                  'btn-white':
-                    !channelId || (channelId && channel.id.toString() !== channelId.toString()),
-                  'btn-primary': channelId && channel.id.toString() === channelId.toString()
-                }"
-              >
-                {{ channel.name }}
-              </RouterLink>
-            </div>
-            <h3 v-if="privateChannels.length" class="mb-3">{{ $t('private-channels') }}</h3>
-            <div v-for="channel in privateChannels" :key="channel.id">
-              <RouterLink
-                :to="`/forum/${uid}/channel/${channel.id}`"
-                class="btn mb-3 w-100"
-                :class="{
-                  'btn-white':
-                    !channelId || (channelId && channel.id.toString() !== channelId.toString()),
-                  'btn-primary': channelId && channel.id.toString() === channelId.toString()
-                }"
-              >
-                {{ channel.name }}
-              </RouterLink>
-            </div>
-            <!-- <div v-if="forum">
-              <div v-for="user in forum.users" :key="user.id">
-                <RouterLink
-                :to="`/forum/${uid}/user/${user.id}`"
-                class="btn mb-3 w-100 btn-white">
-                {{ user.name + ' ' + user.lastname }}
-              </RouterLink>
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
@@ -677,10 +683,15 @@ const loadAfterEdit = async (message: any) => {
 </template>
 
 <style scoped>
+h3 {
+  color: var(--Dark-grey, #797979);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 27px */
+}
 .module {
-  background: rgba(242, 90, 1, 0.8);
-  background: #efdda2;
-  padding: 0.8rem 1rem;
   color: var(--Nabiu, #000000);
   font-family: Inter;
   font-size: 26px;
@@ -822,5 +833,33 @@ const loadAfterEdit = async (message: any) => {
   fill: #666;
 }
 @media (min-width: 1024px) {
+}
+.forum-link {
+  color: var(--Green, #44b08e);
+
+  /* Sidebar - Module */
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 110%; /* 16.5px */
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+  margin: 20px 0 0 0;
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #898989;
+  display: block;
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+  margin-left: 0.5rem;
+}
+.module-item {
+  padding-bottom: 0px;
+}
+.forum-link-individual {
+  border: 0;
 }
 </style>

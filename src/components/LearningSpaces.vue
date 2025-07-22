@@ -51,7 +51,7 @@ const base = import.meta.env.VITE_API_BASE
     <div v-if="authStore.createdAt !== authStore.updatedAt">
       <h3 class="mb-4" v-if="mySpaces.length > 0">{{ $t('els-meus-espais-formatius') }}</h3>
 
-      <div v-for="space in mySpaces" :key="space.id" class="col-4">
+      <div v-for="space in mySpaces" :key="space.id" class="col-4 space">
         <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
           <div class="overlay"></div>
           <RouterLink :to="`/space/${space.uid}`" class="z">
@@ -70,7 +70,7 @@ const base = import.meta.env.VITE_API_BASE
         {{ $t('all-courses') }}
       </h1>
 
-      <div v-for="space in otherSpaces" :key="space.id" class="col-4">
+      <div v-for="space in otherSpaces" :key="space.id" class="col-4 space">
         <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
           <div class="overlay"></div>
           <RouterLink :to="`/space/${space.uid}`" class="z">
@@ -102,6 +102,7 @@ h1-40 {
   font-weight: 700;
   line-height: 45px; /* 112.5% */
 }
+
 .banner-other {
   border-radius: 20px;
   overflow: hidden;

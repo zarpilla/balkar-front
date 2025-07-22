@@ -63,7 +63,7 @@ const hasChildren = computed(() => {
 <template>
   <div class="d-flex">
     <AvatarImage
-      class="me-2 mt-1"
+      class="me-3 mt-1"
       :size="56"
       :url="message.avatar"
       :name="message.name || message.username"
@@ -146,7 +146,7 @@ const hasChildren = computed(() => {
           <span v-else>{{ $t('hi-ha-resposta', { n: message.children.length }) }}</span>
         </div>
         <span
-          class="mt-1 ps-0 ps-md-3"
+          class="mt-1 ps-0 ps-md-3 time-ago"
           v-if="!detail && message.children && message.children.length"
           >{{ timeAgo(message.children[message.children.length - 1].createdAt) }}</span
         >
@@ -292,7 +292,9 @@ const hasChildren = computed(() => {
 }
 .linkable {
   text-decoration: underline;
-  font-weight: 700;
+  font-weight: 500;
+  font-size: 15px;
+
 }
 .bold {
   font-weight: 700;
@@ -315,17 +317,26 @@ const hasChildren = computed(() => {
   color: rgb(27, 117, 208);
 }
 .options {
-  margin-top: -6px;
+  margin-top: -2px;
 }
 @media (min-width: 1024px) {
 }
 .edited {
   color: #666;
 }
+.time-ago{
+  color: var(--Dark-grey, #797979);
+  font-size: 15px;
+
+}
 </style>
 <style>
 .file a,
 .message a {
   color: rgb(27, 117, 208);
+}
+
+.modal-content{
+  border: 0;
 }
 </style>
