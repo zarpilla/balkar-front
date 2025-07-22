@@ -19,7 +19,7 @@ const loading = ref(false)
 <template>
   <LayoutGuest :loaded="!loading" css="col-lg-6 offset-lg-3 place-items-center">
     <div v-if="!loading" class="bg-white p-4">
-      <RegisterForm button-text="apuntar-se"></RegisterForm>      
+      <RegisterForm button-text="register"></RegisterForm>      
     </div>
   </LayoutGuest>
 </template>

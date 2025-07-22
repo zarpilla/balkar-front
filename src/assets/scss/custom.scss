@@ -107,6 +107,14 @@ cite,
   border-radius: 30px;
   border: 1px solid var(--Green, #44B08E);
   background: var(--Green, #44B08E);
+
+  @media screen and (max-width: 768px) {
+    padding: 10px 20px;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+    
+  }
 }
 
 .btn.btn-primary {

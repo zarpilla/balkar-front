@@ -182,6 +182,13 @@ const handleEnroll = () => {
     font-weight: 700;
     line-height: 120%; /* 36px */
     letter-spacing: 0.3px;
+
+    @media screen and (max-width: 768px) {
+      font-size: 24px;
+      padding-left: 20px;
+      width: 100%;
+      
+    }
   }
   img {
     border-radius: 20px;

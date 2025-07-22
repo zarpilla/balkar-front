@@ -199,7 +199,7 @@ const uploaded = (fileImage: string) => {
                 name="country"
               />
             </FormField>
-            <FormField :label="$t('interests')" css="col-12 col-md-8 mb-3">
+            <FormField :label="$t('interests')" css="col-12 col-md-8 mb-3" v-if="interests.length > 0">
               <FormCheckRadioGroup
                 type="checkbox"
                 :options="interests"

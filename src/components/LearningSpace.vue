@@ -158,6 +158,7 @@ const enroll = async () => {
   await Api.enrollments.enroll({ uid: props.uid })
   toastVisible.value = true
   space.value.enrolled = true
+  window.location.reload()
 }
 
 const pay = async () => {
@@ -987,21 +988,6 @@ const selectedLesson = computed(() => {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div
-              v-if="!moduleId && space.forum && space.enrolled"
-              class="forum module module-type-forum"
-            >
-              <div class="d-flex w-100 zmt-3">
-                <RouterLink :to="`/space/${uid}/forum`" class="d-flex">
-                  {{ space.forum.name }}
-                </RouterLink>
-
-                <RouterLink :to="`/space/${uid}/forum`" class="ms-auto btn btn-white">
-                  {{ $t('FORUM ACCESS') }}
-                </RouterLink>
               </div>
             </div>
           </div>

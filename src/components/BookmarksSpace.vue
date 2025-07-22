@@ -220,15 +220,6 @@ const authenticated = computed(() => {
       </div>
     </div>
   </div>
-  <Teleport to="body">
-    <CustomToast
-      :show="toastVisible"
-      type="success"
-      title="Enrolled"
-      description="Enrolled to space successfully!"
-      id="account-contact-ok-toast"
-    ></CustomToast>
-  </Teleport>
 </template>
 
 <style scoped>

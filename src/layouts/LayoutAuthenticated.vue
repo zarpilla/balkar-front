@@ -109,13 +109,13 @@ if (!sessionStorage.getItem('autoenroll')) {
     <div class="container">
       <div class="logo-outter">
         <div class="row w-100">
-          <div class="col-6 col-md-2 order-0 order-md-0">
+          <div class="col-6 col-md-2">
             <RouterLink to="/">
               <img src="@/assets/logo-color.svg" alt="" />
             </RouterLink>
           </div>
 
-          <div class="col-6 col-md-2 order-1 order-md-2 ms-auto">
+          <div class="col-6 col-md-4 ms-auto">
             <div class="auth-wrapper mt-4 d-flex ms-auto">
               <AuthenticatedUser></AuthenticatedUser>
 

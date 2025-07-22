@@ -164,6 +164,12 @@ const getVideoUrl = () => {
   width: calc(100% - 90px);
   left: 45px;
   text-align: left;
+
+  @media screen and (max-width: 768px) {
+    font-size: 24px;
+    width: calc(100% - 20px);
+    left: 20px;    
+  }
 }
 
 .content-video__banner-title {
@@ -180,6 +186,10 @@ const getVideoUrl = () => {
   text-transform: uppercase;
   width: 40%;
   text-align: left;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    left: 20px;
+  }
 }
 
 .content-video__banner {

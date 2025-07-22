@@ -148,12 +148,13 @@ const processUpload = async (event: any) => {
 
 <template>
   <div class="upload-wrapper">
-    <div class="file-upload">
+    <div class="file-upload mt-4 ms-4">
       <input type="file" :accept="getValidExtensions()" @change="processUpload($event)" />
       <button
         type="button"
-        class="upload-button btn zbtn-secondary zposition-absolute button-upload"
+        class="upload-button btn btn-medium button-upload"
       >
+      UPLOAD
         <svg
           width="20"
           height="20"

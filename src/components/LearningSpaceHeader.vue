@@ -30,16 +30,16 @@
         </div>
         <div class="col-12 col-lg-8 content-menu" v-if="space.forum">
           <div class="d-flex">
-            <RouterLink :to="`/space/${uid}`" class="d-flex" :class="{ active: selected === 'space' }">
+            <RouterLink :to="`/space/${uid}`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'space' }">
               {{ $t('content') }}
             </RouterLink>
-            <RouterLink :to="`/space/${uid}/progress`" class="d-flex" :class="{ active: selected === 'progress' }">
+            <RouterLink :to="`/space/${uid}/progress`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'progress' }">
               {{ $t('progress') }}
             </RouterLink>
-            <RouterLink :to="`/space/${uid}/bookmarks`" class="d-flex" :class="{ active: selected === 'bookmarks' }">
+            <RouterLink :to="`/space/${uid}/bookmarks`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'bookmarks' }">
               {{ $t('bookmarks') }}
             </RouterLink>
-            <RouterLink :to="`/space/${uid}/forum`" class="d-flex " :class="{ active: selected === 'community' }">
+            <RouterLink :to="`/space/${uid}/forum`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'community' }">
               {{ $t('community') }}
             </RouterLink>
           </div>
@@ -116,7 +116,7 @@ defineProps<Props>()
   line-height: 110%; /* 16.5px */
   letter-spacing: 0.45px;
   text-transform: uppercase;
-  margin-right: 30px;
+  /* margin-right: 30px; */
 }
 
 .content-menu a.active {

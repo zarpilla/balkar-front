@@ -56,17 +56,17 @@ if (readQueryStringParameter('locale')) {
       <div class="logo-outter">
         <div class="d-flex align-items-center">
 
-          <div class="col-6 col-md-2 order-0 order-md-0">
+          <div class="col-6 col-md-2">
             <RouterLink to="/" class="logo">
               <img src="@/assets/logo-color.svg" alt="" />
             </RouterLink>
           </div>
 
-          <div class="col-6 col-md-2 order-1 order-md-2 ms-auto">
+          <div class="col-6 col-md-4 ms-auto">
             <div class="auth-wrapper mt-4 d-flex">
               <AuthenticatedUser></AuthenticatedUser>
 
-              <LanguageSwitcher class="ms-4"></LanguageSwitcher>
+              <!-- <LanguageSwitcher class="ms-4"></LanguageSwitcher> -->
             </div>
           </div>
           
