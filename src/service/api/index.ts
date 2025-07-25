@@ -12,8 +12,7 @@ import { preEnrollements } from './pre-enrollements'
 import { interests } from './interests'
 import { payment } from './payments'
 import { bookmarks } from './bookmarks'
-
-
+import { userChannelReads } from './user-channel-reads'
 
 export const Api = {
   learningSpaces,
@@ -29,5 +28,6 @@ export const Api = {
   preEnrollements,
   interests,
   payment,
-  bookmarks
+  bookmarks,
+  userChannelReads
 }

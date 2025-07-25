@@ -17,6 +17,7 @@ import { replaceMentionValues } from '@/utils/mentions'
 import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import AvatarImage from '@/components/AvatarImage.vue'
 
 const authStore = useAuthStore()
 
@@ -35,6 +36,7 @@ const showChildrenMessages = ref(false)
 const showChildrenMessagesParent = ref(null)
 const childrenMessages = ref([])
 
+
 const loaded = ref(false)
 const space = ref<any>(null)
 const forum = ref<any>(null)
@@ -45,6 +47,26 @@ const messagesPerChannelChannel = 8
 const start = ref<number>(0)
 
 const messagesPerChannel = ref(channelId.value ? messagesPerChannelChannel : messagesPerChannelHome)
+
+// --- Forum notification system ---
+const unreadCounts = ref<Record<string, number>>({})
+
+const fetchUnreadCounts = async () => {
+  if (!forum.value) return
+  try {
+    const { data } = await Api.forums.unreadCounts(forum.value.id?.toString() || forum.value._id?.toString() || forum.value.uid || props.uid)
+    if (data && data.unreadCounts) {
+      // Map channelId to unreadCount
+      const map: Record<string, number> = {}
+      data.unreadCounts.forEach((item: any) => {
+        map[item.channelId] = item.unreadCount
+      })
+      unreadCounts.value = map
+    }
+  } catch (e) {
+    unreadCounts.value = {}
+  }
+}
 
 const load = async () => {
   loaded.value = false
@@ -80,6 +102,7 @@ const load = async () => {
     }
 
     forum.value = forumData
+    // await fetchUnreadCounts()
   }
 
   const { data: spaceData } = await Api.learningSpaces.get(props.uid, locale.value)
@@ -139,17 +162,19 @@ watch(
     channelId.value = router.currentRoute.value.params.channelId as string
     userId.value = router.currentRoute.value.params.userId as string
 
-    console.log('channelId', channelId.value)
-    console.log('userId', userId.value)
-
     start.value = 0
     if (channelId.value) {
       messagesPerChannel.value = messagesPerChannelChannel
+      // Mark channel as read when entering
+      try {
+        await Api.forums.markChannelAsReadAll(channelId.value)
+      } catch (e) {}
     } else {
       messagesPerChannel.value = messagesPerChannelHome
     }
 
     await load()
+    //await fetchUnreadCounts()
   }
 )
 
@@ -309,11 +334,52 @@ const publicChannels = computed(() => {
 })
 
 const privateChannels = computed(() => {
-  if (forum.value && forum.value.channels) {
-    return forum.value.channels.filter((channel: any) => channel.users_permissions_users.length > 0)
+  if (forum.value && forum.value.private_channels) {
+    return forum.value.private_channels.filter(
+      (channel: any) => channel.users_permissions_users.length > 0
+    )
   }
   return []
 })
+
+const showCreatePrivateChannelModal = ref(false)
+const createPrivateChannelModal = ref<Modal | null>(null)
+
+const availableUsersForPrivateChannels = computed(() => {
+  if (!forum.value || !forum.value.users || !forum.value.private_channels) {
+    return []
+  }
+
+  // Get IDs of users who already have private channels with current user
+  const existingPrivateChannelUserIds = forum.value.private_channels
+    .map((channel: any) => channel.other_user?.id)
+    .filter(Boolean)
+
+  // Filter out current user and users who already have private channels
+  return forum.value.users.filter(
+    (user: any) => user.id !== authStore.userId && !existingPrivateChannelUserIds.includes(user.id)
+  )
+})
+
+const openCreatePrivateChannelModal = () => {
+  showCreatePrivateChannelModal.value = true
+  const el = document.getElementById('confirm-modal-create-private-channel')
+  if (el) {
+    createPrivateChannelModal.value = new Modal(el, { keyboard: false })
+    createPrivateChannelModal.value.show()
+  }
+}
+
+const createPrivateChannel = async (userId: number) => {
+  try {
+    const channel = await Api.channels.createPrivate(props.uid, userId)
+    createPrivateChannelModal.value?.hide()
+    showCreatePrivateChannelModal.value = false
+    router.push(`/space/${props.uid}/forum/channel/${channel.data.data.id}`)
+  } catch (error) {
+    console.error('Error creating private channel:', error)
+  }
+}
 
 const showConfig = () => {
   channelConfig.value = forum.value.channels.find(
@@ -454,7 +520,7 @@ const loadAfterEdit = async (message: any) => {
               >
                 {{ $t('all-channels') }}
                 <svg
-                v-if="!channelId"
+                  v-if="!channelId"
                   class="rotate-90 ms-auto mt-1"
                   width="12"
                   height="8"
@@ -480,8 +546,11 @@ const loadAfterEdit = async (message: any) => {
                 }"
               >
                 {{ channel.name }}
+                <!-- <span v-if="unreadCounts[channel.id] && unreadCounts[channel.id] > 0" class="badge bg-danger ms-2">
+                  {{ unreadCounts[channel.id] }}
+                </span> -->
                 <svg
-                v-if="channelId && channel.id.toString() === channelId.toString()"
+                  v-if="channelId && channel.id.toString() === channelId.toString()"
                   class="rotate-90 ms-auto mt-1"
                   width="12"
                   height="8"
@@ -496,20 +565,28 @@ const loadAfterEdit = async (message: any) => {
                 </svg>
               </RouterLink>
             </div>
-            <h3 v-if="privateChannels.length" class="mb-3">{{ $t('private-channels') }}</h3>
+            <h2 v-if="privateChannels.length" class="mb-3">{{ $t('private-channels') }}</h2>
             <div v-for="channel in privateChannels" :key="channel.id">
               <RouterLink
                 :to="`/space/${uid}/forum/channel/${channel.id}`"
-                class="forum-link d-flex  mb-3 w-100"
+                class="forum-link d-flex mb-3 w-100"
                 :class="{
                   'forum-link':
                     !channelId || (channelId && channel.id.toString() !== channelId.toString()),
                   'forum-selected': channelId && channel.id.toString() === channelId.toString()
                 }"
               >
-                {{ channel.name }}
+                <span v-if="channel.other_user">
+                  {{ channel.other_user.name }} {{ channel.other_user.lastname }}
+                </span>
+                <span v-else>
+                  {{ channel.name }}
+                </span>
+                <!-- <span v-if="unreadCounts[channel.id] && unreadCounts[channel.id] > 0" class="badge bg-danger ms-2">
+                  {{ unreadCounts[channel.id] }}
+                </span> -->
                 <svg
-                v-if="channelId && channel.id.toString() === channelId.toString()"
+                  v-if="channelId && channel.id.toString() === channelId.toString()"
                   class="rotate-90 ms-auto"
                   width="12"
                   height="8"
@@ -523,6 +600,14 @@ const loadAfterEdit = async (message: any) => {
                   />
                 </svg>
               </RouterLink>
+            </div>
+            <div v-if="availableUsersForPrivateChannels.length > 0" class="mt-3">
+              <button
+                @click="openCreatePrivateChannelModal"
+                class="btn btn-outline-primary btn-sm w-100"
+              >
+                {{ $t('create-private-channel') }}
+              </button>
             </div>
           </div>
         </div>
@@ -545,26 +630,6 @@ const loadAfterEdit = async (message: any) => {
                 >
                   {{ channel.name }}
                 </RouterLink>
-
-                <svg
-                  @click="showConfig"
-                  data-bs-toggle="modal"
-                  data-bs-target="#confirm-modal-channel-settings"
-                  v-if="
-                    channelId &&
-                    channel.users_permissions_users &&
-                    channel.users_permissions_users.length > 0
-                  "
-                  class="channel-config clickable mt-2 ms-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24"
-                  viewBox="0 -960 960 960"
-                  width="24"
-                >
-                  <path
-                    d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"
-                  />
-                </svg>
               </div>
               <CommentInput
                 :channel="channel.id"
@@ -669,6 +734,40 @@ const loadAfterEdit = async (message: any) => {
             :users="forum.users"
           >
           </CommentInput>
+        </div>
+      </div>
+    </ConfirmModal>
+    <ConfirmModal
+      id="create-private-channel"
+      :title="$t('create-private-channel')"
+      :show-footer="false"
+    >
+      <div v-if="showCreatePrivateChannelModal">
+        <h5 class="mb-3">{{ $t('select-user-for-private-channel') }}</h5>
+        <div class="list-group">
+          <button
+            v-for="user in availableUsersForPrivateChannels"
+            :key="user.id"
+            @click="createPrivateChannel(user.id)"
+            class="list-group-item list-group-item-action d-flex align-items-center"
+          >
+            <AvatarImage
+              class="me-2 mb-0"
+              :size="40"
+              :url="user.avatar"
+              :name="user.name"
+            ></AvatarImage>
+            <div>
+              <div class="fw-bold">{{ user.name }} {{ user.lastname }}</div>
+              <small class="text-muted">{{ user.username }}</small>
+            </div>
+          </button>
+        </div>
+        <div
+          v-if="availableUsersForPrivateChannels.length === 0"
+          class="text-muted text-center py-3"
+        >
+          {{ $t('no-available-users-for-private-channels') }}
         </div>
       </div>
     </ConfirmModal>

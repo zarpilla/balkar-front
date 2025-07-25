@@ -37,7 +37,7 @@ export default {
     },
     users: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   components: {

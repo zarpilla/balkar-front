@@ -12,6 +12,7 @@ import { checkEmpty, checkIsEmail } from '@/utils/helper'
 import router from '@/router'
 import FormCheckRadio from '../FormCheckRadio.vue'
 import FormCheckRadioGroup from '../FormCheckRadioGroup.vue'
+import { all } from 'node_modules/axios/index.cjs'
 
 interface Interest {
   id: number
@@ -36,7 +37,8 @@ const editedAccount = ref<any>({
   location: '',
   organization: '',
   country: '',
-  interests: []
+  interests: [],
+  allowPrivateMessages: false
 })
 
 const avatar = ref<any>(null)
@@ -63,6 +65,7 @@ const load = async () => {
   editedAccount.value.location = account.value.location
   editedAccount.value.country = account.value.country
   editedAccount.value.organization = account.value.organization
+  editedAccount.value.allowPrivateMessages = account.value.allowPrivateMessages
 
   editedAccount.value.interests = account.value.interests.map((interest: any) => interest.id)
   const myAvatar = await Api.avatars.mine()
@@ -199,12 +202,27 @@ const uploaded = (fileImage: string) => {
                 name="country"
               />
             </FormField>
-            <FormField :label="$t('interests')" css="col-12 col-md-8 mb-3" v-if="interests.length > 0">
+            <FormField
+              :label="$t('interests')"
+              css="col-12 col-md-8 mb-3"
+              v-if="interests.length > 0"
+            >
               <FormCheckRadioGroup
                 type="checkbox"
                 :options="interests"
                 v-model="editedAccount.interests"
                 name="interests"
+              />
+            </FormField>
+            <FormField :label="$t('allow-private-messages')" css="col-12 col-md-8 mb-3">
+              <FormCheckRadio
+                v-model="editedAccount.allowPrivateMessages"
+                :options="[
+                  { id: 'yes', label: $t('yes') },
+                  { id: 'no', label: $t('no') }
+                ]"
+                name="allowPrivateMessages"
+                :inputValue="editedAccount.allowPrivateMessages"
               />
             </FormField>
 

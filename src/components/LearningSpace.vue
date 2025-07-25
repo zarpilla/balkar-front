@@ -63,6 +63,9 @@ const base = import.meta.env.VITE_API_BASE
 
 const toastVisible = ref(false)
 
+// Quiz completion tracking
+const quizCompletions = ref<Record<string, { allCorrect: boolean; score: number }>>({})
+
 const paymentIsSuccessfully = ref(false)
 const paymentIsChecking = ref(false)
 const paymentHasResponse = ref(false)
@@ -232,6 +235,56 @@ const removeBookmark = async () => {
     lesson: lessonId.value
   })
   await load()
+}
+
+const onQuizCompleted = (payload: { quizId: number; allCorrect: boolean; score: number }) => {
+  // Store quiz completion status using a unique key
+  const quizKey = `${moduleId.value}-${unitId.value}-${lessonId.value}-${payload.quizId}`
+  quizCompletions.value[quizKey] = {
+    allCorrect: payload.allCorrect,
+    score: payload.score
+  }
+}
+
+const canMarkAsCompleted = computed(() => {
+  // Check if current content has any quizzes
+  const currentContent = getCurrentContent()
+  if (!currentContent) return true
+
+  // Find all quizzes in the current content
+  const quizzes = currentContent.filter((item: any) => item.__component === 'content.quiz')
+  if (quizzes.length === 0) return true
+
+  // Check if all quizzes are completed correctly
+  return quizzes.every((quiz: any) => {
+    const quizKey = `${moduleId.value}-${unitId.value}-${lessonId.value}-${quiz.quiz.id}`
+    const completion = quizCompletions.value[quizKey]
+    return completion && completion.allCorrect
+  })
+})
+
+const getCurrentContent = () => {
+  if (lessonId.value) {
+    const module = space.value?.content_modules?.find(
+      (m: any) => m.id.toString() === moduleId.value
+    )
+    if (module) {
+      const unit = module.units?.find((u: any) => u.id.toString() === unitId.value)
+      if (unit) {
+        const lesson = unit.lessons?.find((l: any) => l.id.toString() === lessonId.value)
+        return lesson?.content || []
+      }
+    }
+  } else if (unitId.value) {
+    const module = space.value?.content_modules?.find(
+      (m: any) => m.id.toString() === moduleId.value
+    )
+    if (module) {
+      const unit = module.units?.find((u: any) => u.id.toString() === unitId.value)
+      return unit?.content || []
+    }
+  }
+  return []
 }
 
 const authenticated = computed(() => {
@@ -452,7 +505,14 @@ const selectedLesson = computed(() => {
                         </svg>
                         {{ selectedUnit.shortTitle }}
                       </h2>
-                      <div class="bookmark ms-auto clickable" @click="addBookmark" v-if="(!selectedLesson && !selectedUnit.bookmarked) || (selectedLesson && !selectedLesson.bookmarked)">
+                      <div
+                        class="bookmark ms-auto clickable"
+                        @click="addBookmark"
+                        v-if="
+                          (!selectedLesson && !selectedUnit.bookmarked) ||
+                          (selectedLesson && !selectedLesson.bookmarked)
+                        "
+                      >
                         <svg
                           width="18"
                           height="19"
@@ -480,7 +540,13 @@ const selectedLesson = computed(() => {
                         </svg>
                         {{ $t('bookmark-this-page') }}
                       </div>
-                      <div class="bookmark ms-auto clickable" @click="removeBookmark" v-if="(!selectedLesson && selectedUnit.bookmarked)|| selectedLesson?.bookmarked">
+                      <div
+                        class="bookmark ms-auto clickable"
+                        @click="removeBookmark"
+                        v-if="
+                          (!selectedLesson && selectedUnit.bookmarked) || selectedLesson?.bookmarked
+                        "
+                      >
                         <svg
                           width="18"
                           height="19"
@@ -535,6 +601,8 @@ const selectedLesson = computed(() => {
                             title-as="h2"
                             :space-title="space.name"
                             :space-sub-title="unit.title"
+                            :is-completed="unit.completed"
+                            @quiz-completed="onQuizCompleted"
                           />
                         </div>
                         <div
@@ -582,6 +650,14 @@ const selectedLesson = computed(() => {
                           </div>
                         </div>
 
+                        <div
+                          v-if="!unit.completed && unit.lessons.length === 0 && !canMarkAsCompleted"
+                          class="alert alert-info mt-3"
+                        >
+                          <span class="fw-bold">{{ $t('quiz-required') }}</span>
+                            {{ $t('please-complete-all-quizzes-correctly-before-marking-this-lesson-as-completed') }}
+                        </div>
+
                         <div class="d-flex w-100 mt-5 mb-5 justify-content-between">
                           <RouterLink
                             v-if="previousNavigationItem"
@@ -606,7 +682,9 @@ const selectedLesson = computed(() => {
                           <button
                             class="btn btn-primary-outlined"
                             @click="complete()"
-                            v-if="!unit.completed && unit.lessons.length === 0"
+                            v-if="
+                              !unit.completed && unit.lessons.length === 0 && canMarkAsCompleted
+                            "
                           >
                             <svg
                               width="24"
@@ -720,7 +798,21 @@ const selectedLesson = computed(() => {
                           <div v-if="lesson.id.toString() === lessonId.toString()">
                             <h1>{{ lesson.title }}</h1>
 
-                            <SpaceContent :content="lesson.content" title-as="h2" />
+                            <SpaceContent
+                              :content="lesson.content"
+                              title-as="h2"
+                              :is-completed="lesson.completed"
+                              @quiz-completed="onQuizCompleted"
+                            />
+                          </div>
+
+                          <!-- Quiz completion message for lessons -->
+                          <div
+                            v-if="!lesson.completed && !canMarkAsCompleted"
+                            class="alert alert-info mt-3"
+                          >
+                            <span class="fw-bold">{{ $t('quiz-required') }}</span>
+                            {{ $t('please-complete-all-quizzes-correctly-before-marking-this-lesson-as-completed') }}
                           </div>
 
                           <div
@@ -749,7 +841,7 @@ const selectedLesson = computed(() => {
                             </RouterLink>
 
                             <button
-                              v-if="!lesson.completed"
+                              v-if="!lesson.completed && canMarkAsCompleted"
                               class="btn btn-primary-outlined"
                               @click="complete()"
                             >
@@ -1158,5 +1250,31 @@ const selectedLesson = computed(() => {
 }
 .bookmark svg {
   margin-top: -2px;
+}
+
+.alert {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+}
+
+.alert-info {
+  border-radius: 10px;
+  background: var(--Blue-Grey, #cfe0fc);
+  border: 0;
+
+  color: var(--Black, #000);
+
+  /* Text */
+  font-family: Inter;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 25.5px */
+}
+
+.fw-bold {
+  font-weight: bold !important;
 }
 </style>

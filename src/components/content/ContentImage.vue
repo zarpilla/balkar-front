@@ -1,22 +1,15 @@
 <template>
   <div class="content-image">
-    <component 
-      v-if="data.title" 
-      :is="props.titleAs || 'h2'"
-      class="content-image__title"
-    >
+    <component v-if="data.title" :is="props.titleAs || 'h2'" class="content-image__title">
       {{ data.title }}
     </component>
     <figure class="content-image__figure">
-      <img 
-        :src="getImageUrl()" 
+      <img
+        :src="getImageUrl()"
         :alt="data.image.alternativeText || data.title || 'Image'"
         class="content-image__img"
       />
-      <figcaption 
-        v-if="data.caption || data.image.caption" 
-        class="content-image__caption"
-      >
+      <figcaption v-if="data.caption || data.image.caption" class="content-image__caption">
         {{ data.caption || data.image.caption }}
       </figcaption>
     </figure>
@@ -83,7 +76,7 @@ const apiBase = import.meta.env.VITE_API_BASE
 
 const getImageUrl = () => {
   if (!props.data.image) return ''
-  
+
   // Use the best available format for display
   const formats = props.data.image.formats
   if (formats?.large?.url) {
@@ -123,10 +116,15 @@ const getImageUrl = () => {
 }
 
 .content-image__caption {
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  color: #6b7280;
-  text-align: center;
-  font-style: italic;
+  margin-top: 30px;
+  margin-bottom: 50px;
+  color: var(--Dark-grey, #797979);
+
+  /* Footnotes */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 19.6px */
 }
 </style>

@@ -2,6 +2,24 @@
 
 This system provides a flexible way to render dynamic content from Strapi with different content types.
 
+## New: Quiz Component
+
+### ContentQuiz Component
+
+The ContentQuiz component includes enhanced styling and functionality for displaying interactive quizzes with multiple-choice questions.
+
+#### Key Features
+
+1. **Option Prefixes**: Each quiz option displays with a letter prefix (A), B), C), D))
+2. **Custom Radio Buttons**: Uses custom SVG radio buttons that change based on state
+3. **Enhanced Answer Display**: Shows correct option with prefix before explanation
+4. **Learning Space Integration**: Blocks completion until all questions are answered correctly
+
+#### SVG Icons Used
+- `radio-empty.svg`: For unselected options
+- `radio-ok.svg`: For correct selections (green)  
+- `radio.ko.svg`: For incorrect selections (orange)
+
 ## Usage
 
 ```vue

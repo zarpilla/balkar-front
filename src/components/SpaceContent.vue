@@ -8,17 +8,20 @@
         :class="`content-item content-item--${item.__component.replace('.', '-')}`"
         :space-title="spaceTitle"
         :space-sub-title="spaceSubTitle"
+        :is-completed="isCompleted"
+        @quiz-completed="onQuizCompleted"
       />
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 import ContentText from './content/ContentText.vue'
 import ContentImage from './content/ContentImage.vue'
 import ContentVideo from './content/ContentVideo.vue'
 import ContentAccordion from './content/ContentAccordion.vue'
+import ContentQuiz from './content/ContentQuiz.vue'
 
 interface ContentItem {
   __component: string
@@ -31,20 +34,30 @@ interface Props {
   titleAs?: 'h1' | 'h2' | 'h3' | 'h4'
   spaceTitle?: string
   spaceSubTitle?: string
+  isCompleted?: boolean
 }
 
 defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'quiz-completed', payload: { quizId: number, allCorrect: boolean, score: number }): void
+}>()
 
 // Map component types to actual Vue components
 const componentMap: Record<string, any> = {
   'content.text': ContentText,
   'content.image': ContentImage,
   'content.video': ContentVideo,
-  'content.accordion': ContentAccordion
+  'content.accordion': ContentAccordion,
+  'content.quiz': ContentQuiz
 }
 
 const getComponentName = (componentType: string) => {
   return componentMap[componentType] || 'div'
+}
+
+const onQuizCompleted = (payload: { quizId: number, allCorrect: boolean, score: number }) => {
+  emit('quiz-completed', payload)
 }
 </script>
 

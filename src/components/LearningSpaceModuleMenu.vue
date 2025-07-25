@@ -159,7 +159,7 @@
               <span class="unit-name">{{ unit.title }}</span>
             </RouterLink>
           </div>
-          <div v-if="unitId?.toString() === unit.id.toString()">
+          <div v-if="unitId?.toString() === unit.id.toString()" class="mb-3">
             <div
               v-for="lesson in unit.lessons"
               :key="`side.module.id-${module.id}-unit-${unit.id}-lesson-${lesson.id}`"
