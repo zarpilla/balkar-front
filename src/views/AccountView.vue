@@ -5,11 +5,10 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 <template>
   <LayoutAuthenticated css="bg-white">
     <div class="space zpt-3">
-      <div class="container mt-4">
+      <!-- <div class="container mt-4">
         <RouterLink class="btn btn-tertiary me-3" to="/account/profile">{{ $t( 'profile') }}</RouterLink>
         <RouterLink class="btn btn-tertiary" to="/account/profile/password">{{ $t( 'change-password') }}</RouterLink>
-      </div>
-
+      </div> -->
       <router-view></router-view>
     </div>
   </LayoutAuthenticated>

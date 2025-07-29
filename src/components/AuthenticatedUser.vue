@@ -114,9 +114,15 @@ const userText = computed(() =>
           {{ $t('my-courses') }}
         </RouterLink>
       </li>
+      <li class="sep"></li>
       <li class="email">
         <RouterLink class="dropdown-item clickable" to="/account/profile">
           {{ $t('profile-details') }}
+        </RouterLink>
+      </li>
+      <li class="email">
+        <RouterLink class="dropdown-item clickable" to="/account/profile/password">
+          {{ $t('change-password') }}
         </RouterLink>
       </li>
       <li class="email">
@@ -139,7 +145,7 @@ const userText = computed(() =>
       </li>
       <li>
         <RouterLink class="dropdown-item clickable" to="/register">
-          {{ $t('register-1') }}
+          {{ $t('register') }}
         </RouterLink>
       </li>
       <li class="sep"></li>

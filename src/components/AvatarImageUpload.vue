@@ -115,17 +115,16 @@ const processUpload = async (event: any) => {
 
     const file: FormData = formDataFromUrl(uploadFile)
 
-    const formData = new FormData();
+    const formData = new FormData()
 
-    let fileList = event.target.files;
-    if (!fileList) return;
+    let fileList = event.target.files
+    if (!fileList) return
 
     Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append('files.avatar', fileList[x], fileList[x].name);
-    });
+      formData.append('files.avatar', fileList[x], fileList[x].name)
+    })
 
-    formData.append('data', JSON.stringify({ users_permissions_user: '0', field: 'avatar'}));
-
+    formData.append('data', JSON.stringify({ users_permissions_user: '0', field: 'avatar' }))
 
     if (fileType == 'image') {
       if (props.method === 'post') {
@@ -133,7 +132,7 @@ const processUpload = async (event: any) => {
       } else {
         await service({ requiresAuth: true, multipart: true }).put(props.api, formData)
       }
-      
+
       // await service({ requiresAuth: true }).put(props.api, formData, {
       //   headers: { 'Content-Type': 'multipart/form-data' }
       // })
@@ -150,11 +149,8 @@ const processUpload = async (event: any) => {
   <div class="upload-wrapper">
     <div class="file-upload mt-4 ms-4">
       <input type="file" :accept="getValidExtensions()" @change="processUpload($event)" />
-      <button
-        type="button"
-        class="upload-button btn btn-medium button-upload"
-      >
-      UPLOAD
+      <button type="button" class="upload-button btn btn-medium button-upload">
+        {{ $t('upload') }}
         <svg
           width="20"
           height="20"
@@ -337,7 +333,7 @@ const processUpload = async (event: any) => {
   background-color: #0450cd;
 }
 
-.upload-button{
+.upload-button {
   background-color: var(--blanc, #fff);
   border: 2px solid var(--blanc, #000000);
   border-radius: 50px;
