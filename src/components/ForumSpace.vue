@@ -70,9 +70,10 @@ const fetchUnreadCounts = async () => {
 
 const load = async () => {
   loaded.value = false
-  const { data: forumData } = await Api.forums.get(props.uid)
+  const { data: forumData } = await Api.forums.get(props.uid, locale.value)
 
   if (forumData) {
+
     for await (const channel of forumData.channels) {
       if (!channel.messages) {
         channel.messages = []
@@ -80,7 +81,7 @@ const load = async () => {
 
       if (channel.id.toString() === channelId.value) {
         const { data: messages } = await Api.channels.messages(
-          channel.id,
+          channel.uid,
           messagesPerChannelChannel,
           start.value
         )
@@ -91,7 +92,7 @@ const load = async () => {
         }
       } else {
         const { data: messages } = await Api.channels.messages(
-          channel.id,
+          channel.uid,
           messagesPerChannelHome,
           0
         )
@@ -130,7 +131,7 @@ const loadChannel = async (cid: number) => {
   // const { data: forumData } = await Api.forums.get(props.uid)
 
   for await (const channel of forum.value.channels) {
-    if (channel.id.toString() === cid.toString()) {
+    if (channel.uid.toString() === cid.toString()) {
       const { data: messages } = await Api.channels.messages(
         cid.toString(),
         messagesPerChannelChannel,
@@ -167,8 +168,10 @@ watch(
       messagesPerChannel.value = messagesPerChannelChannel
       // Mark channel as read when entering
       try {
-        await Api.forums.markChannelAsReadAll(channelId.value)
-      } catch (e) {}
+        // await Api.forums.markChannelAsReadAll(channelId.value)
+      } catch (e) {
+        console.error('Error marking channel as read:', e)
+      }
     } else {
       messagesPerChannel.value = messagesPerChannelHome
     }
@@ -216,7 +219,7 @@ const getChildrenMessages = async (message: any) => {
     childrenMessages.value = data.data.children
     forum.value.channels.find((channel: any) => {
       if (
-        channel.id.toString() === (showChildrenMessagesParent.value as any).channelId.toString()
+        channel.uid.toString() === (showChildrenMessagesParent.value as any).channelId.toString()
       ) {
         channel.messages.find((m: any) => {
           if (m.id.toString() === (showChildrenMessagesParent.value as any).id.toString()) {
@@ -230,7 +233,7 @@ const getChildrenMessages = async (message: any) => {
 
 const loadMessage = async (message: any) => {
   forum.value.channels.find((channel: any) => {
-    if (channel.id.toString() === message.channel.toString()) {
+    if (channel.uid.toString() === message.channel.toString()) {
       channel.messages.push(message)
     }
   })
@@ -287,7 +290,7 @@ const messagesAndBackgroundMessagesAreEqual = computed(() => {
 
 const loadBackground = async () => {
   console.log('loadBackground')
-  const { data: forumData } = await Api.forums.get(props.uid)
+  const { data: forumData } = await Api.forums.get(props.uid, locale.value)
 
   if (forumData) {
     for await (const channel of forumData.channels) {
@@ -295,9 +298,9 @@ const loadBackground = async () => {
         channel.messages = []
       }
 
-      if (channel.id.toString() === channelId.value) {
+      if (channel.uid.toString() === channelId.value) {
         const { data: messages } = await Api.channels.messages(
-          channel.id,
+          channel.uid,
           messagesPerChannelChannel,
           start.value
         )
@@ -308,7 +311,7 @@ const loadBackground = async () => {
         }
       } else {
         const { data: messages } = await Api.channels.messages(
-          channel.id,
+          channel.uid,
           messagesPerChannelHome,
           0
         )
@@ -333,8 +336,10 @@ const publicChannels = computed(() => {
   return []
 })
 
+const privateChannelsEnabled = false
+
 const privateChannels = computed(() => {
-  if (forum.value && forum.value.private_channels) {
+  if (forum.value && forum.value.private_channels && privateChannelsEnabled) {
     return forum.value.private_channels.filter(
       (channel: any) => channel.users_permissions_users.length > 0
     )
@@ -375,7 +380,7 @@ const createPrivateChannel = async (userId: number) => {
     const channel = await Api.channels.createPrivate(props.uid, userId)
     createPrivateChannelModal.value?.hide()
     showCreatePrivateChannelModal.value = false
-    router.push(`/space/${props.uid}/forum/channel/${channel.data.data.id}`)
+    router.push(`/space/${props.uid}/forum/channel/${channel.data.data.uid}`)
   } catch (error) {
     console.error('Error creating private channel:', error)
   }
@@ -383,7 +388,7 @@ const createPrivateChannel = async (userId: number) => {
 
 const showConfig = () => {
   channelConfig.value = forum.value.channels.find(
-    (channel: any) => channel.id.toString() === channelId.value
+    (channel: any) => channel.uid.toString() === channelId.value
   )
   channelConfigVisible.value = true
 }
@@ -400,7 +405,7 @@ onMounted(() => {
         await awaitUntilLoaded()
         start.value = start.value + messagesPerChannelChannel
         messagesPerChannel.value = start.value + messagesPerChannelChannel
-        await loadChannel(parseInt(channelId.value))
+        await loadChannel(channelId.value)
       }
     }
   })
@@ -503,7 +508,7 @@ const loadAfterEdit = async (message: any) => {
 
 <template>
   <div class="learning-space mb-5" v-if="forum && space">
-    <LearningSpaceBanner :space="space" :base="base" :authenticated="true" />
+    <LearningSpaceBanner :space="space" :base="base" :authenticated="true" template="small" />
 
     <LearningSpaceHeader :space="space" :uid="uid" :authenticated="true" selected="community" />
 
@@ -512,45 +517,19 @@ const loadAfterEdit = async (message: any) => {
         <div class="col-12 col-md-4 mb-5 pe-0 pe-md-5">
           <div class="module">
             <h2 class="mb-4">{{ $t('channels') }}</h2>
-            <div class="module-item">
-              <RouterLink
-                class="forum-link d-flex mb-3 w-100"
-                :to="`/space/${uid}/forum`"
-                :class="{ 'forum-link': channelId, 'forum-selected': !channelId }"
-              >
-                {{ $t('all-channels') }}
-                <svg
-                  v-if="!channelId"
-                  class="rotate-90 ms-auto mt-1"
-                  width="12"
-                  height="8"
-                  viewBox="0 0 12 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6 3.14879L1.4 7.74879L0 6.34879L6 0.348785L12 6.34879L10.6 7.74879L6 3.14879Z"
-                    fill="#44B08E"
-                  />
-                </svg>
-              </RouterLink>
-            </div>
             <div v-for="channel in publicChannels" :key="channel.id" class="module-item">
               <RouterLink
-                :to="`/space/${uid}/forum/channel/${channel.id}`"
+                :to="`/space/${uid}/forum/channel/${channel.uid}`"
                 class="forum-link d-flex mb-3 w-100"
                 :class="{
                   'forum-link':
-                    !channelId || (channelId && channel.id.toString() !== channelId.toString()),
-                  'forum-selected': channelId && channel.id.toString() === channelId.toString()
+                    !channelId || (channelId && channel.uid.toString() !== channelId.toString()),
+                  'forum-selected': channelId && channel.uid.toString() === channelId.toString()
                 }"
               >
                 {{ channel.name }}
-                <!-- <span v-if="unreadCounts[channel.id] && unreadCounts[channel.id] > 0" class="badge bg-danger ms-2">
-                  {{ unreadCounts[channel.id] }}
-                </span> -->
                 <svg
-                  v-if="channelId && channel.id.toString() === channelId.toString()"
+                  v-if="channelId && channel.uid.toString() === channelId.toString()"
                   class="rotate-90 ms-auto mt-1"
                   width="12"
                   height="8"
@@ -566,14 +545,14 @@ const loadAfterEdit = async (message: any) => {
               </RouterLink>
             </div>
             <h2 v-if="privateChannels.length" class="mb-3">{{ $t('private-channels') }}</h2>
-            <div v-for="channel in privateChannels" :key="channel.id">
+            <div v-for="channel in privateChannels" :key="channel.uid">
               <RouterLink
-                :to="`/space/${uid}/forum/channel/${channel.id}`"
+                :to="`/space/${uid}/forum/channel/${channel.uid}`"
                 class="forum-link d-flex mb-3 w-100"
                 :class="{
                   'forum-link':
-                    !channelId || (channelId && channel.id.toString() !== channelId.toString()),
-                  'forum-selected': channelId && channel.id.toString() === channelId.toString()
+                    !channelId || (channelId && channel.uid.toString() !== channelId.toString()),
+                  'forum-selected': channelId && channel.uid.toString() === channelId.toString()
                 }"
               >
                 <span v-if="channel.other_user">
@@ -582,11 +561,8 @@ const loadAfterEdit = async (message: any) => {
                 <span v-else>
                   {{ channel.name }}
                 </span>
-                <!-- <span v-if="unreadCounts[channel.id] && unreadCounts[channel.id] > 0" class="badge bg-danger ms-2">
-                  {{ unreadCounts[channel.id] }}
-                </span> -->
                 <svg
-                  v-if="channelId && channel.id.toString() === channelId.toString()"
+                  v-if="channelId && channel.uid.toString() === channelId.toString()"
                   class="rotate-90 ms-auto"
                   width="12"
                   height="8"
@@ -601,7 +577,7 @@ const loadAfterEdit = async (message: any) => {
                 </svg>
               </RouterLink>
             </div>
-            <div v-if="availableUsersForPrivateChannels.length > 0" class="mt-3">
+            <div v-if="availableUsersForPrivateChannels.length > 0 && privateChannelsEnabled" class="mt-3">
               <button
                 @click="openCreatePrivateChannelModal"
                 class="btn btn-outline-primary btn-sm w-100"
@@ -612,11 +588,11 @@ const loadAfterEdit = async (message: any) => {
           </div>
         </div>
 
-        <div class="col-12 col-md-8">
-          <div v-for="channel in forum.channels" :key="channel.id">
+        <div class="col-12 col-md-8 mt-3" v-if="channelId">
+          <div v-for="channel in forum.channels" :key="channel.uid">
             <div
               class="bg-white zmt-5"
-              v-if="!channelId || (channelId && channelId.toString() === channel.id.toString())"
+              v-if="!channelId || (channelId && channelId.toString() === channel.uid.toString())"
             >
               <div class="d-flex w-100 zmt-3 flex-wrap">
                 <div v-if="channelId && false">
@@ -625,7 +601,7 @@ const loadAfterEdit = async (message: any) => {
                   </RouterLink>
                 </div>
                 <RouterLink
-                  :to="`/space/${uid}/forum/channel/${channel.id}`"
+                  :to="`/space/${uid}/forum/channel/${channel.uid}`"
                   class="forum-link forum-link-individual"
                 >
                   {{ channel.name }}
@@ -644,7 +620,7 @@ const loadAfterEdit = async (message: any) => {
                 <forum-message
                   v-if="i < messagesPerChannel - 1"
                   :message="message"
-                  :channel="channel.id"
+                  :channel="channel.uid"
                   @post="load"
                   @message-detail="messageDetail"
                   :detail="false"
@@ -655,7 +631,7 @@ const loadAfterEdit = async (message: any) => {
 
                 <div v-if="i === messagesPerChannel - 1 && !channelId">
                   <RouterLink
-                    :to="`/space/${uid}/forum/channel/${channel.id}`"
+                    :to="`/space/${uid}/forum/channel/${channel.uid}`"
                     class="btn btn-tertiary mb-3"
                   >
                     {{ $t('veure-tots-els-missatges-del-canal') }}
@@ -668,6 +644,15 @@ const loadAfterEdit = async (message: any) => {
               </div>
             </div>
           </div>
+        </div>
+        <div class="col-12 col-md-8" v-else>
+          <div class="zmodule-type-forum mb-5">
+            <VueMarkdown
+              class="description"
+              :source="forum.description"
+              :options="{ sanitize: true }"
+            ></VueMarkdown>
+          </div>            
         </div>
       </div>
     </div>

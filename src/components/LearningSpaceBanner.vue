@@ -2,7 +2,7 @@
   <div>
     <!-- Banner for non-enrolled users -->
     <div
-      v-if="space.bannerIntro && space.bannerIntro.url && space.enrolled === false"
+      v-if="space.bannerIntro && space.bannerIntro.url && template === 'big'"
       class="mt-5"
       :class="{ container: authenticated }"
     >
@@ -13,9 +13,73 @@
           <div class="free">{{ space.free ? $t('free-course') : $t('paid-course') }}</div>
           {{ space.name }}
 
-          <div class="w-100 text-center mt-5">
-            <button class="btn btn-secondary mt-4 mb-4" @click="handleEnroll">
-              {{ $t('apuntar-se') }}
+          <div class="w-100 text-center mt-5" v-if="authenticated">
+            <button class="btn btn-secondary mt-4 mb-4" @click="handleEnroll" v-if="!spaceNeedsPayment">
+              {{
+                space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se')
+              }}
+              <svg
+                width="24"
+                height="25"
+                viewBox="0 0 24 25"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <mask
+                  id="mask0_64_2203"
+                  style="mask-type: alpha"
+                  maskUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="24"
+                  height="25"
+                >
+                  <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+                </mask>
+                <g mask="url(#mask0_64_2203)">
+                  <path
+                    d="M12 21.3126C10.75 21.3126 9.57917 21.0751 8.4875 20.6001C7.39583 20.1251 6.44583 19.4835 5.6375 18.6751C4.82917 17.8668 4.1875 16.9168 3.7125 15.8251C3.2375 14.7335 3 13.5626 3 12.3126C3 11.0626 3.2375 9.89179 3.7125 8.80012C4.1875 7.70846 4.82917 6.75846 5.6375 5.95012C6.44583 5.14179 7.39583 4.50012 8.4875 4.02512C9.57917 3.55012 10.75 3.31262 12 3.31262V5.31262C10.05 5.31262 8.39583 5.99179 7.0375 7.35012C5.67917 8.70846 5 10.3626 5 12.3126C5 14.2626 5.67917 15.9168 7.0375 17.2751C8.39583 18.6335 10.05 19.3126 12 19.3126V21.3126ZM16 17.3126L14.6 15.8876L17.175 13.3126H9V11.3126H17.175L14.6 8.71262L16 7.31262L21 12.3126L16 17.3126Z"
+                    fill="black"
+                  />
+                </g>
+              </svg>
+            </button>
+            <button class="btn btn-secondary mt-4 mb-4" @click="goToId('not-enrolled-payment')" v-else>
+              {{
+                $t('pay')
+              }}
+              <svg
+                width="24"
+                height="25"
+                viewBox="0 0 24 25"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <mask
+                  id="mask0_64_2203"
+                  style="mask-type: alpha"
+                  maskUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="24"
+                  height="25"
+                >
+                  <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+                </mask>
+                <g mask="url(#mask0_64_2203)">
+                  <path
+                    d="M12 21.3126C10.75 21.3126 9.57917 21.0751 8.4875 20.6001C7.39583 20.1251 6.44583 19.4835 5.6375 18.6751C4.82917 17.8668 4.1875 16.9168 3.7125 15.8251C3.2375 14.7335 3 13.5626 3 12.3126C3 11.0626 3.2375 9.89179 3.7125 8.80012C4.1875 7.70846 4.82917 6.75846 5.6375 5.95012C6.44583 5.14179 7.39583 4.50012 8.4875 4.02512C9.57917 3.55012 10.75 3.31262 12 3.31262V5.31262C10.05 5.31262 8.39583 5.99179 7.0375 7.35012C5.67917 8.70846 5 10.3626 5 12.3126C5 14.2626 5.67917 15.9168 7.0375 17.2751C8.39583 18.6335 10.05 19.3126 12 19.3126V21.3126ZM16 17.3126L14.6 15.8876L17.175 13.3126H9V11.3126H17.175L14.6 8.71262L16 7.31262L21 12.3126L16 17.3126Z"
+                    fill="black"
+                  />
+                </g>
+              </svg>
+            </button>
+          </div>
+          <div class="w-100 text-center mt-5" v-else>
+            <button class="btn btn-secondary mt-4 mb-4" @click="goToId('register-form')">
+              {{
+                space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se')
+              }}
               <svg
                 width="24"
                 height="25"
@@ -49,22 +113,28 @@
 
     <!-- Banner for enrolled users -->
     <div
-      v-if="space.banner && space.banner.url && space.enrolled === true"
+      v-if="space.banner && space.banner.url && template === 'small'"
       class="mt-5"
       :class="{ container: authenticated }"
     >
-      <div class="banner-small d-flex flex-column align-items-center">
-        <div class="overlay"></div>
-        <img :src="base + space.banner.url" class="w-100" />
-        <h1 class="mt-3 mb-0">
-          {{ space.name }}
-        </h1>
-      </div>
+      <router-link
+        :to="`/space/${space.uid}`"
+        class="banner-small d-flex flex-column align-items-center"
+      >
+        <div class="w-100 d-flex flex-column align-items-center">
+          <div class="overlay"></div>
+          <img :src="base + space.banner.url" class="w-100" />
+          <h1 class="mt-3 mb-0">
+            {{ space.name }}
+          </h1>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { te } from 'date-fns/locale/te'
 import { defineProps, defineEmits } from 'vue'
 
 interface Space {
@@ -77,12 +147,16 @@ interface Space {
   enrolled: boolean
   free?: boolean
   name: string
+  uid: string
+  contentCompleted?: number
 }
 
 interface Props {
   space: Space
   base: string
   authenticated: boolean
+  template: 'big' | 'small'
+  spaceNeedsPayment?: boolean
 }
 
 interface Emits {
@@ -94,6 +168,15 @@ const emit = defineEmits<Emits>()
 
 const handleEnroll = () => {
   emit('enroll')
+}
+
+const goToId = (id: string) => {
+  const element = document.getElementById(id)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+  } else {
+    console.error(`Element with id ${id} not found`)
+  }
 }
 </script>
 
@@ -187,7 +270,6 @@ const handleEnroll = () => {
       font-size: 24px;
       padding-left: 20px;
       width: 100%;
-      
     }
   }
   img {

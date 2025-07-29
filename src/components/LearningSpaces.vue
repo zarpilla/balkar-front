@@ -54,7 +54,7 @@ const base = import.meta.env.VITE_API_BASE
       <div v-for="space in mySpaces" :key="space.id" class="col-12 col-md-4 space">
         <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
           <div class="overlay"></div>
-          <RouterLink :to="`/space/${space.uid}`" class="z">
+          <RouterLink :to="`/space/${space.uid}/about`" class="z">
             <img :src="base + space.bannerOther.url" class="w-100" />
           </RouterLink>
         </div>
@@ -73,7 +73,7 @@ const base = import.meta.env.VITE_API_BASE
       <div v-for="space in otherSpaces" :key="space.id" class="col-4 col-md-4 space">
         <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
           <div class="overlay"></div>
-          <RouterLink :to="`/space/${space.uid}`" class="z">
+          <RouterLink :to="`/space/${space.uid}/about`" class="z">
             <img :src="base + space.bannerOther.url" class="w-100" />
           </RouterLink>
         </div>

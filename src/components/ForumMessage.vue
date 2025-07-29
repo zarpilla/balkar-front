@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { Api } from '@/service/api'
 import { ref, watch, computed } from 'vue'
-import VueMarkdown from 'vue-markdown-render'
-import { useRouter } from 'vue-router'
-import CustomToast from '@/components/CustomToast.vue'
-import FileUpload from '@/components/FileUploadSubmission.vue'
-import ConfirmModal from '@/components/ConfirmModal.vue'
-import CommentInput from '@/components/CommentInput.vue'
-import { useAuthStore } from '@/stores/auth'
 import { format } from 'date-fns'
 import { timeAgo } from '@/utils/helper'
 import AvatarImage from '@/components/AvatarImage.vue'
 import { replaceMentionValues } from '@/utils/mentions'
+import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/stores/auth.js'
 
+const { locale } = useI18n()
 const authStore = useAuthStore()
 
 const props = defineProps<{
@@ -38,10 +33,10 @@ const open = (url: string) => {
   window.open(url, '_blank')
 }
 
-const edit = (message: any) => {
+const editMsg = (message: any) => {
   emit('edit', message)
 }
-const del = (message: any) => {
+const deleteMsg = (message: any) => {
   emit('delete', message)
 }
 const hasOptions = computed(() => {
@@ -94,10 +89,10 @@ const hasChildren = computed(() => {
           </svg>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li v-if="message.file === null">
-              <a class="dropdown-item" @click="edit(message)">{{ $t('Edit') }}</a>
+              <a class="dropdown-item" @click="editMsg(message)">{{ $t('Edit') }}</a>
             </li>
             <li v-if="!hasChildren && !first">
-              <a class="dropdown-item" @click="del(message)">{{ $t('Delete') }}</a>
+              <a class="dropdown-item" @click="deleteMsg(message)">{{ $t('Delete') }}</a>
             </li>
           </ul>
         </div>
@@ -148,7 +143,7 @@ const hasChildren = computed(() => {
         <span
           class="mt-1 ps-0 ps-md-3 time-ago"
           v-if="!detail && message.children && message.children.length"
-          >{{ timeAgo(message.children[message.children.length - 1].createdAt) }}</span
+          >{{ timeAgo(message.children[message.children.length - 1].createdAt, locale) }}</span
         >
       </div>
       <div

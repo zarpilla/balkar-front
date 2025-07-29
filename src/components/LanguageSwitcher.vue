@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, type PropType } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { useApplicationStore } from '@/stores/application'
+import { computed } from 'vue'
+import { useLocaleStore } from '@/stores/locale'
 import { useI18n } from 'vue-i18n'
-import { Api } from '@/service/api'
-const { t, locale, availableLocales } = useI18n()
 
-const localeText = computed(() => (locale.value === 'en' ? 'EN' : 'CA'))
+const { locale, availableLocales } = useI18n()
+const localeStore = useLocaleStore()
+
+const localeText = computed(() => localeStore.getLocaleName(locale.value))
 
 const setLocale = (loc: string) => {
   locale.value = loc
@@ -50,7 +49,7 @@ const setLocale = (loc: string) => {
 
     <ul class="dropdown-menu">
       <li class="locale" v-for="loc in availableLocales" :key="loc">
-        <span class="text-uppercase" @click="setLocale(loc)">{{ loc }}</span>
+        <span @click="setLocale(loc)">{{ localeStore.getLocaleName(loc) }}</span>
       </li>
     </ul>
   </div>

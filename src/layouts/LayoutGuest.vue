@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useApplicationStore } from '@/stores/application.js'
 import { useI18n } from 'vue-i18n'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+import AuthenticatedUser from '@/components/AuthenticatedUser.vue'
 
 const { t, locale } = useI18n()
 
@@ -23,7 +24,7 @@ const applicationLoaded = ref(false)
 
 const apiBase = import.meta.env.VITE_API_BASE
 
-applicationStore.load().then(async () => {
+applicationStore.load(locale.value).then(async () => {
   applicationLoaded.value = true
 })
 
@@ -63,7 +64,7 @@ if (readQueryStringParameter('locale')) {
           </div>
 
           <div class="col-6 col-md-4 ms-auto">
-            <div class="auth-wrapper mt-4 d-flex">
+            <div class="auth-wrapper mt-4 d-flex ms-auto">
               <AuthenticatedUser></AuthenticatedUser>
 
               <!-- <LanguageSwitcher class="ms-4"></LanguageSwitcher> -->

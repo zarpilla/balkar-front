@@ -2,11 +2,11 @@
   <div class="module module-menu">
     <div
       v-for="module in space.content_modules"
-      :key="`side.module.id-${module.id}`"
+      :key="`side.module.uid-${module.uid}`"
       class="d-block mb-1 module-item-block"
-      :class="{ 'pb-3': moduleId?.toString() === module.id.toString() }"
+      :class="{ 'pb-3': moduleId?.toString() === module.uid.toString() }"
     >
-      <RouterLink :to="`/space/${uid}/module/${module.id}`" class="d-flex module-item">
+      <RouterLink :to="`/space/${uid}/module/${module.uid}`" class="d-flex module-item">
         {{ module.menuTitle }}
         <svg
           class="ms-1 mt-module-item"
@@ -38,7 +38,7 @@
 
         <svg
           class="ms-auto"
-          v-if="moduleId?.toString() === module.id.toString() && false"
+          v-if="moduleId?.toString() === module.uid.toString() && false"
           width="25"
           height="25"
           viewBox="0 0 25 25"
@@ -66,7 +66,7 @@
 
         <svg
           class="ms-auto"
-          v-if="moduleId?.toString() !== module.id.toString()"
+          v-if="moduleId?.toString() !== module.uid.toString()"
           width="24"
           height="25"
           viewBox="0 0 24 25"
@@ -92,8 +92,8 @@
           </g>
         </svg>
       </RouterLink>
-      <div v-if="moduleId?.toString() === module.id.toString()">
-        <div v-for="(unit, j) in module.units" :key="`side.module.id-${module.id}-unit-${unit.id}`">
+      <div v-if="moduleId?.toString() === module.uid.toString()">
+        <div v-for="(unit, j) in module.units" :key="`side.module.uid-${module.uid}-unit-${unit.uid}`">
           <div class="d-flex">
             <div class="unit-icon-wrapper">
               <svg
@@ -152,21 +152,21 @@
               </svg>
             </div>
             <RouterLink
-              :to="`/space/${uid}/module/${module.id}/unit/${unit.id}`"
+              :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}`"
               class="d-block unit side-unit"
             >
               <span class="unit-num pe-1">{{ j + 1 }}.</span>
               <span class="unit-name">{{ unit.title }}</span>
             </RouterLink>
           </div>
-          <div v-if="unitId?.toString() === unit.id.toString()" class="mb-3">
+          <div v-if="unitId?.toString() === unit.uid.toString() && unit.lessons && unit.lessons.length > 0" class="mb-3">
             <div
               v-for="lesson in unit.lessons"
-              :key="`side.module.id-${module.id}-unit-${unit.id}-lesson-${lesson.id}`"
+              :key="`side.module.uid-${module.uid}-unit-${unit.uid}-lesson-${lesson.uid}`"
             >
               <div class="d-block mt-1 mb-1 ms-1">
                 <RouterLink
-                  :to="`/space/${uid}/module/${module.id}/unit/${unit.id}/lesson/${lesson.id}`"
+                  :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}/lesson/${lesson.uid}`"
                   class="d-block lesson side-lesson"
                 >
                   <span class="lesson-num pe-1">

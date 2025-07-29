@@ -67,7 +67,7 @@ const applicationLoaded = ref(false)
 
 const apiBase = import.meta.env.VITE_API_BASE
 
-applicationStore.load().then(async () => {
+applicationStore.load(locale.value).then(async () => {
   applicationLoaded.value = true
 })
 
@@ -90,7 +90,7 @@ const autoenroll = async () => {
   const resp = await Api.enrollments.autoenroll().then((r) => r.data)
   if (resp && resp.enrollements) {
     applicationLoaded.value = false
-    applicationStore.load().then(async () => {
+    applicationStore.load(locale.value).then(async () => {
       applicationLoaded.value = true
     })
   }

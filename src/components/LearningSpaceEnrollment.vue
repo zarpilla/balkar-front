@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Not enrolled section for authenticated users -->
-    <div class="not-enrolled" v-if="authenticated && space.enrolled === false">
+    <div class="not-enrolled" v-if="authenticated" id="not-enrolled-payment">
       <div class="container bg-white mt-5">
         <div class="row">
           <div class="col-lg-8 offset-lg-2">
@@ -49,7 +49,7 @@
 
             <div class="w-100 text-center" v-else>
               <button class="btn btn-secondary mt-4 mb-4" @click="handleEnroll">
-                {{ $t('apuntar-se') }}
+                {{ space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se') }}
                 <svg
                   width="24"
                   height="25"
@@ -84,64 +84,68 @@
 
     <!-- Not enrolled section for non-authenticated users -->
     <div class="not-enrolled" v-if="!authenticated">
-      <div class="zcontainer zbg-balkar zmt-5">
-        <vue-markdown
-          v-if="space.publicDescription"
-          :linkify="true"
-          :options="{ html: true }"
-          class="mt-4 mb-4"
-          :source="space.publicDescription"
-        ></vue-markdown>
+      <div class="container zbg-balkar zmt-5">
+        <div class="row">
+          <div class="col-lg-8 offset-lg-2">
+            <!-- <vue-markdown
+              v-if="space.publicDescription"
+              :linkify="true"
+              :options="{ html: true }"
+              class="mt-4 mb-4"
+              :source="space.publicDescription"
+            ></vue-markdown> -->
 
-        <div
-          v-if="!paymentIsChecking && paymentHasResponse && paymentIsSuccessfully"
-          class="alert alert-success mt-4 mb-4"
-        >
-          {{ $t('payment-successful') }}
-        </div>
-        <div
-          v-else-if="!paymentIsChecking && paymentHasResponse && !paymentIsSuccessfully"
-          class="alert alert-danger mt-4 mb-4"
-        >
-          {{ $t('payment-error') }}
-        </div>
+            <div
+              v-if="!paymentIsChecking && paymentHasResponse && paymentIsSuccessfully"
+              class="alert alert-success mt-4 mb-4"
+            >
+              {{ $t('payment-successful') }}
+            </div>
+            <div
+              v-else-if="!paymentIsChecking && paymentHasResponse && !paymentIsSuccessfully"
+              class="alert alert-danger mt-4 mb-4"
+            >
+              {{ $t('payment-error') }}
+            </div>
 
-        <div class="row mt-4 mb-3">
-          <div class="col-lg-6 zoffset-lg-3">
-            <RegisterForm
-              button-text="apuntar-se"
-              :enroll="uid"
-              :disabled="spaceNeedsPayment"
-              @email-valid="handleEmailValid"
-              :force-email="canPayEmail && paymentIsSuccessfully ? canPayEmail : ''"
-              :force-name="canPayName && paymentIsSuccessfully ? canPayName : ''"
-              :force-lastname="canPayLastname && paymentIsSuccessfully ? canPayLastname : ''"
-              :checkout-session="checkoutSession"
-            ></RegisterForm>
+            <div class="row mt-5 mb-3">
+              <div class="col-lg-6 zoffset-lg-3" id="register-form">
+                <RegisterForm
+                  button-text="apuntar-se"
+                  :enroll="uid"
+                  :disabled="spaceNeedsPayment"
+                  @email-valid="handleEmailValid"
+                  :force-email="canPayEmail && paymentIsSuccessfully ? canPayEmail : ''"
+                  :force-name="canPayName && paymentIsSuccessfully ? canPayName : ''"
+                  :force-lastname="canPayLastname && paymentIsSuccessfully ? canPayLastname : ''"
+                  :checkout-session="checkoutSession"
+                ></RegisterForm>
+              </div>
+            </div>
+
+            <button
+              class="btn btn-primary zmt-4 mb-4"
+              @click="handlePay"
+              v-if="spaceNeedsPayment"
+              :disabled="!canPay"
+            >
+              {{ $t('pay') }}
+
+              <svg
+                width="37"
+                height="16"
+                viewBox="0 0 37 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1.10156 7.20868C0.549278 7.20868 0.101563 7.65639 0.101562 8.20868C0.101562 8.76096 0.549278 9.20868 1.10156 9.20868L1.10156 7.20868ZM36.2985 8.91579C36.6891 8.52527 36.6891 7.8921 36.2985 7.50158L29.9346 1.13762C29.5441 0.747091 28.9109 0.747091 28.5204 1.13762C28.1298 1.52814 28.1298 2.1613 28.5204 2.55183L34.1772 8.20868L28.5204 13.8655C28.1298 14.2561 28.1298 14.8892 28.5204 15.2798C28.9109 15.6703 29.5441 15.6703 29.9346 15.2798L36.2985 8.91579ZM1.10156 9.20868L35.5914 9.20868L35.5914 7.20868L1.10156 7.20868L1.10156 9.20868Z"
+                  fill="#fff"
+                />
+              </svg>
+            </button>
           </div>
         </div>
-
-        <button
-          class="btn btn-primary zmt-4 mb-4"
-          @click="handlePay"
-          v-if="spaceNeedsPayment"
-          :disabled="!canPay"
-        >
-          {{ $t('pay') }}
-
-          <svg
-            width="37"
-            height="16"
-            viewBox="0 0 37 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1.10156 7.20868C0.549278 7.20868 0.101563 7.65639 0.101562 8.20868C0.101562 8.76096 0.549278 9.20868 1.10156 9.20868L1.10156 7.20868ZM36.2985 8.91579C36.6891 8.52527 36.6891 7.8921 36.2985 7.50158L29.9346 1.13762C29.5441 0.747091 28.9109 0.747091 28.5204 1.13762C28.1298 1.52814 28.1298 2.1613 28.5204 2.55183L34.1772 8.20868L28.5204 13.8655C28.1298 14.2561 28.1298 14.8892 28.5204 15.2798C28.9109 15.6703 29.5441 15.6703 29.9346 15.2798L36.2985 8.91579ZM1.10156 9.20868L35.5914 9.20868L35.5914 7.20868L1.10156 7.20868L1.10156 9.20868Z"
-              fill="#fff"
-            />
-          </svg>
-        </button>
       </div>
     </div>
   </div>
@@ -156,6 +160,7 @@ interface Space {
   enrolled: boolean
   publicDescription?: string
   product?: any
+  contentCompleted?: number
 }
 
 interface EmailValidData {

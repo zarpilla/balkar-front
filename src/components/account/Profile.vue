@@ -214,7 +214,7 @@ const uploaded = (fileImage: string) => {
                 name="interests"
               />
             </FormField>
-            <FormField :label="$t('allow-private-messages')" css="col-12 col-md-8 mb-3">
+            <!-- <FormField :label="$t('allow-private-messages')" css="col-12 col-md-8 mb-3">
               <FormCheckRadio
                 v-model="editedAccount.allowPrivateMessages"
                 :options="[
@@ -224,7 +224,7 @@ const uploaded = (fileImage: string) => {
                 name="allowPrivateMessages"
                 :inputValue="editedAccount.allowPrivateMessages"
               />
-            </FormField>
+            </FormField> -->
 
             <div class="col-12 col-md-8">
               <div class="actions d-flex mt-4 mb-4">

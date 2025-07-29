@@ -23,7 +23,7 @@ export const CreateBaseApiService = (resource: string) => {
 export const CreateBaseApiLocaleService = (resource: string) => {  
   return {
     // Get a list of resources
-    list: (locale: string) => service({ requiresAuth: true }).get(`${resource}?locale=${locale}`),
+    list: (locale: string) => service({ requiresAuth: true }).get(`${resource}?_limit=-1&locale=${locale}&populate=localizations`),
     // Get a single resource by its id
     get: (id: string, locale: string) => service({ requiresAuth: true }).get(`${resource}/${id}?locale=${locale}`),    
   }

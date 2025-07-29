@@ -79,7 +79,6 @@ onMounted(async () => {
       const paymentIntentId = queryParams.get('success')
       if (paymentIntentId && paymentIntentId !== 'false') {
         const response = await Api.payment.check(paymentIntentId).then((r) => r.data)
-        console.log(response)
         paymentIsSuccessfully.value = response.ok
         paymentHasResponse.value = true
         paymentIsChecking.value = false
@@ -95,7 +94,6 @@ onMounted(async () => {
         paymentIsChecking.value = false
       }
     } catch (e) {
-      console.log('3')
       paymentHasResponse.value = true
       paymentIsSuccessfully.value = false
       paymentIsChecking.value = false
@@ -131,25 +129,21 @@ watch(
 )
 
 const selectContentAfterLoad = () => {
-  console.log('selectContentAfterLoad', moduleId.value, unitId.value, lessonId.value)
   if (!moduleId.value) {
     if (space.value.content_modules.length > 0) {
-      moduleId.value = space.value.content_modules[0].id.toString()
+      moduleId.value = space.value.content_modules[0].uid.toString()
     } else {
       return
     }
   }
-  const module = space.value.content_modules.find((m: any) => m.id.toString() === moduleId.value)
+  const module = space.value.content_modules.find((m: any) => m.uid.toString() === moduleId.value)
   if (module && module.units.length > 0) {
     if (!unitId.value) {
-      unitId.value = module.units[0].id.toString()
+      unitId.value = module.units[0].uid.toString()
     }
-    const unit = module.units.find((u: any) => u.id.toString() === unitId.value)
+    const unit = module.units.find((u: any) => u.uid.toString() === unitId.value)
     if (unit && unit.lessons.length > 0) {
-      // lessonId.value = unit.lessons[0].id.toString()
-      // router.push(
-      //   `/space/${props.uid}/module/${moduleId.value}/unit/${unitId.value}/lesson/${lessonId.value}`
-      // )
+      // If lessonId is not set, select the first lesson
     } else {
       router.push(`/space/${props.uid}/module/${moduleId.value}/unit/${unitId.value}`)
     }
@@ -266,21 +260,21 @@ const canMarkAsCompleted = computed(() => {
 const getCurrentContent = () => {
   if (lessonId.value) {
     const module = space.value?.content_modules?.find(
-      (m: any) => m.id.toString() === moduleId.value
+      (m: any) => m.uid.toString() === moduleId.value
     )
     if (module) {
-      const unit = module.units?.find((u: any) => u.id.toString() === unitId.value)
+      const unit = module.units?.find((u: any) => u.uid.toString() === unitId.value)
       if (unit) {
-        const lesson = unit.lessons?.find((l: any) => l.id.toString() === lessonId.value)
+        const lesson = unit.lessons?.find((l: any) => l.uid.toString() === lessonId.value)
         return lesson?.content || []
       }
     }
   } else if (unitId.value) {
     const module = space.value?.content_modules?.find(
-      (m: any) => m.id.toString() === moduleId.value
+      (m: any) => m.uid.toString() === moduleId.value
     )
     if (module) {
-      const unit = module.units?.find((u: any) => u.id.toString() === unitId.value)
+      const unit = module.units?.find((u: any) => u.uid.toString() === unitId.value)
       return unit?.content || []
     }
   }
@@ -320,9 +314,9 @@ const getAllNavigationItems = () => {
       // Add unit
       items.push({
         type: 'unit',
-        moduleId: module.id.toString(),
-        unitId: unit.id.toString(),
-        url: `/space/${props.uid}/module/${module.id}/unit/${unit.id}`,
+        moduleId: module.uid.toString(),
+        unitId: unit.uid.toString(),
+        url: `/space/${props.uid}/module/${module.uid}/unit/${unit.uid}`,
         title: `${unitIndex + 1}. ${unit.title}`
       })
 
@@ -330,10 +324,10 @@ const getAllNavigationItems = () => {
         // Add lesson
         items.push({
           type: 'lesson',
-          moduleId: module.id.toString(),
-          unitId: unit.id.toString(),
-          lessonId: lesson.id.toString(),
-          url: `/space/${props.uid}/module/${module.id}/unit/${unit.id}/lesson/${lesson.id}`,
+          moduleId: module.uid.toString(),
+          unitId: unit.uid.toString(),
+          lessonId: lesson.uid.toString(),
+          url: `/space/${props.uid}/module/${module.uid}/unit/${unit.uid}/lesson/${lesson.uid}`,
           title: lesson.title
         })
       })
@@ -385,9 +379,9 @@ const nextNavigationItem = computed(() => {
 
 const selectedUnit = computed(() => {
   if (unitId.value) {
-    const module = space.value.content_modules.find((m: any) => m.id.toString() === moduleId.value)
+    const module = space.value.content_modules.find((m: any) => m.uid.toString() === moduleId.value)
     if (module) {
-      return module.units.find((u: any) => u.id.toString() === unitId.value)
+      return module.units.find((u: any) => u.uid.toString() === unitId.value)
     }
   }
   return null
@@ -395,11 +389,11 @@ const selectedUnit = computed(() => {
 
 const selectedLesson = computed(() => {
   if (lessonId.value) {
-    const module = space.value.content_modules.find((m: any) => m.id.toString() === moduleId.value)
+    const module = space.value.content_modules.find((m: any) => m.uid.toString() === moduleId.value)
     if (module) {
-      const unit = module.units.find((u: any) => u.id.toString() === unitId.value)
+      const unit = module.units.find((u: any) => u.uid.toString() === unitId.value)
       if (unit) {
-        return unit.lessons.find((l: any) => l.id.toString() === lessonId.value)
+        return unit.lessons.find((l: any) => l.uid.toString() === lessonId.value)
       }
     }
   }
@@ -414,6 +408,8 @@ const selectedLesson = computed(() => {
       :base="base"
       :authenticated="!!authenticated"
       @enroll="enroll"
+      template="small"
+      :space-needs-payment="spaceNeedsPayment"
     />
 
     <LearningSpaceHeader
@@ -424,6 +420,7 @@ const selectedLesson = computed(() => {
     />
 
     <LearningSpaceEnrollment
+      v-if="paymentHasResponse"
       :space="space"
       :authenticated="!!authenticated"
       :uid="uid"
@@ -441,7 +438,7 @@ const selectedLesson = computed(() => {
       @email-valid="emailIsValid"
     />
 
-    <div class="enrolled" v-if="space.enrolled === true" :class="{ 'module-selected': moduleId }">
+    <div class="enrolled" v-if="space.enrolled === true && !paymentHasResponse" :class="{ 'module-selected': moduleId }">
       <div class="container bg-white mt-5" v-if="!moduleId">
         <vue-markdown
           v-if="space.privateDescription"
@@ -463,9 +460,9 @@ const selectedLesson = computed(() => {
           </div>
           <div class="col-12 col-md-8">
             <template v-if="moduleId">
-              <template v-for="module in space.content_modules" :key="`module.id-${module.id}`">
+              <template v-for="module in space.content_modules" :key="`module.uid-${module.uid}`">
                 <div
-                  v-if="module.id.toString() === moduleId.toString()"
+                  v-if="module.uid.toString() === moduleId.toString()"
                   class="module module-bordered"
                 >
                   <div class="module-header">
@@ -587,10 +584,10 @@ const selectedLesson = computed(() => {
                   <template v-if="unitId">
                     <template
                       v-for="(unit, ui) in module.units"
-                      :key="`module.id-${module.id}-unit-${unit.id}`"
+                      :key="`module.id-${module.uid}-unit-${unit.uid}`"
                     >
                       <div
-                        v-if="unit.id.toString() === unitId.toString() && !lessonId"
+                        v-if="unit.uid.toString() === unitId.toString() && !lessonId"
                         class="module-unit"
                       >
                         <h1 class="mt-4 mb-4">{{ ui + 1 }}. {{ unit.title }}</h1>
@@ -607,11 +604,11 @@ const selectedLesson = computed(() => {
                         </div>
                         <div
                           v-for="lesson in unit.lessons"
-                          :key="`unit.id-${unit.id}-lesson-${lesson.id}`"
+                          :key="`unit.id-${unit.uid}-lesson-${lesson.uid}`"
                         >
                           <div class="d-block">
                             <RouterLink
-                              :to="`/space/${uid}/module/${module.id}/unit/${unit.id}/lesson/${lesson.id}`"
+                              :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}/lesson/${lesson.uid}`"
                               class="d-flex lesson lesson-list-item"
                             >
                               <span class="lesson-name me-auto">{{ lesson.title }}</span>
@@ -788,14 +785,14 @@ const selectedLesson = computed(() => {
                         </div>
                       </div>
                       <div
-                        v-if="unit.id.toString() === unitId.toString() && lessonId"
+                        v-if="unit.uid.toString() === unitId.toString() && lessonId"
                         class="module-unit"
                       >
                         <template
                           v-for="lesson in unit.lessons"
-                          :key="`unit.id-${unit.id}-lesson-${lesson.id}`"
+                          :key="`unit.id-${unit.uid}-lesson-${lesson.uid}`"
                         >
-                          <div v-if="lesson.id.toString() === lessonId.toString()">
+                          <div v-if="lesson.uid.toString() === lessonId.toString()">
                             <h1>{{ lesson.title }}</h1>
 
                             <SpaceContent
@@ -817,7 +814,7 @@ const selectedLesson = computed(() => {
 
                           <div
                             class="d-flex justify-content-between mt-4 pt-4 zborder-top"
-                            v-if="lesson.id.toString() === lessonId.toString()"
+                            v-if="lesson.uid.toString() === lessonId.toString()"
                           >
                             <RouterLink
                               v-if="previousNavigationItem"
@@ -955,7 +952,7 @@ const selectedLesson = computed(() => {
 
             <div
               v-for="module in pageModules"
-              :key="`module.id-${module.moduleId}`"
+              :key="`module.uid-${module.moduleId}`"
               class="d-block mb-3"
             >
               <RouterLink
@@ -975,7 +972,7 @@ const selectedLesson = computed(() => {
               <div v-if="moduleId === module.moduleId">
                 <div
                   v-for="content in module.contents"
-                  :key="`module.id-${module.moduleId}-content-${content.id}`"
+                  :key="`module.uid-${module.moduleId}-content-${content.id}`"
                 >
                   <div v-if="content.text" class="mt-4 mb-4">
                     <vue-markdown
@@ -994,11 +991,11 @@ const selectedLesson = computed(() => {
 
                 <div
                   v-for="(unit, j) in module.units"
-                  :key="`module.id-${module.moduleId}-unit-${unit.unitId}`"
+                  :key="`module.uid-${module.moduleId}-unit-${unit.uid}`"
                 >
                   <div class="d-block mt-3 mb-3 ms-3 ms-md-5">
                     <RouterLink
-                      :to="`/space/${uid}/module/${module.moduleId}/unit/${unit.id}`"
+                      :to="`/space/${uid}/module/${module.moduleId}/unit/${unit.uid}`"
                       class="d-flex unit"
                     >
                       <span class="pe-1">{{ j + 1 }}.</span>
@@ -1016,10 +1013,10 @@ const selectedLesson = computed(() => {
                       </svg>
                     </RouterLink>
 
-                    <div v-if="unitId === unit.id">
+                    <div v-if="unitId === unit.uid">
                       <div
                         v-for="content in unit.contents"
-                        :key="`module.id-${module.moduleId}-unit-${unit.id}-content-${content.id}`"
+                        :key="`module.uid-${module.moduleId}-unit-${unit.uid}-content-${content.id}`"
                       >
                         <div v-if="content.text" class="mt-4 mb-4">
                           <vue-markdown

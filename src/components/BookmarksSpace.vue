@@ -69,7 +69,7 @@ const authenticated = computed(() => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
-    <LearningSpaceBanner :space="space" :base="base" :authenticated="!!authenticated" />
+    <LearningSpaceBanner :space="space" :base="base" :authenticated="!!authenticated" template="small" />
 
     <LearningSpaceHeader
       :space="space"
@@ -87,12 +87,12 @@ const authenticated = computed(() => {
             <div v-if="space.content_modules?.length > 0">
               <template
                 v-for="module in space.content_modules"
-                :key="`bookmark-module-${module.id}`"
+                :key="`bookmark-module-${module.uid}`"
               >
                 <div v-if="hasBookmarkedItems(module)" class="module-bookmarks mb-4">
                   <h3 class="module-title">{{ module.title }}</h3>
 
-                  <template v-for="unit in module.units" :key="`bookmark-unit-${unit.id}`">
+                  <template v-for="unit in module.units" :key="`bookmark-unit-${unit.uid}`">
                     <div
                       v-if="unit.bookmarked || hasBookmarkedLessons(unit)"
                       class="unit-bookmarks ms-3 mb-3"
@@ -129,7 +129,7 @@ const authenticated = computed(() => {
                           </g>
                         </svg>
                         <RouterLink
-                          :to="`/space/${uid}/module/${module.id}/unit/${unit.id}`"
+                          :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}`"
                           class="bookmark-link"
                         >
                           {{ unit.title }}
@@ -179,7 +179,7 @@ const authenticated = computed(() => {
                             </g>
                           </svg>
                           <RouterLink
-                            :to="`/space/${uid}/module/${module.id}/unit/${unit.id}/lesson/${lesson.id}`"
+                            :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}/lesson/${lesson.uid}`"
                             class="bookmark-link"
                           >
                             {{ lesson.title }}
@@ -204,16 +204,16 @@ const authenticated = computed(() => {
                 </div>
               </template>
 
-              <div v-if="!hasAnyBookmarks()" class="text-center py-5">
-                <p class="text-muted">{{ $t('No bookmarks found') }}</p>
+              <div v-if="!hasAnyBookmarks()" class="text-left py-5">
+                <p class="text-muted">{{ $t('no-bookmarks-found') }}</p>
                 <p class="text-muted">
-                  {{ $t('Add bookmarks from the learning content to see them here') }}
+                  {{ $t('add-bookmarks-from-the-learning-content-to-see-them-here') }}
                 </p>
               </div>
             </div>
 
             <div v-else class="text-center py-5">
-              <p class="text-muted">{{ $t('No content available') }}</p>
+              <p class="text-muted">{{ $t('no-content-available') }}</p>
             </div>
           </div>
         </div>

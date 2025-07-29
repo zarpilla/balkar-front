@@ -69,6 +69,16 @@ const form = reactive({
   checkoutSession: props.checkoutSession
 })
 
+if (props.forceEmail) {
+  form.email = props.forceEmail
+}
+if (props.forceName) {
+  form.name = props.forceName
+}
+if (props.forceLastname) {
+  form.lastname = props.forceLastname
+}
+
 const status = reactive({
   messageName: '',
   messageLast: '',
@@ -201,6 +211,7 @@ watch(
   () => props.forceEmail,
   () => {
     if (props.forceEmail) {
+      console.log('Force email:', props.forceEmail)
       form.email = props.forceEmail
     }    
   }

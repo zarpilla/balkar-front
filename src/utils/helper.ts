@@ -1,8 +1,9 @@
 import { formatDistance } from 'date-fns'
-// import { zonedTimeToUtc } from 'date-fns-tz'
+import { 
+  enUS, bg, hr, cs, da, nl, et, fi, fr, de, el, hu, it, lv, lt, mt, pl, pt, ro, sk, sl, es, sv, ca 
+} from 'date-fns/locale'
 import { type CellFormat, type ICheckIsDateOverload } from '@/types/types'
 import { v1 as uuidv1, v5 as uuidv5 } from 'uuid'
-// import { parseISO, intervalToDuration, isBefore, isSameDay } from 'date-fns'
 
 export const getStateToken = (): string => {
   return uuidv5('monetrapp', uuidv1())
@@ -156,7 +157,7 @@ export const parseResponse = (response: Record<string, string>) => {
 // }
 
 export const formatPrice = (value: any) => {
-  let val = (Math.abs(value)/1).toFixed(2).replace('.', ',')
+  const val = (Math.abs(value)/1).toFixed(2).replace('.', ',')
   return (value < 0 ? '-' : '') + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' €'
 }
 
@@ -164,6 +165,40 @@ export const checkPasswordMatch = (password: string, confirmPassword: string) =>
   return !checkEmpty(password) && !checkEmpty(confirmPassword) && password === confirmPassword
 }
 
-export const timeAgo = (date: string) => {
-  return formatDistance(new Date(date), new Date(), { addSuffix: true })
+export const timeAgo = (date: string, locale: string = 'en') => {
+  // Map locale strings to date-fns locale objects
+  const localeMap: Record<string, any> = {
+    en: enUS,
+    bg: bg,
+    hr: hr,
+    cs: cs,
+    da: da,
+    nl: nl,
+    et: et,
+    fi: fi,
+    fr: fr,
+    de: de,
+    el: el,
+    hu: hu,
+    ga: enUS, // Irish Gaelic not available in date-fns, fallback to English
+    it: it,
+    lv: lv,
+    lt: lt,
+    mt: mt,
+    pl: pl,
+    pt: pt,
+    ro: ro,
+    sk: sk,
+    sl: sl,
+    es: es,
+    sv: sv,
+    ca: ca
+  }
+  
+  const dateFnsLocale = localeMap[locale] || enUS
+  
+  return formatDistance(new Date(date), new Date(), { 
+    addSuffix: true,
+    locale: dateFnsLocale
+  })
 }

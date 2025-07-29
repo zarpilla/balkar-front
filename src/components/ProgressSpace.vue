@@ -45,7 +45,7 @@ const authenticated = computed(() => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
-    <LearningSpaceBanner :space="space" :base="base" :authenticated="!!authenticated" />
+    <LearningSpaceBanner :space="space" :base="base" :authenticated="!!authenticated" template="small" />
 
     <LearningSpaceHeader
       :space="space"
@@ -63,16 +63,16 @@ const authenticated = computed(() => {
             <div v-if="space.content_modules?.length > 0">
               <template
                 v-for="module in space.content_modules"
-                :key="`bookmark-module-${module.id}`"
+                :key="`bookmark-module-${module.uid}`"
               >
                 <div class="module-bookmarks mb-4">
                   <h3 class="module-title">{{ module.title }}</h3>
 
-                  <template v-for="unit in module.units" :key="`bookmark-unit-${unit.id}`">
+                  <template v-for="unit in module.units" :key="`bookmark-unit-${unit.uid}`">
                     <div class="unit-bookmarks ms-3 mb-3">
                       <div class="bookmark-item d-flex align-items-center mb-2">
                         <RouterLink
-                          :to="`/space/${uid}/module/${module.id}/unit/${unit.id}`"
+                          :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}`"
                           class="bookmark-link"
                         >
                           {{ unit.title }}
@@ -135,11 +135,11 @@ const authenticated = computed(() => {
 
                       <template
                         v-for="lesson in unit.lessons"
-                        :key="`bookmark-lesson-${lesson.id}`"
+                        :key="`bookmark-lesson-${lesson.uid}`"
                       >
                         <div class="bookmark-item d-flex align-items-center mb-2 ms-3">
                           <RouterLink
-                            :to="`/space/${uid}/module/${module.id}/unit/${unit.id}/lesson/${lesson.id}`"
+                            :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}/lesson/${lesson.uid}`"
                             class="bookmark-link"
                           >
                             {{ lesson.title }}
