@@ -10,7 +10,7 @@ import { useAuthStore } from '@/stores/auth.js'
 import { Api } from '@/service/api'
 // @ts-ignore
 import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const authStore = useAuthStore()
 authStore.logout()
@@ -47,7 +47,7 @@ const submit = async () => {
       return
     }
 
-    await Api.auth.forgot(form.login)
+    await Api.auth.forgot(form.login, locale.value)
 
     status.info = t('An email to reset your password have been sent.')
 

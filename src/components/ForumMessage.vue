@@ -67,6 +67,9 @@ const hasChildren = computed(() => {
     <div class="w-75">
       <div class="mt-1 d-flex">
         <span class="bold pe-2">{{ message.username }}</span>
+        <span class="teacher pe-2" v-if="message.manager">
+          {{ $t('teacher') }}
+        </span>
         {{ format(message.updatedAt || new Date(), 'HH:mm dd/MM/yyyy') }}
         <span v-if="message.updatedAt !== message.createdAt" class="ms-2 edited">
           {{ $t('Edited') }}
@@ -333,5 +336,10 @@ const hasChildren = computed(() => {
 
 .modal-content{
   border: 0;
+}
+.teacher {
+  color: var(--Dark-grey, #797979);
+  font-size: 15px;
+  font-weight: 700;
 }
 </style>

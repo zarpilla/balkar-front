@@ -10,6 +10,7 @@ import FormField from '@/components/FormField.vue'
 import FormControl from '@/components/FormControl.vue'
 import CustomToast from '@/components/CustomToast.vue'
 import PasswordMeter from 'vue-simple-password-meter'
+const { locale } = useI18n()
 
 
 const props = defineProps({
@@ -159,7 +160,7 @@ const submit = async () => {
       return
     }
 
-    const response: any = (await Api.auth.register(form.email, form.password, form.name, form.lastname)).data
+    const response: any = (await Api.auth.register(form.email, form.password, form.name, form.lastname, locale.value)).data
 
     if (response && response.user) {
       toastVisible.value = !toastVisible.value

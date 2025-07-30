@@ -6,6 +6,7 @@ import { useLocaleStore } from '@/stores/locale'
 import { useI18n } from 'vue-i18n'
 import { Modal } from 'bootstrap'
 import AvatarImage from './AvatarImage.vue'
+import { Api } from '@/service/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -31,11 +32,19 @@ const openLanguageModal = async () => {
   }
 }
 
-const setLocale = (loc: string) => {
+const setLocale = async (loc: string) => {
   locale.value = loc
   localStorage.setItem('locale', loc)
   languageModal.value?.hide()
-  location.reload()
+  if (authStore.isAuthenticated()) {
+    const userId = authStore.userId
+    await Api.auth.update(userId, {
+      locale: loc
+    })
+    location.reload()
+  } else {
+    location.reload()
+  }
 }
 
 const closeLanguageModal = () => {
@@ -61,7 +70,6 @@ const userText = computed(() =>
 <template>
   <div class="d-flex dropdown ms-auto">
     <span
-    
       class="d-flex dropdown-toggle"
       href="#"
       role="button"
@@ -69,7 +77,7 @@ const userText = computed(() =>
       aria-expanded="false"
     >
       <AvatarImage
-      v-if="authStore.isAuthenticated()"
+        v-if="authStore.isAuthenticated()"
         :bordered="false"
         :size="40"
         class="me-0 me-md-3 s-40"
@@ -131,14 +139,14 @@ const userText = computed(() =>
         </a>
       </li>
       <li class="sep"></li>
-      <li >
+      <li>
         <a class="dropdown-item clickable" @click="logOut">
           {{ $t('log-out') }}
         </a>
       </li>
     </ul>
     <ul class="dropdown-menu" v-else>
-            <li>
+      <li>
         <RouterLink class="dropdown-item clickable" to="/login">
           {{ $t('log-in') }}
         </RouterLink>
@@ -154,7 +162,6 @@ const userText = computed(() =>
           {{ $t('change-language') }}
         </a>
       </li>
-      
     </ul>
   </div>
 
@@ -185,15 +192,15 @@ const userText = computed(() =>
           </div>
           <div class="modal-body">
             <div class="language-grid">
-              <div 
-                v-for="loc in availableLocales" 
+              <div
+                v-for="loc in availableLocales"
                 :key="loc"
                 class="zlanguage-item btn btn-tertiary"
                 @click="setLocale(loc)"
-                :class="{'bg-secondary': locale === loc}"
+                :class="{ 'bg-secondary': locale === loc }"
               >
                 {{ localeStore.getLocaleName(loc) }}
-              </div>              
+              </div>
             </div>
           </div>
         </div>
@@ -360,7 +367,7 @@ a .user-name,
   font-weight: 600;
 }
 .bg-secondary {
-  background: var(--Mimosa, #F0C05A)!important;
+  background: var(--Mimosa, #f0c05a) !important;
   color: #000 !important;
 }
 </style>

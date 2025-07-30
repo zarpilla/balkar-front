@@ -8,13 +8,14 @@ export const auth = {
       identifier: login,
       password: password
     }),
-    register: (email: string, password: string, name: string, lastname: string): Promise<any> =>
+    register: (email: string, password: string, name: string, lastname: string, locale: string): Promise<any> =>
     service().post('auth/local/register', {
       username: email,
       email: email,
       password: password,
       name: name,
-      lastname: lastname
+      lastname: lastname,
+      locale: locale
     }),
   resetPassword: (code: string, password: string, passwordConfirmation: string) =>
     service({ requiresAuth: true }).post(`auth/reset-password`, {
@@ -23,9 +24,10 @@ export const auth = {
       passwordConfirmation
     }),
 
-  forgot: (email: string) =>
-    service().post('auth/forgot-password', {
-      email: email
+  forgot: (email: string, locale: string) =>
+    service().post('user-avatars/forgot-password', {
+      email: email,
+      locale: locale
     }),
   changePassword: (currentPassword: string, password: string, passwordConfirmation: string) => 
     service({ requiresAuth: true }).post('auth/change-password', {
