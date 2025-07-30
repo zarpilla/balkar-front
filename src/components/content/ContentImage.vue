@@ -6,7 +6,7 @@
     <figure class="content-image__figure">
       <img
         :src="getImageUrl()"
-        :alt="data.image.alternativeText || data.title || 'Image'"
+        :alt="data.alternativeText || data.image.alternativeText || data.title || 'Image'"
         class="content-image__img"
       />
       <figcaption v-if="data.caption || data.image.caption" class="content-image__caption">
@@ -63,6 +63,7 @@ interface ContentImageData {
   title?: string
   image: ImageData
   caption?: string
+  alternativeText?: string
 }
 
 interface Props {

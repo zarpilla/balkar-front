@@ -73,6 +73,12 @@ const router = createRouter({
       component: () => import('../views/SpaceAboutView.vue')
     },
     {
+      path: '/space/:uid/admin',
+      name: 'space-admin',
+      meta: { requiresAuth: true },
+      component: () => import('../views/SpaceAdminView.vue')
+    },
+    {
       path: '/space/:uid/module/:moduleId',
       name: 'space-module',
       meta: { requiresAuth: true },
