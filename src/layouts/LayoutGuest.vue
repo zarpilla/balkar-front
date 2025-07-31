@@ -102,7 +102,7 @@ if (readQueryStringParameter('locale')) {
     </div>
   </div>
 </template>
-<style scoped>
+<style scoped lang="scss">
 .slot {
   display: flex;
   margin: 0 auto;
@@ -150,6 +150,14 @@ header {
   color: #fff;
   background-color: #000000;
   border-color: #000000;
+  transition: all 0.3s ease-in-out;
+
+
+  &:hover {
+    background: var(--Green, #44B08E)!important;
+    color: #000!important;
+    border-color: #44B08E!important;
+  }
 }
 .router-link-exact-active svg path, .router-link-exact-active:hover svg path, .router-link-exact-active:focus svg path{
   fill: #fff;

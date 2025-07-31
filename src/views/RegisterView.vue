@@ -17,7 +17,7 @@ const loading = ref(false)
 </script>
 
 <template>
-  <LayoutGuest :loaded="!loading" css="col-lg-6 offset-lg-3 place-items-center">
+  <LayoutGuest :loaded="!loading" css="col-lg-6 zoffset-lg-3 zplace-items-center">
     <div v-if="!loading" class="bg-white p-4">
       <RegisterForm button-text="register"></RegisterForm>      
     </div>

@@ -67,7 +67,7 @@ const submit = async () => {
 </script>
 
 <template>
-  <LayoutGuest :loaded="true" css="col-lg-6 offset-lg-3 place-items-center">
+  <LayoutGuest :loaded="true" css="col-lg-6 zoffset-lg-3 zplace-items-center">
     <div class="bg-white p-4">
 
       <h3 class="mb-5">{{ $t('recupera-la-teva-clau-de-pas')}}</h3>

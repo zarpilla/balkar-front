@@ -369,5 +369,6 @@ a .user-name,
 .bg-secondary {
   background: var(--Mimosa, #f0c05a) !important;
   color: #000 !important;
+  border-color: var(--Mimosa, #f0c05a) !important;
 }
 </style>

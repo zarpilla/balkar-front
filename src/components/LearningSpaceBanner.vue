@@ -76,7 +76,10 @@
             </button>
           </div>
           <div class="w-100 text-center mt-5" v-else>
-            <button class="btn btn-secondary mt-4 mb-4" @click="goToId('register-form')">
+            <router-link
+              :to="`/register`"
+              class="btn btn-secondary mt-4 mb-4">
+            
               {{
                 space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se')
               }}
@@ -105,7 +108,7 @@
                   />
                 </g>
               </svg>
-            </button>
+            </router-link>
           </div>
         </h1>
       </div>
@@ -134,6 +137,7 @@
 </template>
 
 <script setup lang="ts">
+import router from '@/router'
 import { te } from 'date-fns/locale/te'
 import { defineProps, defineEmits } from 'vue'
 

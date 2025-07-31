@@ -12,7 +12,6 @@ import CustomToast from '@/components/CustomToast.vue'
 import PasswordMeter from 'vue-simple-password-meter'
 const { locale } = useI18n()
 
-
 const props = defineProps({
   buttonText: {
     type: String,
@@ -52,7 +51,7 @@ const props = defineProps({
 const { t } = useI18n()
 
 const emit = defineEmits<{
-  (e: 'email-valid', msg: any): { valid: boolean, email: string, name: string, lastname: string }
+  (e: 'email-valid', msg: any): { valid: boolean; email: string; name: string; lastname: string }
 }>()
 
 const authStore = useAuthStore()
@@ -116,7 +115,7 @@ const submit = async () => {
     status.messageLast = ''
     status.messageEmail = ''
     status.messagePwd = ''
-    status.messagePwdRepeat = ''    
+    status.messagePwdRepeat = ''
 
     if (checkEmpty(form.name)) {
       status.errorName = true
@@ -160,7 +159,9 @@ const submit = async () => {
       return
     }
 
-    const response: any = (await Api.auth.register(form.email, form.password, form.name, form.lastname, locale.value)).data
+    const response: any = (
+      await Api.auth.register(form.email, form.password, form.name, form.lastname, locale.value)
+    ).data
 
     if (response && response.user) {
       toastVisible.value = !toastVisible.value
@@ -204,7 +205,12 @@ const onScore = (payload: any) => {
 watch(
   () => [form.email, form.name, form.lastname],
   () => {
-    emit('email-valid', { valid: checkIsEmail(form.email), email: form.email, name: form.name, lastname: form.lastname })
+    emit('email-valid', {
+      valid: checkIsEmail(form.email),
+      email: form.email,
+      name: form.name,
+      lastname: form.lastname
+    })
   }
 )
 
@@ -214,7 +220,7 @@ watch(
     if (props.forceEmail) {
       console.log('Force email:', props.forceEmail)
       form.email = props.forceEmail
-    }    
+    }
   }
 )
 
@@ -223,7 +229,7 @@ watch(
   () => {
     if (props.forceName) {
       form.name = props.forceName
-    }    
+    }
   }
 )
 
@@ -232,7 +238,7 @@ watch(
   () => {
     if (props.forceLastname) {
       form.lastname = props.forceLastname
-    }    
+    }
   }
 )
 </script>
@@ -290,7 +296,12 @@ watch(
       />
     </FormField>
 
-    <FormField :help="status.messagePwd" :label="$t('password-label')" class="mb-4" v-if="!disabled">
+    <FormField
+      :help="status.messagePwd"
+      :label="$t('password-label')"
+      class="mb-4"
+      v-if="!disabled"
+    >
       <FormControl
         @click="removeError"
         :placeholderEffect="false"
@@ -305,7 +316,12 @@ watch(
       <password-meter @score="onScore" :password="form.password" />
     </FormField>
 
-    <FormField :help="status.messagePwdRepeat" :label="$t('repeat-password-label')" class="mb-4" v-if="!disabled">
+    <FormField
+      :help="status.messagePwdRepeat"
+      :label="$t('repeat-password-label')"
+      class="mb-4"
+      v-if="!disabled"
+    >
       <FormControl
         @click="removeError"
         :placeholderEffect="false"
@@ -319,34 +335,40 @@ watch(
       />
     </FormField>
 
-    <button class="mt-4 w-100z btn btn-primary" type="submit" color="primary" :disabled="disabled" v-if="!disabled">
+    <button
+      class="mt-4 w-100z btn btn-secondary"
+      type="submit"
+      color="primary"
+      :disabled="disabled"
+      v-if="!disabled"
+    >
       {{ $t(buttonText) }}
 
       <svg
-                width="24"
-                height="25"
-                viewBox="0 0 24 25"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <mask
-                  id="mask0_64_2203"
-                  style="mask-type: alpha"
-                  maskUnits="userSpaceOnUse"
-                  x="0"
-                  y="0"
-                  width="24"
-                  height="25"
-                >
-                  <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
-                </mask>
-                <g mask="url(#mask0_64_2203)">
-                  <path
-                    d="M12 21.3126C10.75 21.3126 9.57917 21.0751 8.4875 20.6001C7.39583 20.1251 6.44583 19.4835 5.6375 18.6751C4.82917 17.8668 4.1875 16.9168 3.7125 15.8251C3.2375 14.7335 3 13.5626 3 12.3126C3 11.0626 3.2375 9.89179 3.7125 8.80012C4.1875 7.70846 4.82917 6.75846 5.6375 5.95012C6.44583 5.14179 7.39583 4.50012 8.4875 4.02512C9.57917 3.55012 10.75 3.31262 12 3.31262V5.31262C10.05 5.31262 8.39583 5.99179 7.0375 7.35012C5.67917 8.70846 5 10.3626 5 12.3126C5 14.2626 5.67917 15.9168 7.0375 17.2751C8.39583 18.6335 10.05 19.3126 12 19.3126V21.3126ZM16 17.3126L14.6 15.8876L17.175 13.3126H9V11.3126H17.175L14.6 8.71262L16 7.31262L21 12.3126L16 17.3126Z"
-                    fill="black"
-                  />
-                </g>
-              </svg>
+        width="24"
+        height="25"
+        viewBox="0 0 24 25"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <mask
+          id="mask0_64_2203"
+          style="mask-type: alpha"
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width="24"
+          height="25"
+        >
+          <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+        </mask>
+        <g mask="url(#mask0_64_2203)">
+          <path
+            d="M12 21.3126C10.75 21.3126 9.57917 21.0751 8.4875 20.6001C7.39583 20.1251 6.44583 19.4835 5.6375 18.6751C4.82917 17.8668 4.1875 16.9168 3.7125 15.8251C3.2375 14.7335 3 13.5626 3 12.3126C3 11.0626 3.2375 9.89179 3.7125 8.80012C4.1875 7.70846 4.82917 6.75846 5.6375 5.95012C6.44583 5.14179 7.39583 4.50012 8.4875 4.02512C9.57917 3.55012 10.75 3.31262 12 3.31262V5.31262C10.05 5.31262 8.39583 5.99179 7.0375 7.35012C5.67917 8.70846 5 10.3626 5 12.3126C5 14.2626 5.67917 15.9168 7.0375 17.2751C8.39583 18.6335 10.05 19.3126 12 19.3126V21.3126ZM16 17.3126L14.6 15.8876L17.175 13.3126H9V11.3126H17.175L14.6 8.71262L16 7.31262L21 12.3126L16 17.3126Z"
+            fill="black"
+          />
+        </g>
+      </svg>
     </button>
 
     <div class="error-message mt-3 text-error" v-if="status.errorOther">

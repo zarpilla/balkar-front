@@ -124,16 +124,16 @@ const awaitUntilLoaded = async () => {
   })
 }
 
-const loadChannel = async (cid: number) => {
+const loadChannel = async (uid: string) => {
   // await until loaded.value is true
   await awaitUntilLoaded()
 
   // const { data: forumData } = await Api.forums.get(props.uid)
 
   for await (const channel of forum.value.channels) {
-    if (channel.uid.toString() === cid.toString()) {
+    if (channel.uid.toString() === uid.toString()) {
       const { data: messages } = await Api.channels.messages(
-        cid.toString(),
+        uid.toString(),
         messagesPerChannelChannel,
         start.value
       )
@@ -219,7 +219,7 @@ const getChildrenMessages = async (message: any) => {
     childrenMessages.value = data.data.children
     forum.value.channels.find((channel: any) => {
       if (
-        channel.uid.toString() === (showChildrenMessagesParent.value as any).channelId.toString()
+        channel.uid.toString() === data.data.channelUid.toString()
       ) {
         channel.messages.find((m: any) => {
           if (m.id.toString() === (showChildrenMessagesParent.value as any).id.toString()) {

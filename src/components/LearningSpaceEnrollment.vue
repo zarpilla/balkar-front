@@ -5,8 +5,11 @@
       <div class="container bg-white mt-5">
         <div class="row">
           <div class="col-lg-8 offset-lg-2">
+            <div v-if="space.publicLesson">
+              <SpaceContent :content="space.publicLesson.content" title-as="h2" :is-completed="false" :space-title="space.name" />
+            </div>
             <vue-markdown
-              v-if="space.publicDescription"
+              v-else-if="space.publicDescription"
               :options="{ html: true }"
               :linkify="true"
               class="mt-4 mb-4"
@@ -49,7 +52,9 @@
 
             <div class="w-100 text-center" v-else>
               <button class="btn btn-secondary mt-4 mb-4" @click="handleEnroll">
-                {{ space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se') }}
+                {{
+                  space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se')
+                }}
                 <svg
                   width="24"
                   height="25"
@@ -84,7 +89,7 @@
 
     <!-- Not enrolled section for non-authenticated users -->
     <div class="not-enrolled" v-if="!authenticated">
-      <div class="container zbg-balkar zmt-5">
+      <div class="container zbg-balkar mt-5">
         <div class="row">
           <div class="col-lg-8 offset-lg-2">
             <!-- <vue-markdown
@@ -94,6 +99,10 @@
               class="mt-4 mb-4"
               :source="space.publicDescription"
             ></vue-markdown> -->
+
+            <div v-if="space.publicLesson">
+              <SpaceContent :content="space.publicLesson.content" title-as="h2" :is-completed="false" :space-title="space.name" />
+            </div>
 
             <div
               v-if="!paymentIsChecking && paymentHasResponse && paymentIsSuccessfully"
@@ -108,7 +117,7 @@
               {{ $t('payment-error') }}
             </div>
 
-            <div class="row mt-5 mb-3">
+            <div class="row mt-5 mb-3" v-if="spaceNeedsPayment">
               <div class="col-lg-6 zoffset-lg-3" id="register-form">
                 <RegisterForm
                   button-text="apuntar-se"
@@ -121,6 +130,38 @@
                   :checkout-session="checkoutSession"
                 ></RegisterForm>
               </div>
+            </div>
+            <div class="w-100 text-center mt-5" v-else>
+              <router-link :to="`/register`" class="btn btn-secondary mt-4 mb-4">
+                {{
+                  space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se')
+                }}
+                <svg
+                  width="24"
+                  height="25"
+                  viewBox="0 0 24 25"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <mask
+                    id="mask0_64_2203"
+                    style="mask-type: alpha"
+                    maskUnits="userSpaceOnUse"
+                    x="0"
+                    y="0"
+                    width="24"
+                    height="25"
+                  >
+                    <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+                  </mask>
+                  <g mask="url(#mask0_64_2203)">
+                    <path
+                      d="M12 21.3126C10.75 21.3126 9.57917 21.0751 8.4875 20.6001C7.39583 20.1251 6.44583 19.4835 5.6375 18.6751C4.82917 17.8668 4.1875 16.9168 3.7125 15.8251C3.2375 14.7335 3 13.5626 3 12.3126C3 11.0626 3.2375 9.89179 3.7125 8.80012C4.1875 7.70846 4.82917 6.75846 5.6375 5.95012C6.44583 5.14179 7.39583 4.50012 8.4875 4.02512C9.57917 3.55012 10.75 3.31262 12 3.31262V5.31262C10.05 5.31262 8.39583 5.99179 7.0375 7.35012C5.67917 8.70846 5 10.3626 5 12.3126C5 14.2626 5.67917 15.9168 7.0375 17.2751C8.39583 18.6335 10.05 19.3126 12 19.3126V21.3126ZM16 17.3126L14.6 15.8876L17.175 13.3126H9V11.3126H17.175L14.6 8.71262L16 7.31262L21 12.3126L16 17.3126Z"
+                      fill="black"
+                    />
+                  </g>
+                </svg>
+              </router-link>
             </div>
 
             <button
@@ -155,12 +196,15 @@
 import { defineProps, defineEmits } from 'vue'
 import VueMarkdown from 'vue-markdown-render'
 import RegisterForm from '@/components/RegisterForm.vue'
+import SpaceContent from '@/components/SpaceContent.vue'
 
 interface Space {
   enrolled: boolean
   publicDescription?: string
   product?: any
   contentCompleted?: number
+  publicLesson?: any
+  name: string
 }
 
 interface EmailValidData {
@@ -183,6 +227,7 @@ interface Props {
   canPayName: string
   canPayLastname: string
   checkoutSession: string
+  publicLesson?: any
 }
 
 interface Emits {

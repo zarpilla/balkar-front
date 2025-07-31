@@ -119,6 +119,14 @@ cite,
 
 .btn.btn-primary {
   background: var(--Green, #44B08E);
+
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--Resilience-fosc, #F3C857);
+    color: var(--blanc, #000000);
+    border-color: var(--Resilience-fosc, #F3C857);
+  }
 }
 
 
@@ -129,11 +137,15 @@ cite,
 .btn.btn-secondary {
   border-radius: 30px;
   background: var(--Mimosa, #F0C05A);
-  border: 1px solid var(--Mimosa, #F0C05A);
+  border: 2px solid var(--Mimosa, #F0C05A);
+
+  transition: all 0.3s ease;
 }
 
 .btn.btn-secondary:hover {
-  background: var(--Resilience-fosc, #F3C857);
+  background: var(--Blue-Grey, #CFE0FC);
+  color: var(--blanc, #000000);
+  border-color: var(--Blue-Grey, #CFE0FC);
 }
 
 .btn.btn-primary svg,
@@ -181,6 +193,7 @@ cite,
 .btn.btn.btn-tertiary:hover {
   background: var(--Resilience-fosc, #F3C857);
   color: var(--blanc, #000000);
+  border-color: var(--Mimosa, #f0c05a) !important;
 }
 
 
