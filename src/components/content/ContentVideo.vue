@@ -37,7 +37,6 @@
         class="content-video__thumbnail"
       />
     </div>
-
     <!-- Video player (shown when playing) -->
     <div v-if="isPlaying" class="content-video__wrapper">
       <video
@@ -49,6 +48,15 @@
         class="content-video__player"
         @ended="stopVideo"
       >
+        <track
+          v-for="track in subtitleTracks"
+          :key="track.id"
+          kind="subtitles"
+          :src="track.src"
+          :srclang="track.srclang"
+          :label="track.label"
+          v-bind:default="track.default || undefined"
+        />
         {{ $t('content.video.notSupported') }}
       </video>
       <iframe
@@ -63,7 +71,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { computed, defineProps, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
 
 interface VideoFile {
   url: string
@@ -85,6 +95,23 @@ interface ThumbnailImage {
   }
 }
 
+interface SubtitleFile {
+  id: number
+  text: string
+  name: string
+  createdAt: string
+  updatedAt: string
+  locale: string
+  localizations?: Array<{
+    id: number
+    text: string
+    name: string
+    createdAt: string
+    updatedAt: string
+    locale: string
+  }>
+}
+
 interface ContentVideoData {
   __component: string
   id: number
@@ -93,6 +120,7 @@ interface ContentVideoData {
   url?: string // For embed URLs
   thumbnail?: ThumbnailImage
   description?: string
+  subtitle?: SubtitleFile
 }
 
 interface Props {
@@ -138,6 +166,32 @@ const getVideoUrl = () => {
   }
   return ''
 }
+
+const subtitleTracks = computed(() => {
+  const tracks = []
+  const subtitle = props.data.subtitle
+  if (subtitle) {
+    tracks.push({
+      id: subtitle.id,
+      src: `/api/subtitles/file/${subtitle.id}`,
+      srclang: subtitle.locale,
+      label: subtitle.locale.toUpperCase(),
+      default: subtitle.locale === locale.value
+    })
+    if (Array.isArray(subtitle.localizations)) {
+      for (const loc of subtitle.localizations) {
+        tracks.push({
+          id: loc.id,
+          src: `/api/subtitles/file/${loc.id}`,
+          srclang: loc.locale,
+          label: loc.locale.toUpperCase(),
+          default: loc.locale === locale.value
+        })
+      }
+    }
+  }
+  return tracks
+})
 </script>
 
 <style scoped>
@@ -168,7 +222,7 @@ const getVideoUrl = () => {
   @media screen and (max-width: 768px) {
     font-size: 24px;
     width: calc(100% - 20px);
-    left: 20px;    
+    left: 20px;
   }
 }
 
