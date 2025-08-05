@@ -41,13 +41,8 @@ RUN echo 'server { \
 }' > /etc/nginx/conf.d/default.conf
 
 # Create startup script for environment variable injection
-RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
-    echo 'echo "Injecting environment variables..."' >> /docker-entrypoint.sh && \
-    echo 'envsubst '\''$VITE_API_BASE'\'' < /usr/share/nginx/html/config.js > /tmp/config.js' >> /docker-entrypoint.sh && \
-    echo 'mv /tmp/config.js /usr/share/nginx/html/config.js' >> /docker-entrypoint.sh && \
-    echo 'echo "Starting nginx..."' >> /docker-entrypoint.sh && \
-    echo 'nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
-    chmod +x /docker-entrypoint.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
 
