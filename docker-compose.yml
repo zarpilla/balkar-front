@@ -1,10 +1,15 @@
-version: '3.8'
 
+# For local development, use the build context below.
+# For production, comment out the build section and uncomment the image line to pull from Docker Hub.
+version: '3.8'
 services:
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # Uncomment for production:
+    image: ${DOCKERHUB_USERNAME}/balkar-front:mooc
+    # Comment out build for production:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     ports:
       - "3000:80"
     environment:
