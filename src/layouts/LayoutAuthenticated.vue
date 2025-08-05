@@ -9,8 +9,8 @@ import AuthenticatedMenu from '@/components/AuthenticatedMenu.vue'
 import { Api } from '@/service/api'
 import { type UserLoginData, type UserData } from '@/types/types'
 import { useApplicationStore } from '@/stores/application.js'
-import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import { useI18n } from 'vue-i18n'
+import { getApiBase } from '@/utils/config'
 const { t, locale } = useI18n()
 
 const applicationStore = useApplicationStore()
@@ -65,7 +65,7 @@ try {
 
 const applicationLoaded = ref(false)
 
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
 
 applicationStore.load(locale.value).then(async () => {
   applicationLoaded.value = true

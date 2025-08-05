@@ -130,6 +130,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { getApiBase } from '@/utils/config'
 
 interface SliderItem {
   id: number
@@ -188,7 +189,7 @@ const goToSlide = (index: number) => {
   currentSlide.value = index
 }
 
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
 </script>
 
 <style scoped lang="scss">

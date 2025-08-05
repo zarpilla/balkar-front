@@ -10,7 +10,7 @@ import CustomToast from '@/components/CustomToast.vue'
 import { useI18n } from 'vue-i18n'
 import { checkEmpty, checkIsEmail } from '@/utils/helper'
 import router from '@/router'
-
+import { getApiBase } from '@/utils/config'
 
 interface Interest {
   id: number
@@ -59,7 +59,8 @@ const loadInterests = async () => {
 
 loadInterests()
 
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
+
 const load = async () => {
   account.value = (await Api.auth.get()).data
   editedAccount.value.name = account.value.name

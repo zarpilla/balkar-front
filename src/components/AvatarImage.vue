@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { stringToColor } from '@/utils/colorsFunctions'
+import { getApiBase } from '@/utils/config'
 
 const props = defineProps({
   name: {
@@ -24,7 +25,7 @@ const firstLetterOfName = computed(() => {
   return name.value ? name.value.charAt(0).toUpperCase() : ''
 })
 
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
 
 const urlWithApiBase = computed(() => {
   return props.url ? (( props.url.startsWith(apiBase) || props.url.includes(';base64') ? '' : apiBase) + props.url) : ''

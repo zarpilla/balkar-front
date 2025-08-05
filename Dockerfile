@@ -20,6 +20,9 @@ RUN npm run build
 # Production stage
 FROM nginx:alpine AS production
 
+# Install gettext for envsubst
+RUN apk add --no-cache gettext
+
 # Copy built application from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
@@ -37,6 +40,15 @@ RUN echo 'server { \
     } \
 }' > /etc/nginx/conf.d/default.conf
 
+# Create startup script for environment variable injection
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'echo "Injecting environment variables..."' >> /docker-entrypoint.sh && \
+    echo 'envsubst '\''$VITE_API_BASE'\'' < /usr/share/nginx/html/config.js > /tmp/config.js' >> /docker-entrypoint.sh && \
+    echo 'mv /tmp/config.js /usr/share/nginx/html/config.js' >> /docker-entrypoint.sh && \
+    echo 'echo "Starting nginx..."' >> /docker-entrypoint.sh && \
+    echo 'nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
+
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/docker-entrypoint.sh"]

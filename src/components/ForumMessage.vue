@@ -6,6 +6,7 @@ import AvatarImage from '@/components/AvatarImage.vue'
 import { replaceMentionValues } from '@/utils/mentions'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth.js'
+import { getApiBase } from '@/utils/config'
 
 const { locale } = useI18n()
 const authStore = useAuthStore()
@@ -27,7 +28,7 @@ const emit = defineEmits<{
 const messageDetail = (message: any) => {
   emit('message-detail', message)
 }
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
 
 const open = (url: string) => {
   window.open(url, '_blank')

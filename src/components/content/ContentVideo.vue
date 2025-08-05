@@ -108,6 +108,8 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { getApiBase } from '@/utils/config'
+
 const { locale } = useI18n()
 
 interface VideoFile {
@@ -169,7 +171,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const isPlaying = ref(false)
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
 
 const playVideo = () => {
   isPlaying.value = true

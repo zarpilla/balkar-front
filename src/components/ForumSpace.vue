@@ -31,7 +31,6 @@ const router = useRouter()
 const channelId = ref(router.currentRoute.value.params.channelId as string)
 const userId = ref(router.currentRoute.value.params.userId as string)
 
-const apiBase = import.meta.env.VITE_API_BASE
 const showChildrenMessages = ref(false)
 const showChildrenMessagesParent = ref(null)
 const childrenMessages = ref([])

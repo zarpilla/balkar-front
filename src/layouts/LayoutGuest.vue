@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { useApplicationStore } from '@/stores/application.js'
 import { useI18n } from 'vue-i18n'
-import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import AuthenticatedUser from '@/components/AuthenticatedUser.vue'
+import { getApiBase } from '@/utils/config'
 
 const { t, locale } = useI18n()
 
@@ -22,7 +22,7 @@ const props = defineProps({
 
 const applicationLoaded = ref(false)
 
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
 
 applicationStore.load(locale.value).then(async () => {
   applicationLoaded.value = true

@@ -10,6 +10,7 @@ import router from './router'
 import axios from 'axios'
 import Vue3linkify from 'vue-3-linkify'
 import { useLocaleStore } from '@/stores/locale'
+import { getApiBase } from '@/utils/config'
 
 // @ts-ignore
 import { createI18n } from 'vue-i18n'
@@ -32,8 +33,10 @@ const i18n = createI18n({
 })
 
 // First, get the list of available locales
+const apiBase = getApiBase()
+
 axios
-  .get(import.meta.env.VITE_API_URL + '/i18n/locales?_sort=name')
+  .get(apiBase + '/api/i18n/locales?_sort=name')
   .then((localesResponse) => {
     const availableLocales = localesResponse.data.map((locale: any) => locale.code)
     const localeData = localesResponse.data // Store full locale data with names
@@ -47,7 +50,7 @@ axios
     // Then load translations for all available locales
     return axios
       .get(
-        import.meta.env.VITE_API_URL + '/translations?_limit=-1&locale=en&populate=localizations'
+        apiBase + '/api/translations?_limit=-1&locale=en&populate=localizations'
       )
       .then((response) => {
         const translations = response.data.data

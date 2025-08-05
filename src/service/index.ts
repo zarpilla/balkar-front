@@ -1,8 +1,10 @@
 import axios from 'axios'
+import { getApiBase } from '@/utils/config'
 
 export default ({ requiresAuth = false, multipart = false } = {}) => {
   const options: any = {}
-  options.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:1337'
+  const apiBase = getApiBase()
+  options.baseURL = apiBase + '/api'
 
   if (requiresAuth) {
     const jwt = localStorage.getItem('user.jwt')

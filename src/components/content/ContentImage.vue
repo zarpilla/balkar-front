@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
+import { getApiBase } from '@/utils/config'
 
 interface ImageFormat {
   ext: string
@@ -73,7 +74,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
 
 const getImageUrl = () => {
   if (!props.data.image) return ''

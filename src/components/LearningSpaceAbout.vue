@@ -13,6 +13,7 @@ import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 import LearningSpaceEnrollment from '@/components/LearningSpaceEnrollment.vue'
 import LearningSpaceModuleMenu from '@/components/LearningSpaceModuleMenu.vue'
+import { getApiBase } from '@/utils/config'
 
 const authStore = useAuthStore()
 
@@ -36,7 +37,7 @@ const lessonId: Ref<string | null> = ref(
   (router.currentRoute.value.params.lessonId as string) || null
 )
 
-const apiBase = import.meta.env.VITE_API_BASE
+const apiBase = getApiBase()
 
 const loaded = ref(false)
 const space = ref<any>(null)
