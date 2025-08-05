@@ -22,6 +22,7 @@ import ContentImage from './content/ContentImage.vue'
 import ContentVideo from './content/ContentVideo.vue'
 import ContentAccordion from './content/ContentAccordion.vue'
 import ContentQuiz from './content/ContentQuiz.vue'
+import ContentSlider from './content/ContentSlider.vue'
 
 interface ContentItem {
   __component: string
@@ -49,7 +50,8 @@ const componentMap: Record<string, any> = {
   'content.image': ContentImage,
   'content.video': ContentVideo,
   'content.accordion': ContentAccordion,
-  'content.quiz': ContentQuiz
+  'content.quiz': ContentQuiz,
+  'content.slider': ContentSlider
 }
 
 const getComponentName = (componentType: string) => {

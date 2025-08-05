@@ -67,6 +67,41 @@
         allowfullscreen
       ></iframe>
     </div>
+    <div v-if="isPlaying" class="content-transcript">
+      <button
+        class="btn btn-primary w-100 mt-2"
+        @click="downloadTranscript"
+        v-if="data.subtitle && data.subtitle.transcript"
+      >
+        {{ $t('transcript-download') }}
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <mask
+            id="mask0_96_597"
+            style="mask-type: alpha"
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="25"
+            height="25"
+          >
+            <rect x="0.5" y="0.712402" width="24" height="24" fill="#D9D9D9" />
+          </mask>
+          <g mask="url(#mask0_96_597)">
+            <path
+              d="M12.5 16.7124L16.5 12.7124L15.1 11.3124L13.5 12.9124V8.7124H11.5V12.9124L9.9 11.3124L8.5 12.7124L12.5 16.7124ZM12.5 22.7124C11.1167 22.7124 9.81667 22.4499 8.6 21.9249C7.38333 21.3999 6.325 20.6874 5.425 19.7874C4.525 18.8874 3.8125 17.8291 3.2875 16.6124C2.7625 15.3957 2.5 14.0957 2.5 12.7124C2.5 11.3291 2.7625 10.0291 3.2875 8.8124C3.8125 7.59574 4.525 6.5374 5.425 5.6374C6.325 4.7374 7.38333 4.0249 8.6 3.4999C9.81667 2.9749 11.1167 2.7124 12.5 2.7124C13.8833 2.7124 15.1833 2.9749 16.4 3.4999C17.6167 4.0249 18.675 4.7374 19.575 5.6374C20.475 6.5374 21.1875 7.59574 21.7125 8.8124C22.2375 10.0291 22.5 11.3291 22.5 12.7124C22.5 14.0957 22.2375 15.3957 21.7125 16.6124C21.1875 17.8291 20.475 18.8874 19.575 19.7874C18.675 20.6874 17.6167 21.3999 16.4 21.9249C15.1833 22.4499 13.8833 22.7124 12.5 22.7124ZM12.5 20.7124C14.7333 20.7124 16.625 19.9374 18.175 18.3874C19.725 16.8374 20.5 14.9457 20.5 12.7124C20.5 10.4791 19.725 8.5874 18.175 7.0374C16.625 5.4874 14.7333 4.7124 12.5 4.7124C10.2667 4.7124 8.375 5.4874 6.825 7.0374C5.275 8.5874 4.5 10.4791 4.5 12.7124C4.5 14.9457 5.275 16.8374 6.825 18.3874C8.375 19.9374 10.2667 20.7124 12.5 20.7124Z"
+              fill="#1C1B1F"
+            />
+          </g>
+        </svg>
+      </button>
+    </div>
+
   </div>
 </template>
 
@@ -98,6 +133,7 @@ interface ThumbnailImage {
 interface SubtitleFile {
   id: number
   text: string
+  transcript?: string
   name: string
   createdAt: string
   updatedAt: string
@@ -192,6 +228,14 @@ const subtitleTracks = computed(() => {
   }
   return tracks
 })
+
+const downloadTranscript = () => {
+  const subtitle = props.data.subtitle
+  if (subtitle) {
+    const url = `/api/subtitles/transcript/${subtitle.id}`
+    window.open(url, '_blank')
+  }
+}
 </script>
 
 <style scoped>
@@ -327,6 +371,25 @@ const subtitleTracks = computed(() => {
   margin-top: 1rem;
   color: #6b7280;
   line-height: 1.6;
+}
+
+.content-transcript .btn {
+  border-radius: 30px;
+  background: var(--Light-Grey, #e0e0e0);
+  border: none;
+
+  color: var(--Black, #000);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 23px; /* 127.778% */
+  letter-spacing: 0.18px;
+  text-transform: none;
+
+  &:hover {
+    background: var(--Blue-Grey, #cfe0fc);
+  }
 }
 
 /* Responsive adjustments */

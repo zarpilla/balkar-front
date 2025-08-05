@@ -124,8 +124,14 @@ defineProps<Props>()
   /* margin-right: 30px; */
 }
 
-.content-menu a.active {
-  
+.content-menu a.active {  
   color: var(--Dark-grey, #000);
+}
+
+.content-menu .d-flex {
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    
+  }
 }
 </style>

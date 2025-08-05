@@ -168,6 +168,8 @@ router.beforeEach(async (to, from, next) => {
 
   to.meta.transition = 'slide-right' 
 
+  //scrollTo({ top: 0, behavior: 'smooth' })
+
   next()
 })
 

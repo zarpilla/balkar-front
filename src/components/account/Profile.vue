@@ -34,10 +34,14 @@ const account = ref<any>(null)
 const editedAccount = ref<any>({
   name: '',
   lastname: '',
-  location: '',
+  nationality: '',
+  age: '',
+  motivation: '',
   organization: '',
-  country: '',
-  interests: [],
+  occupation: '',
+  // location: '',
+  // country: '',
+  // interests: [],
   allowPrivateMessages: false
 })
 
@@ -62,9 +66,13 @@ const load = async () => {
   account.value = (await Api.auth.get()).data
   editedAccount.value.name = account.value.name
   editedAccount.value.lastname = account.value.lastname
-  editedAccount.value.location = account.value.location
-  editedAccount.value.country = account.value.country
   editedAccount.value.organization = account.value.organization
+  editedAccount.value.location = account.value.location || ''
+  editedAccount.value.country = account.value.country || '' 
+  editedAccount.value.nationality = account.value.nationality || ''
+  editedAccount.value.age = account.value.age || ''
+  editedAccount.value.motivation = account.value.motivation || ''
+  editedAccount.value.occupation = account.value.occupation || ''
   editedAccount.value.allowPrivateMessages = account.value.allowPrivateMessages
 
   editedAccount.value.interests = account.value.interests.map((interest: any) => interest.id)
@@ -178,6 +186,30 @@ const uploaded = (fileImage: string) => {
                 name="lastname"
               />
             </FormField>
+            <FormField :label="$t('nationality')" css="col-12 col-md-8 mb-3">
+              <FormControl
+                type="text"
+                :placeholder="$t('nationality')"
+                v-model="editedAccount.nationality"
+                name="nationality"
+              />
+            </FormField>
+            <FormField :label="$t('age')" css="col-12 col-md-8 mb-3">
+              <FormControl
+                type="text"
+                :placeholder="$t('age')"
+                v-model="editedAccount.age"
+                name="age"
+              />
+            </FormField>
+            <FormField :label="$t('motivation')" css="col-12 col-md-8 mb-3">
+              <FormControl
+                type="text"
+                :placeholder="$t('motivation')"
+                v-model="editedAccount.motivation"
+                name="motivation"
+              />
+            </FormField>
             <FormField :label="$t('organization')" css="col-12 col-md-8 mb-3">
               <FormControl
                 type="text"
@@ -186,7 +218,17 @@ const uploaded = (fileImage: string) => {
                 name="organization"
               />
             </FormField>
-            <FormField :label="$t('location')" css="col-12 col-md-8 mb-3">
+            <FormField :label="$t('occupation')" css="col-12 col-md-8 mb-3">
+              <FormControl
+                type="text"
+                :placeholder="$t('occupation')"
+                v-model="editedAccount.occupation"
+                name="occupation"
+              />
+            </FormField>
+
+            
+            <!-- <FormField :label="$t('location')" css="col-12 col-md-8 mb-3">
               <FormControl
                 type="text"
                 :placeholder="$t('location')"
@@ -213,7 +255,7 @@ const uploaded = (fileImage: string) => {
                 v-model="editedAccount.interests"
                 name="interests"
               />
-            </FormField>
+            </FormField> -->
             <!-- <FormField :label="$t('allow-private-messages')" css="col-12 col-md-8 mb-3">
               <FormCheckRadio
                 v-model="editedAccount.allowPrivateMessages"

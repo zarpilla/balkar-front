@@ -6,7 +6,7 @@
         <div class="row">
           <div class="col-lg-8 offset-lg-2">
             <div v-if="space.publicLesson">
-              <SpaceContent :content="space.publicLesson.content" title-as="h2" :is-completed="false" :space-title="space.name" />
+              <SpaceContent :content="space.publicLesson.content" title-as="h2" :is-completed="false" :space-title="space.name" />              
             </div>
             <vue-markdown
               v-else-if="space.publicDescription"

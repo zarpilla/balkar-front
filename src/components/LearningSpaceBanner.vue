@@ -184,7 +184,7 @@ const goToId = (id: string) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .banner-full {
   border-radius: 20px;
   background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 42.31%, rgba(68, 176, 142, 0) 100%);
@@ -210,6 +210,14 @@ const goToId = (id: string) => {
     line-height: 100%; /* 50px */
     letter-spacing: -0.5px;
 
+    @media screen and (max-width: 768px) {
+      font-size: 36px;
+      width: 100%;
+      top: 20px;
+      padding: 20px;
+      
+    }
+
     .free {
       color: var(--White, #fff);
       text-align: center;
@@ -229,6 +237,10 @@ const goToId = (id: string) => {
     width: 100%;
     height: 650px;
     object-fit: cover;
+
+    @media screen and (max-width: 768px) {
+      height: 400px;
+    }
   }
   .overlay {
     position: absolute;
