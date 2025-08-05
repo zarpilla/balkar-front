@@ -10,9 +10,7 @@ import CustomToast from '@/components/CustomToast.vue'
 import { useI18n } from 'vue-i18n'
 import { checkEmpty, checkIsEmail } from '@/utils/helper'
 import router from '@/router'
-import FormCheckRadio from '../FormCheckRadio.vue'
-import FormCheckRadioGroup from '../FormCheckRadioGroup.vue'
-import { all } from 'node_modules/axios/index.cjs'
+
 
 interface Interest {
   id: number
