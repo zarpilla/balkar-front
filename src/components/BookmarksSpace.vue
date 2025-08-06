@@ -37,8 +37,6 @@ load()
 
 const base = getApiBase()
 
-const toastVisible = ref(false)
-
 const removeBookmark = async (moduleId: string, unitId: string, lessonId: string) => {
   await Api.bookmarks.delete({
     uid: props.uid,

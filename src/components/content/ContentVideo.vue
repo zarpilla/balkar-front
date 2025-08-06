@@ -211,7 +211,7 @@ const subtitleTracks = computed(() => {
   if (subtitle) {
     tracks.push({
       id: subtitle.id,
-      src: `/api/subtitles/file/${subtitle.id}`,
+      src: `${getApiBase()}/api/subtitles/file/${subtitle.id}`,
       srclang: subtitle.locale,
       label: subtitle.locale.toUpperCase(),
       default: subtitle.locale === locale.value
@@ -220,7 +220,7 @@ const subtitleTracks = computed(() => {
       for (const loc of subtitle.localizations) {
         tracks.push({
           id: loc.id,
-          src: `/api/subtitles/file/${loc.id}`,
+          src: `${getApiBase()}/api/subtitles/file/${loc.id}`,
           srclang: loc.locale,
           label: loc.locale.toUpperCase(),
           default: loc.locale === locale.value
@@ -234,7 +234,7 @@ const subtitleTracks = computed(() => {
 const downloadTranscript = () => {
   const subtitle = props.data.subtitle
   if (subtitle) {
-    const url = `/api/subtitles/transcript/${subtitle.id}`
+    const url = `${getApiBase()}/api/subtitles/transcript/${subtitle.id}`
     window.open(url, '_blank')
   }
 }

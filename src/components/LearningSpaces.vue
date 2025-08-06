@@ -20,10 +20,6 @@ const load = async () => {
   const response = await Api.learningSpaces.mine(locale.value)
   if (response.data && response.data.data) {
     spaces.value = response.data.data
-
-    // if (mySpaces.value.length === 0 && otherSpaces.value.length === 1) {
-    //   router.push(`/space/${otherSpaces.value[0].uid}`)
-    // }
   }
   loaded.value = true
 }
@@ -40,11 +36,8 @@ const otherSpaces = computed(() => {
   return spaces.value.filter((space: any) => space.enrolled === false)
 })
 
-const router = useRouter()
 
 const base = getApiBase()
-// console.log('mySpaces', mySpaces.value)
-// console.log('otherSpaces', otherSpaces.value)
 </script>
 
 <template>
