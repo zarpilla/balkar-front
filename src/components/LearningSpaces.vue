@@ -6,7 +6,6 @@ import { ref } from 'vue'
 import Profile from '@/components/account/Profile.vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink, useRouter } from 'vue-router'
-import { get } from 'node_modules/axios/index.cjs'
 import { getApiBase } from '@/utils/config'
 
 const props = defineProps<{
