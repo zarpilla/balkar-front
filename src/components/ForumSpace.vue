@@ -18,6 +18,7 @@ import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 import AvatarImage from '@/components/AvatarImage.vue'
+import { getApiBase } from '@/utils/config'
 
 const authStore = useAuthStore()
 
@@ -150,7 +151,7 @@ const loadChannel = async (uid: string) => {
 
 load()
 
-const base = import.meta.env.VITE_API_BASE
+const base = getApiBase()
 
 const toastVisible = ref(false)
 const channelConfigVisible = ref(false)

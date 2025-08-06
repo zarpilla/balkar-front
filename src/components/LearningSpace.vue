@@ -60,7 +60,7 @@ const load = async () => {
 
 load()
 
-const base = import.meta.env.VITE_API_BASE
+const base = getApiBase()
 
 const toastVisible = ref(false)
 

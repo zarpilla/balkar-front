@@ -37,8 +37,6 @@ const lessonId: Ref<string | null> = ref(
   (router.currentRoute.value.params.lessonId as string) || null
 )
 
-const apiBase = getApiBase()
-
 const loaded = ref(false)
 const space = ref<any>(null)
 const load = async () => {
@@ -57,7 +55,7 @@ const load = async () => {
 
 load()
 
-const base = import.meta.env.VITE_API_BASE
+const base = getApiBase()
 
 const toastVisible = ref(false)
 

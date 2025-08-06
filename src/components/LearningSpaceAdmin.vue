@@ -2,12 +2,10 @@
 import { Api } from '@/service/api'
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { Modal } from 'bootstrap'
-import CustomToast from '@/components/CustomToast.vue'
-
 import { useAuthStore } from '@/stores/auth'
-
 import { useI18n } from 'vue-i18n'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import { getApiBase } from '@/utils/config'
 
 const authStore = useAuthStore()
 
@@ -44,7 +42,7 @@ const load = async () => {
 
 load()
 
-const base = import.meta.env.VITE_API_BASE
+const base = getApiBase()
 
 const toastVisible = ref(false)
 

@@ -21,15 +21,7 @@ export function getApiBase(): string {
   const windowConfig = window.APP_CONFIG?.API_BASE
   const viteEnv = import.meta.env.VITE_API_BASE
   const fallback = 'http://localhost:1337'
-  
-  // Debug logging (remove in production)
-  console.log('Config debug:', {
-    windowConfig,
-    viteEnv,
-    hasAppConfig: !!window.APP_CONFIG,
-    appConfigKeys: window.APP_CONFIG ? Object.keys(window.APP_CONFIG) : 'undefined'
-  })
-  
+    
   return windowConfig || viteEnv || fallback
 }
 

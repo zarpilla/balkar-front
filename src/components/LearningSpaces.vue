@@ -6,6 +6,8 @@ import { ref } from 'vue'
 import Profile from '@/components/account/Profile.vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink, useRouter } from 'vue-router'
+import { get } from 'node_modules/axios/index.cjs'
+import { getApiBase } from '@/utils/config'
 
 const props = defineProps<{
   state: string
@@ -41,7 +43,7 @@ const otherSpaces = computed(() => {
 
 const router = useRouter()
 
-const base = import.meta.env.VITE_API_BASE
+const base = getApiBase()
 // console.log('mySpaces', mySpaces.value)
 // console.log('otherSpaces', otherSpaces.value)
 </script>
