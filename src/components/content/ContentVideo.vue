@@ -47,6 +47,7 @@
         autoplay
         class="content-video__player"
         @ended="stopVideo"
+        crossorigin="anonymous"
       >
         <track
           v-for="track in subtitleTracks"

@@ -1,3 +1,3 @@
 window.APP_CONFIG = {
-  API_BASE: 'http://localhost:1337'
+  API_BASE: 'https://api.urbanresilienceresearch.net'
 };
