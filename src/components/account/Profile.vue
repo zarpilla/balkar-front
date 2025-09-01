@@ -67,7 +67,7 @@ const load = async () => {
   editedAccount.value.lastname = account.value.lastname
   editedAccount.value.organization = account.value.organization
   editedAccount.value.location = account.value.location || ''
-  editedAccount.value.country = account.value.country || '' 
+  editedAccount.value.country = account.value.country || ''
   editedAccount.value.nationality = account.value.nationality || ''
   editedAccount.value.age = account.value.age || ''
   editedAccount.value.motivation = account.value.motivation || ''
@@ -135,99 +135,100 @@ const uploaded = (fileImage: string) => {
 
 <template>
   <div class="container mt-5" v-if="account">
-    <div class="row">
-      <div class="col-12 col-md-9">
-        <div class="bordered-card mb-4">
-          <FormField :label="$t('avatar')" css="col-12 col-md-8 mb-3">
-            <div class="d-flex mb-5 position-relative mt-2">
-              <AvatarImage
-                class="me-1"
-                :size="96"
-                :url="editedAccount.pictureUrl"
-                :name="
-                  editedAccount.name
-                    ? editedAccount.name + ' ' + editedAccount.lastname
-                    : account.email
-                "
-              ></AvatarImage>
-              <div class="upload">
-                <AvatarImageUpload
-                  @uploaded="uploaded"
-                  :api="`/user-avatars${avatar ? '/' + avatar.id : ''}`"
-                  :method="avatar ? 'put' : 'post'"
-                ></AvatarImageUpload>
+    <div class="row bordered-card">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="mb-4">
+          <h1>{{ $t('profile-details') }}</h1>
+          <div class="zzplace-items-center">
+            <FormField :label="$t('avatar')" css="mb-3 mt-5">
+              <div class="d-flex mb-5 position-relative mt-2">
+                <AvatarImage
+                  class="me-1"
+                  :size="96"
+                  :url="editedAccount.pictureUrl"
+                  :name="
+                    editedAccount.name
+                      ? editedAccount.name + ' ' + editedAccount.lastname
+                      : account.email
+                  "
+                ></AvatarImage>
+                <div class="upload">
+                  <AvatarImageUpload
+                    @uploaded="uploaded"
+                    :api="`/user-avatars${avatar ? '/' + avatar.id : ''}`"
+                    :method="avatar ? 'put' : 'post'"
+                  ></AvatarImageUpload>
+                </div>
               </div>
-            </div>
-          </FormField>
-          <form @submit.prevent="updateAccount">
-            <FormField :label="$t('email')" css="col-12 col-md-8 mb-3">
-              <FormControl
-                type="text"
-                :placeholder="$t('email')"
-                v-model="account.email"
-                name="current"
-                readonly
-              />
             </FormField>
-            <FormField :label="$t('name') + '*'" css="col-12 col-md-8 mb-3">
-              <FormControl
-                type="text"
-                :placeholder="$t('name')"
-                v-model="editedAccount.name"
-                name="name"
-              />
-            </FormField>
-            <FormField :label="$t('lastname') + '*'" css="col-12 col-md-8 mb-3">
-              <FormControl
-                type="text"
-                :placeholder="$t('lastname')"
-                v-model="editedAccount.lastname"
-                name="lastname"
-              />
-            </FormField>
-            <FormField :label="$t('nationality')" css="col-12 col-md-8 mb-3">
-              <FormControl
-                type="text"
-                :placeholder="$t('nationality')"
-                v-model="editedAccount.nationality"
-                name="nationality"
-              />
-            </FormField>
-            <FormField :label="$t('age')" css="col-12 col-md-8 mb-3">
-              <FormControl
-                type="text"
-                :placeholder="$t('age')"
-                v-model="editedAccount.age"
-                name="age"
-              />
-            </FormField>
-            <FormField :label="$t('motivation')" css="col-12 col-md-8 mb-3">
-              <FormControl
-                type="text"
-                :placeholder="$t('motivation')"
-                v-model="editedAccount.motivation"
-                name="motivation"
-              />
-            </FormField>
-            <FormField :label="$t('organization')" css="col-12 col-md-8 mb-3">
-              <FormControl
-                type="text"
-                :placeholder="$t('organization')"
-                v-model="editedAccount.organization"
-                name="organization"
-              />
-            </FormField>
-            <FormField :label="$t('occupation')" css="col-12 col-md-8 mb-3">
-              <FormControl
-                type="text"
-                :placeholder="$t('occupation')"
-                v-model="editedAccount.occupation"
-                name="occupation"
-              />
-            </FormField>
+            <form @submit.prevent="updateAccount">
+              <FormField :label="$t('email')" css="col-12 mb-2">
+                <FormControl
+                  type="text"
+                  :placeholder="$t('email')"
+                  v-model="account.email"
+                  name="current"
+                  readonly
+                />
+              </FormField>
+              <FormField :label="$t('name') + '*'" css="col-12 mb-2">
+                <FormControl
+                  type="text"
+                  :placeholder="$t('name')"
+                  v-model="editedAccount.name"
+                  name="name"
+                />
+              </FormField>
+              <FormField :label="$t('lastname') + '*'" css="col-12 mb-2">
+                <FormControl
+                  type="text"
+                  :placeholder="$t('lastname')"
+                  v-model="editedAccount.lastname"
+                  name="lastname"
+                />
+              </FormField>
+              <FormField :label="$t('nationality')" css="col-12 mb-2">
+                <FormControl
+                  type="text"
+                  :placeholder="$t('nationality')"
+                  v-model="editedAccount.nationality"
+                  name="nationality"
+                />
+              </FormField>
+              <FormField :label="$t('age')" css="col-12 mb-2">
+                <FormControl
+                  type="text"
+                  :placeholder="$t('age')"
+                  v-model="editedAccount.age"
+                  name="age"
+                />
+              </FormField>
+              <FormField :label="$t('motivation')" css="col-12 mb-2">
+                <FormControl
+                  type="text"
+                  :placeholder="$t('motivation')"
+                  v-model="editedAccount.motivation"
+                  name="motivation"
+                />
+              </FormField>
+              <FormField :label="$t('organization')" css="col-12 mb-2">
+                <FormControl
+                  type="text"
+                  :placeholder="$t('organization')"
+                  v-model="editedAccount.organization"
+                  name="organization"
+                />
+              </FormField>
+              <FormField :label="$t('occupation')" css="col-12 mb-2">
+                <FormControl
+                  type="text"
+                  :placeholder="$t('occupation')"
+                  v-model="editedAccount.occupation"
+                  name="occupation"
+                />
+              </FormField>
 
-            
-            <!-- <FormField :label="$t('location')" css="col-12 col-md-8 mb-3">
+              <!-- <FormField :label="$t('location')" css="col-12 mb-2">
               <FormControl
                 type="text"
                 :placeholder="$t('location')"
@@ -235,7 +236,7 @@ const uploaded = (fileImage: string) => {
                 name="location"
               />
             </FormField>
-            <FormField :label="$t('country')" css="col-12 col-md-8 mb-3">
+            <FormField :label="$t('country')" css="col-12 mb-2">
               <FormControl
                 type="text"
                 :placeholder="$t('country')"
@@ -245,7 +246,7 @@ const uploaded = (fileImage: string) => {
             </FormField>
             <FormField
               :label="$t('interests')"
-              css="col-12 col-md-8 mb-3"
+              css="col-12 mb-2"
               v-if="interests.length > 0"
             >
               <FormCheckRadioGroup
@@ -255,7 +256,7 @@ const uploaded = (fileImage: string) => {
                 name="interests"
               />
             </FormField> -->
-            <!-- <FormField :label="$t('allow-private-messages')" css="col-12 col-md-8 mb-3">
+              <!-- <FormField :label="$t('allow-private-messages')" css="col-12 mb-2">
               <FormCheckRadio
                 v-model="editedAccount.allowPrivateMessages"
                 :options="[
@@ -267,14 +268,15 @@ const uploaded = (fileImage: string) => {
               />
             </FormField> -->
 
-            <div class="col-12 col-md-8">
-              <div class="actions d-flex mt-4 mb-4">
-                <button class="btn btn-primary zbtn-medium ms-auto mb-4" type="submit">
-                  {{ $t('changePassword.submitButton') }}
-                </button>
+              <div class="col-12 col-md-8">
+                <div class="actions d-flex mt-4 mb-4">
+                  <button class="btn btn-primary zbtn-medium ms-auto mb-4" type="submit">
+                    {{ $t('changePassword.submitButton') }}
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -296,3 +298,16 @@ const uploaded = (fileImage: string) => {
     ></CustomToast>
   </Teleport>
 </template>
+<style scoped lang="scss">
+.bordered-card {
+  background-color: #CFE0FC;
+  border-radius: 19px;
+  padding: 50px 0px;
+  margin-bottom: 100px;
+
+  @media screen {
+    margin: 0 10px;
+    margin-bottom: 100px;
+  }
+}
+</style>

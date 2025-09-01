@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { Api } from '@/service/api'
 import { ref, computed } from 'vue'
-import CustomToast from '@/components/CustomToast.vue'
-
 import { useAuthStore } from '@/stores/auth'
-
 import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import BaseProgressBar from '@/components/BaseProgressBar.vue'
 import { getApiBase } from '@/utils/config'
 
 const authStore = useAuthStore()
@@ -46,7 +44,12 @@ const authenticated = computed(() => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
-    <LearningSpaceBanner :space="space" :base="base" :authenticated="!!authenticated" template="small" />
+    <LearningSpaceBanner
+      :space="space"
+      :base="base"
+      :authenticated="!!authenticated"
+      template="small"
+    />
 
     <LearningSpaceHeader
       :space="space"
@@ -58,8 +61,23 @@ const authenticated = computed(() => {
     <div class="enrolled">
       <div class="container bg-white mt-5">
         <div class="row">
-          <div class="col-12 col-lg-8 col-offset-lg-2">
+          <div class="col-12 col-lg-8 offset-lg-2">
             <h2 class="mb-4">{{ $t('progress') }}</h2>
+
+            <div class="w-100 d-block d-md-none">
+              <BaseProgressBar
+                :completed="space.contentCompleted"
+                :total="space.contentNotCompleted"
+                >{{ $t('completed') }}</BaseProgressBar
+              >
+            </div>
+            <div class="w-50 d-none d-md-none">
+              <BaseProgressBar
+                :completed="space.contentCompleted"
+                :total="space.contentNotCompleted"
+                >{{ $t('completed') }}</BaseProgressBar
+              >
+            </div>
 
             <div v-if="space.content_modules?.length > 0">
               <template
@@ -67,78 +85,84 @@ const authenticated = computed(() => {
                 :key="`bookmark-module-${module.uid}`"
               >
                 <div class="module-bookmarks mb-4">
-                  <h3 class="module-title">{{ module.title }}</h3>
+                  <h3 class="module-title mt-5">{{ module.title }}</h3>
 
-                  <template v-for="unit in module.units" :key="`bookmark-unit-${unit.uid}`">
-                    <div class="unit-bookmarks ms-3 mb-3">
-                      <div class="bookmark-item d-flex align-items-center mb-2">
+                  <template v-for="(unit, ui) in module.units" :key="`bookmark-unit-${unit.uid}`">
+                    <div class="unit-bookmarks zms-3 mb-3">
+                      <div
+                        class="bookmark-item d-flex align-items-center mb-2"
+                        :class="unit.completed ? 'completed' : ''"
+                      >
                         <RouterLink
                           :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}`"
                           class="bookmark-link"
                         >
-                          {{ unit.title }}
+                          {{ ui + 1 }}. {{ unit.title }}
                         </RouterLink>
                         <span class="completed-pct-space ms-2">
-                            <svg
-                              v-if="unit.completed"
+                          <svg
+                            v-if="unit.completed"
+                            width="18"
+                            height="19"
+                            viewBox="0 0 18 19"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <mask
+                              id="mask0_71_4297"
+                              style="mask-type: alpha"
+                              maskUnits="userSpaceOnUse"
+                              x="0"
+                              y="0"
                               width="18"
                               height="19"
-                              viewBox="0 0 18 19"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <mask
-                                id="mask0_71_4297"
-                                style="mask-type: alpha"
-                                maskUnits="userSpaceOnUse"
-                                x="0"
-                                y="0"
-                                width="18"
-                                height="19"
-                              >
-                                <rect y="0.848755" width="18" height="18" fill="#D9D9D9" />
-                              </mask>
-                              <g mask="url(#mask0_71_4297)">
-                                <path
-                                  d="M7.95 13.2988L13.2375 8.01126L12.1875 6.96126L7.95 11.1988L5.8125 9.06125L4.7625 10.1113L7.95 13.2988ZM9 17.3488C7.9625 17.3488 6.9875 17.1519 6.075 16.7581C5.1625 16.3644 4.36875 15.83 3.69375 15.155C3.01875 14.48 2.48438 13.6863 2.09063 12.7738C1.69687 11.8613 1.5 10.8863 1.5 9.84875C1.5 8.81125 1.69687 7.83626 2.09063 6.92375C2.48438 6.01125 3.01875 5.2175 3.69375 4.5425C4.36875 3.8675 5.1625 3.33313 6.075 2.93938C6.9875 2.54563 7.9625 2.34875 9 2.34875C10.0375 2.34875 11.0125 2.54563 11.925 2.93938C12.8375 3.33313 13.6313 3.8675 14.3063 4.5425C14.9813 5.2175 15.5156 6.01125 15.9094 6.92375C16.3031 7.83626 16.5 8.81125 16.5 9.84875C16.5 10.8863 16.3031 11.8613 15.9094 12.7738C15.5156 13.6863 14.9813 14.48 14.3063 15.155C13.6313 15.83 12.8375 16.3644 11.925 16.7581C11.0125 17.1519 10.0375 17.3488 9 17.3488Z"
-                                  fill="#44B08E"
-                                />
-                              </g>
-                            </svg>
-                            <svg
-                              v-else
+                              <rect y="0.848755" width="18" height="18" fill="#D9D9D9" />
+                            </mask>
+                            <g mask="url(#mask0_71_4297)">
+                              <path
+                                d="M7.95 13.2988L13.2375 8.01126L12.1875 6.96126L7.95 11.1988L5.8125 9.06125L4.7625 10.1113L7.95 13.2988ZM9 17.3488C7.9625 17.3488 6.9875 17.1519 6.075 16.7581C5.1625 16.3644 4.36875 15.83 3.69375 15.155C3.01875 14.48 2.48438 13.6863 2.09063 12.7738C1.69687 11.8613 1.5 10.8863 1.5 9.84875C1.5 8.81125 1.69687 7.83626 2.09063 6.92375C2.48438 6.01125 3.01875 5.2175 3.69375 4.5425C4.36875 3.8675 5.1625 3.33313 6.075 2.93938C6.9875 2.54563 7.9625 2.34875 9 2.34875C10.0375 2.34875 11.0125 2.54563 11.925 2.93938C12.8375 3.33313 13.6313 3.8675 14.3063 4.5425C14.9813 5.2175 15.5156 6.01125 15.9094 6.92375C16.3031 7.83626 16.5 8.81125 16.5 9.84875C16.5 10.8863 16.3031 11.8613 15.9094 12.7738C15.5156 13.6863 14.9813 14.48 14.3063 15.155C13.6313 15.83 12.8375 16.3644 11.925 16.7581C11.0125 17.1519 10.0375 17.3488 9 17.3488Z"
+                                fill="#44B08E"
+                              />
+                            </g>
+                          </svg>
+                          <svg
+                            v-else
+                            width="18"
+                            height="19"
+                            viewBox="0 0 18 19"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <mask
+                              id="mask0_71_4302"
+                              style="mask-type: alpha"
+                              maskUnits="userSpaceOnUse"
+                              x="0"
+                              y="0"
                               width="18"
                               height="19"
-                              viewBox="0 0 18 19"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <mask
-                                id="mask0_71_4302"
-                                style="mask-type: alpha"
-                                maskUnits="userSpaceOnUse"
-                                x="0"
-                                y="0"
-                                width="18"
-                                height="19"
-                              >
-                                <rect y="0.848755" width="18" height="18" fill="#D9D9D9" />
-                              </mask>
-                              <g mask="url(#mask0_71_4302)">
-                                <path
-                                  d="M7.95 13.2988L13.2375 8.01126L12.1875 6.96126L7.95 11.1988L5.8125 9.06125L4.7625 10.1113L7.95 13.2988ZM9 17.3488C7.9625 17.3488 6.9875 17.1519 6.075 16.7581C5.1625 16.3644 4.36875 15.83 3.69375 15.155C3.01875 14.48 2.48438 13.6863 2.09063 12.7738C1.69687 11.8613 1.5 10.8863 1.5 9.84875C1.5 8.81125 1.69687 7.83626 2.09063 6.92375C2.48438 6.01125 3.01875 5.2175 3.69375 4.5425C4.36875 3.8675 5.1625 3.33313 6.075 2.93938C6.9875 2.54563 7.9625 2.34875 9 2.34875C10.0375 2.34875 11.0125 2.54563 11.925 2.93938C12.8375 3.33313 13.6313 3.8675 14.3063 4.5425C14.9813 5.2175 15.5156 6.01125 15.9094 6.92375C16.3031 7.83626 16.5 8.81125 16.5 9.84875C16.5 10.8863 16.3031 11.8613 15.9094 12.7738C15.5156 13.6863 14.9813 14.48 14.3063 15.155C13.6313 15.83 12.8375 16.3644 11.925 16.7581C11.0125 17.1519 10.0375 17.3488 9 17.3488ZM9 15.8488C10.675 15.8488 12.0938 15.2675 13.2563 14.105C14.4187 12.9425 15 11.5238 15 9.84875C15 8.17375 14.4187 6.75501 13.2563 5.5925C12.0938 4.43001 10.675 3.84875 9 3.84875C7.325 3.84875 5.90625 4.43001 4.74375 5.5925C3.58125 6.75501 3 8.17375 3 9.84875C3 11.5238 3.58125 12.9425 4.74375 14.105C5.90625 15.2675 7.325 15.8488 9 15.8488Z"
-                                  fill="#44B08E"
-                                />
-                              </g>
-                            </svg>
-                          </span>
+                              <rect y="0.848755" width="18" height="18" fill="#D9D9D9" />
+                            </mask>
+                            <g mask="url(#mask0_71_4302)">
+                              <path
+                                d="M7.95 13.2988L13.2375 8.01126L12.1875 6.96126L7.95 11.1988L5.8125 9.06125L4.7625 10.1113L7.95 13.2988ZM9 17.3488C7.9625 17.3488 6.9875 17.1519 6.075 16.7581C5.1625 16.3644 4.36875 15.83 3.69375 15.155C3.01875 14.48 2.48438 13.6863 2.09063 12.7738C1.69687 11.8613 1.5 10.8863 1.5 9.84875C1.5 8.81125 1.69687 7.83626 2.09063 6.92375C2.48438 6.01125 3.01875 5.2175 3.69375 4.5425C4.36875 3.8675 5.1625 3.33313 6.075 2.93938C6.9875 2.54563 7.9625 2.34875 9 2.34875C10.0375 2.34875 11.0125 2.54563 11.925 2.93938C12.8375 3.33313 13.6313 3.8675 14.3063 4.5425C14.9813 5.2175 15.5156 6.01125 15.9094 6.92375C16.3031 7.83626 16.5 8.81125 16.5 9.84875C16.5 10.8863 16.3031 11.8613 15.9094 12.7738C15.5156 13.6863 14.9813 14.48 14.3063 15.155C13.6313 15.83 12.8375 16.3644 11.925 16.7581C11.0125 17.1519 10.0375 17.3488 9 17.3488ZM9 15.8488C10.675 15.8488 12.0938 15.2675 13.2563 14.105C14.4187 12.9425 15 11.5238 15 9.84875C15 8.17375 14.4187 6.75501 13.2563 5.5925C12.0938 4.43001 10.675 3.84875 9 3.84875C7.325 3.84875 5.90625 4.43001 4.74375 5.5925C3.58125 6.75501 3 8.17375 3 9.84875C3 11.5238 3.58125 12.9425 4.74375 14.105C5.90625 15.2675 7.325 15.8488 9 15.8488Z"
+                                fill="#000000"
+                              />
+                            </g>
+                          </svg>
+                        </span>
                       </div>
 
                       <template
                         v-for="lesson in unit.lessons"
                         :key="`bookmark-lesson-${lesson.uid}`"
                       >
-                        <div class="bookmark-item d-flex align-items-center mb-2 ms-3">
+                        <div
+                          class="bookmark-item d-flex align-items-center mb-2 ms-3"
+                          :class="lesson.completed ? 'completed' : ''"
+                        >
                           <RouterLink
                             :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}/lesson/${lesson.uid}`"
                             class="bookmark-link"
@@ -194,7 +218,7 @@ const authenticated = computed(() => {
                               <g mask="url(#mask0_71_4302)">
                                 <path
                                   d="M7.95 13.2988L13.2375 8.01126L12.1875 6.96126L7.95 11.1988L5.8125 9.06125L4.7625 10.1113L7.95 13.2988ZM9 17.3488C7.9625 17.3488 6.9875 17.1519 6.075 16.7581C5.1625 16.3644 4.36875 15.83 3.69375 15.155C3.01875 14.48 2.48438 13.6863 2.09063 12.7738C1.69687 11.8613 1.5 10.8863 1.5 9.84875C1.5 8.81125 1.69687 7.83626 2.09063 6.92375C2.48438 6.01125 3.01875 5.2175 3.69375 4.5425C4.36875 3.8675 5.1625 3.33313 6.075 2.93938C6.9875 2.54563 7.9625 2.34875 9 2.34875C10.0375 2.34875 11.0125 2.54563 11.925 2.93938C12.8375 3.33313 13.6313 3.8675 14.3063 4.5425C14.9813 5.2175 15.5156 6.01125 15.9094 6.92375C16.3031 7.83626 16.5 8.81125 16.5 9.84875C16.5 10.8863 16.3031 11.8613 15.9094 12.7738C15.5156 13.6863 14.9813 14.48 14.3063 15.155C13.6313 15.83 12.8375 16.3644 11.925 16.7581C11.0125 17.1519 10.0375 17.3488 9 17.3488ZM9 15.8488C10.675 15.8488 12.0938 15.2675 13.2563 14.105C14.4187 12.9425 15 11.5238 15 9.84875C15 8.17375 14.4187 6.75501 13.2563 5.5925C12.0938 4.43001 10.675 3.84875 9 3.84875C7.325 3.84875 5.90625 4.43001 4.74375 5.5925C3.58125 6.75501 3 8.17375 3 9.84875C3 11.5238 3.58125 12.9425 4.74375 14.105C5.90625 15.2675 7.325 15.8488 9 15.8488Z"
-                                  fill="#44B08E"
+                                  fill="#000000"
                                 />
                               </g>
                             </svg>
@@ -217,7 +241,7 @@ const authenticated = computed(() => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .module-item-block {
   border-bottom: 1px solid #898989;
 }
@@ -372,8 +396,6 @@ const authenticated = computed(() => {
 }
 
 .module-bookmarks {
-  border-left: 3px solid #44b08e;
-  padding-left: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -391,11 +413,15 @@ const authenticated = computed(() => {
 }
 
 .bookmark-item {
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem;
   border: 0px solid #e9ecef;
   border-radius: 10px;
   background: var(--Blue-Grey, #cfe0fc);
   transition: background-color 0.2s ease;
+
+  &.completed {
+    background-color: #d4edda;
+  }
 }
 
 .zbookmark-item:hover {

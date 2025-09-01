@@ -105,9 +105,10 @@ if (!sessionStorage.getItem('autoenroll')) {
 </script>
 
 <template>
+<div class="layout-wrapper">
   <header v-if="applicationLoaded">
     <div class="container">
-      <div class="logo-outter">
+      <div class="logo-outter mt-3">
         <div class="row w-100">
           <div class="col-6 col-md-2">
             <RouterLink to="/">
@@ -116,22 +117,19 @@ if (!sessionStorage.getItem('autoenroll')) {
           </div>
 
           <div class="col-6 col-md-4 ms-auto">
-            <div class="auth-wrapper mt-4 d-flex ms-auto">
+            <div class="auth-wrapper mt-3 d-flex ms-auto">
               <AuthenticatedUser></AuthenticatedUser>
 
-              <!-- <LanguageSwitcher class="ms-4"></LanguageSwitcher> -->
             </div>
           </div>
         </div>
       </div>
 
-      <!-- <h1 class="mt-3 pb-3 mb-0">{{ $t('benvinguda-al-teu-balkar') }}</h1> -->
-
       <AuthenticatedMenu class="pb-4"></AuthenticatedMenu>
     </div>
   </header>
 
-  <div v-if="applicationLoaded" class="content" :class="props.css">
+  <div v-if="applicationLoaded" class="content flex-grow-1" :class="props.css">
     <div>
       <div class="slot">
         <div class="slot-inner">
@@ -141,15 +139,19 @@ if (!sessionStorage.getItem('autoenroll')) {
     </div>
   </div>
   <FooterBar></FooterBar>
+</div>
 </template>
 <style scoped>
+.layout-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.flex-grow-1 {
+  flex: 1 1 auto;
+}
 .content{
   min-height: calc(100vh - 353px);
-}
-.zslot {
-  display: flex;
-  margin: 0 auto;
-  height: calc(100vh - 140px);
 }
 
 .place-items-center .slot {
@@ -175,9 +177,6 @@ if (!sessionStorage.getItem('autoenroll')) {
 }
 .logo-outter img {
   height: 80px;
-}
-header {
-  /*background: #fbf7eb;*/
 }
 .auth-wrapper {
   border-radius: 0px;

@@ -244,7 +244,7 @@ watch(
 </script>
 
 <template>
-  <h3 class="mb-4">{{ $t('crea-el-teu-espai-balkar') }}</h3>
+  <h1 class="mb-4">{{ $t('crea-el-teu-espai-balkar') }}</h1>
 
   <form @submit.prevent="submit" v-if="!registered">
     <!-- <FormField :help="status.messageName" :label="$t('name-label')" class="mb-4">
@@ -259,7 +259,7 @@ watch(
     />
   </FormField> -->
 
-    <FormField :help="status.messageName" :label="$t('name')" css="mb-4">
+    <FormField :help="status.messageName" :label="$t('name')" css="mb-2">
       <FormControl
         type="text"
         :placeholder="$t('name')"
@@ -270,7 +270,7 @@ watch(
         :readonly="props.forceName !== ''"
       />
     </FormField>
-    <FormField :label="$t('lastname')" css="mb-4" :help="status.messageLast">
+    <FormField :label="$t('lastname')" css="mb-2" :help="status.messageLast">
       <FormControl
         type="text"
         :placeholder="$t('lastname')"
@@ -282,7 +282,7 @@ watch(
       />
     </FormField>
 
-    <FormField :help="status.messageEmail" :label="$t('email-label')" class="mb-4">
+    <FormField :help="status.messageEmail" :label="$t('email-label')" class="mb-2">
       <FormControl
         @click="removeError"
         :placeholderEffect="false"
@@ -299,7 +299,7 @@ watch(
     <FormField
       :help="status.messagePwd"
       :label="$t('password-label')"
-      class="mb-4"
+      class="mb-2"
       v-if="!disabled"
     >
       <FormControl
@@ -319,7 +319,7 @@ watch(
     <FormField
       :help="status.messagePwdRepeat"
       :label="$t('repeat-password-label')"
-      class="mb-4"
+      class="mb-2"
       v-if="!disabled"
     >
       <FormControl
@@ -334,43 +334,43 @@ watch(
         maxlength="200"
       />
     </FormField>
-
-    <button
-      class="mt-4 w-100z btn btn-secondary"
-      type="submit"
-      color="primary"
-      :disabled="disabled"
-      v-if="!disabled"
-    >
-      {{ $t(buttonText) }}
-
-      <svg
-        width="24"
-        height="25"
-        viewBox="0 0 24 25"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+    <div class="d-flex mt-4">
+      <button
+        class="mt-4 w-100z btn btn-primary ms-auto me-auto"
+        type="submit"
+        color="primary"
+        :disabled="disabled"
+        v-if="!disabled"
       >
-        <mask
-          id="mask0_64_2203"
-          style="mask-type: alpha"
-          maskUnits="userSpaceOnUse"
-          x="0"
-          y="0"
+        {{ $t(buttonText) }}
+
+        <svg
           width="24"
           height="25"
+          viewBox="0 0 24 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
-        </mask>
-        <g mask="url(#mask0_64_2203)">
-          <path
-            d="M12 21.3126C10.75 21.3126 9.57917 21.0751 8.4875 20.6001C7.39583 20.1251 6.44583 19.4835 5.6375 18.6751C4.82917 17.8668 4.1875 16.9168 3.7125 15.8251C3.2375 14.7335 3 13.5626 3 12.3126C3 11.0626 3.2375 9.89179 3.7125 8.80012C4.1875 7.70846 4.82917 6.75846 5.6375 5.95012C6.44583 5.14179 7.39583 4.50012 8.4875 4.02512C9.57917 3.55012 10.75 3.31262 12 3.31262V5.31262C10.05 5.31262 8.39583 5.99179 7.0375 7.35012C5.67917 8.70846 5 10.3626 5 12.3126C5 14.2626 5.67917 15.9168 7.0375 17.2751C8.39583 18.6335 10.05 19.3126 12 19.3126V21.3126ZM16 17.3126L14.6 15.8876L17.175 13.3126H9V11.3126H17.175L14.6 8.71262L16 7.31262L21 12.3126L16 17.3126Z"
-            fill="black"
-          />
-        </g>
-      </svg>
-    </button>
-
+          <mask
+            id="mask0_64_2203"
+            style="mask-type: alpha"
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="24"
+            height="25"
+          >
+            <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+          </mask>
+          <g mask="url(#mask0_64_2203)">
+            <path
+              d="M12 21.3126C10.75 21.3126 9.57917 21.0751 8.4875 20.6001C7.39583 20.1251 6.44583 19.4835 5.6375 18.6751C4.82917 17.8668 4.1875 16.9168 3.7125 15.8251C3.2375 14.7335 3 13.5626 3 12.3126C3 11.0626 3.2375 9.89179 3.7125 8.80012C4.1875 7.70846 4.82917 6.75846 5.6375 5.95012C6.44583 5.14179 7.39583 4.50012 8.4875 4.02512C9.57917 3.55012 10.75 3.31262 12 3.31262V5.31262C10.05 5.31262 8.39583 5.99179 7.0375 7.35012C5.67917 8.70846 5 10.3626 5 12.3126C5 14.2626 5.67917 15.9168 7.0375 17.2751C8.39583 18.6335 10.05 19.3126 12 19.3126V21.3126ZM16 17.3126L14.6 15.8876L17.175 13.3126H9V11.3126H17.175L14.6 8.71262L16 7.31262L21 12.3126L16 17.3126Z"
+              fill="black"
+            />
+          </g>
+        </svg>
+      </button>
+    </div>
     <div class="error-message mt-3 text-error" v-if="status.errorOther">
       {{ status.errorOther }}
     </div>

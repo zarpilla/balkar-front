@@ -204,7 +204,7 @@ const apiBase = getApiBase()
 
 .slider-title {
   color: var(--Black, #000);
-  font-family: 'DM Sans';
+  font-family: 'Inter';
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -258,7 +258,7 @@ const apiBase = getApiBase()
 
 .slide-pre-title {
   color: var(--Black, #000);
-  font-family: 'DM Sans';
+  font-family: 'Inter';
   font-size: 14px;
   font-style: normal;
   font-weight: 800;
@@ -268,7 +268,7 @@ const apiBase = getApiBase()
 
 .slide-title {
   color: var(--Black, #000);
-  font-family: 'DM Sans';
+  font-family: 'Inter';
   font-size: 28px;
   font-style: normal;
   font-weight: 600;
@@ -278,7 +278,7 @@ const apiBase = getApiBase()
 
 .slide-description {
   color: var(--Black, #000);
-  font-family: 'DM Sans';
+  font-family: 'Inter';
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

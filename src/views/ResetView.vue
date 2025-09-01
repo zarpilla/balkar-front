@@ -90,7 +90,7 @@ const onScore = (payload: any) => {
 
 <template>
   <LayoutGuest :loaded="true" css="col-lg-4 offset-lg-4 place-items-center">
-    <div class="bg-white p-4">
+    <div class="zbg-white p-4">
       <h3 class="mb-5">{{ $t('reset-password') }}</h3>
 
       <form @submit.prevent="submit">
@@ -122,7 +122,7 @@ const onScore = (payload: any) => {
         </FormField>
 
         <BaseButton
-          class="mt-4 w-100 btn btn-primary"
+          class="mt-4 zw-100 btn btn-primary"
           type="submit"
           @click="submit"
           color="primary"
@@ -130,9 +130,9 @@ const onScore = (payload: any) => {
         />
       </form>
 
-      <div class="text-center mt-3">
+      <!-- <div class="text-center mt-3">
         <RouterLink to="/login">{{ $t('back-to-log-in') }}</RouterLink>
-      </div>
+      </div> -->
     </div>
   </LayoutGuest>
 </template>

@@ -2,7 +2,7 @@
   <div class="content-video">
     <!-- Video banner with thumbnail and play button -->
     <div class="content-video__banner" v-if="!isPlaying">
-      <div class="content-video__overlay" @click="playVideo">
+      <div class="content-video__overlay" @click="playVideo" :class="data.overlay ? 'content-video__overlay-' + data.overlay : ''">
         <div class="content-video__play-button">
           <svg
             width="66"
@@ -160,6 +160,7 @@ interface ContentVideoData {
   thumbnail?: ThumbnailImage
   description?: string
   subtitle?: SubtitleFile
+  overlay?: 'green' | 'yellow' | 'blue'
 }
 
 interface Props {
@@ -340,6 +341,16 @@ const downloadTranscript = () => {
   justify-content: center;
   pointer-events: auto;
   z-index: 2;
+}
+
+.content-video__overlay-yellow {  
+   /* #F0C05A */
+  background: linear-gradient(180deg, rgba(240, 192, 90, 0.9) 42.31%, rgba(240, 192, 90, 0.5) 100%); 
+}
+
+.content-video__overlay-blue {
+  /* #CFE0FC */
+  background: linear-gradient(180deg, rgba(207, 224, 252, 0.9) 42.31%, rgba(207, 224, 252, 0.5) 100%);
 }
 
 .content-video__play-button {

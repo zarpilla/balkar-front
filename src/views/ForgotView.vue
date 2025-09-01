@@ -67,8 +67,8 @@ const submit = async () => {
 </script>
 
 <template>
-  <LayoutGuest :loaded="true" css="col-lg-6 zoffset-lg-3 zplace-items-center">
-    <div class="bg-white p-4">
+  <LayoutGuest :loaded="true" css="col-lg-8 offset-lg-2 place-items-center">
+    <div class="zbg-white p-4">
 
       <h3 class="mb-5">{{ $t('recupera-la-teva-clau-de-pas')}}</h3>
 
@@ -87,7 +87,7 @@ const submit = async () => {
         </FormField>
 
         <button
-          class="mt-4 w-100 btn btn-primary"
+          class="mt-4 zw-100 btn btn-primary"
           type="submit"
           color="primary"
           label="Continue"
@@ -96,9 +96,16 @@ const submit = async () => {
         </button>
       </form>
 
-      <div class="text-center mt-3">
-        <RouterLink to="/login">{{ $t('back-to-log-in')}}</RouterLink>
-      </div>
+      <!-- <div class="ztext-center mt-5">
+        <RouterLink class="forgot" to="/login">{{ $t('back-to-log-in')}}</RouterLink>
+      </div> -->
     </div>
   </LayoutGuest>
 </template>
+<style scoped lang="scss">
+a.forgot {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+</style>

@@ -36,7 +36,7 @@ const urlWithApiBase = computed(() => {
 
 <template>
   <div>
-    <img v-if="url" :src="urlWithApiBase" :alt="name" :class="`rounded mr s-${props.size}`" />
+    <img v-if="url" :src="urlWithApiBase" :alt="name" :class="`fit rounded mr s-${props.size}`" />
     <div class="icon mr" :style="`height:${size}px;width:${size}px;background-color:${stringToColor(name || 'x')}`" v-else>
 
       <div class="first-letter" :style="`font-size: ${props.size / 2.5}px; line-height: ${props.size}px`">{{ firstLetterOfName }}</div>
@@ -163,5 +163,8 @@ const urlWithApiBase = computed(() => {
   color: var(--Nabiu, #000000);
   text-transform: uppercase;
   color: #fff;
+}
+.fit {
+  object-fit: cover;
 }
 </style>

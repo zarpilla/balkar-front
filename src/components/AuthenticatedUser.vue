@@ -68,7 +68,7 @@ const userText = computed(() =>
 </script>
 
 <template>
-  <div class="d-flex dropdown ms-auto">
+  <div class="d-flex dropdown ms-auto ms-md-4 mt-1">
     <span
       class="d-flex dropdown-toggle"
       href="#"

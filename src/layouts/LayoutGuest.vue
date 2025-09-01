@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useApplicationStore } from '@/stores/application.js'
 import { useI18n } from 'vue-i18n'
 import AuthenticatedUser from '@/components/AuthenticatedUser.vue'
+import FooterBar from '@/components/FooterBar.vue'
 import { getApiBase } from '@/utils/config'
 
 const { t, locale } = useI18n()
@@ -30,16 +31,15 @@ applicationStore.load(locale.value).then(async () => {
 
 if (localStorage.getItem('locale')) {
   const storedLocale = localStorage.getItem('locale')
-  if (storedLocale){
+  if (storedLocale) {
     locale.value = storedLocale
-  }  
+  }
 }
 
 const readQueryStringParameter = (name: string) => {
   const urlParams = new URLSearchParams(window.location.search)
   return urlParams.get(name)
 }
-
 
 if (readQueryStringParameter('locale')) {
   const localeQs = readQueryStringParameter('locale')
@@ -52,61 +52,76 @@ if (readQueryStringParameter('locale')) {
 </script>
 
 <template>
-  <header v-if="props.loaded && applicationLoaded" class="pb-4">
-    <div class="container">
-      <div class="logo-outter">
-        <div class="d-flex align-items-center">
+  <div class="layout-wrapper">
+    <header v-if="props.loaded && applicationLoaded" class="pb-4">
+      <div class="container">
+        <div class="logo-outter mt-3">
+          <div class="d-flex align-items-center">
+            <div class="col-6 col-md-2">
+              <RouterLink to="/" class="logo">
+                <img src="@/assets/logo-color.svg" alt="" />
+              </RouterLink>
+            </div>
 
-          <div class="col-6 col-md-2">
-            <RouterLink to="/" class="logo">
-              <img src="@/assets/logo-color.svg" alt="" />
-            </RouterLink>
-          </div>
+            <div class="col-6 col-md-10 ms-auto">
+              <div class="auth-wrapper mt-2 d-flex ms-auto">
+                <div class="d-flex flex-wrap ms-auto d-none d-md-flex">
+                  <RouterLink to="/login" class="btn btn-tertiary me-5 mb-4 mb-md-0">
+                    {{ $t('accedeix-al-teu-perfil') }}
+                  </RouterLink>
 
-          <div class="col-6 col-md-4 ms-auto">
-            <div class="auth-wrapper mt-4 d-flex ms-auto">
-              <AuthenticatedUser></AuthenticatedUser>
+                  <RouterLink to="/register" class="btn btn-secondary mb-4 mb-md-0">
+                    {{ $t('crea-nou-perfil') }}
+                  </RouterLink>
+                </div>
 
-              <!-- <LanguageSwitcher class="ms-4"></LanguageSwitcher> -->
+                <AuthenticatedUser></AuthenticatedUser>
+              </div>
             </div>
           </div>
-          
-        </div>  
+        </div>
+        <div class="d-flex flex-wrap ms-auto d-flex d-md-none">
+          <RouterLink to="/login" class="btn btn-tertiary me-5 mb-4 mb-md-0">
+            {{ $t('accedeix-al-teu-perfil') }}
+          </RouterLink>
 
+          <RouterLink to="/register" class="btn btn-secondary mb-4 mb-md-0">
+            {{ $t('crea-nou-perfil') }}
+          </RouterLink>
+        </div>
       </div>
-      <h1 class="mt-3 pb-3">{{ $t('benvinguda-al-teu-balkar') }}</h1>
+    </header>
 
-      <div class="d-flex flex-wrap">
-        <RouterLink to="/login" class="btn btn-secondary me-5 mb-4 mb-md-0">
-          {{ $t('accedeix-al-teu-perfil') }}
-        </RouterLink>
-
-        <RouterLink to="/register" class="btn btn-secondary mb-4 mb-md-0">
-          {{ $t('crea-nou-perfil') }}
-        </RouterLink>
-      </div>
-    </div>
-  </header>
-
-  <div v-if="props.loaded && applicationLoaded" class="zbg-balkar pt-3">
-    <div class="container">
-      <div class="row align-items-start zcontent">
-        <div :class="props.css">
-          <div class="slot">
-            <div class="slot-inner">
-              <slot />
+    <div v-if="props.loaded && applicationLoaded" class="zbg-balkar pt-3 flex-grow-1">
+      <div class="container">
+        <div class="row align-items-start the-content">
+          <div :class="props.css">
+            <div class="slot">
+              <div class="slot-inner">
+                <slot />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <FooterBar></FooterBar>
   </div>
 </template>
 <style scoped lang="scss">
+.layout-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.flex-grow-1 {
+  flex: 1 1 auto;
+}
 .slot {
   display: flex;
   margin: 0 auto;
-  
+
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -139,27 +154,25 @@ header {
   /* background: #fbf7eb; */
 }
 
-
-
 @media (min-width: 1024px) and (max-height: 700px) {
   .slot {
     height: auto;
   }
 }
-.router-link-exact-active:not(.logo), .router-link-exact-active:not(.logo):hover, .router-link-exact-active:not(.logo):focus{
-  color: #fff;
-  background-color: #000000;
-  border-color: #000000;
-  transition: all 0.3s ease-in-out;
-
-
-  &:hover {
-    background: var(--Green, #44B08E)!important;
-    color: #000!important;
-    border-color: #44B08E!important;
-  }
-}
-.router-link-exact-active svg path, .router-link-exact-active:hover svg path, .router-link-exact-active:focus svg path{
+.router-link-exact-active svg path,
+.router-link-exact-active:hover svg path,
+.router-link-exact-active:focus svg path {
   fill: #fff;
+}
+.the-content {
+  background-color: #d4edda;
+  border-radius: 19px;
+  padding: 50px 0px;
+  margin-bottom: 100px;
+
+  @media screen {
+    margin: 0 10px;
+    margin-bottom: 100px;
+  }
 }
 </style>

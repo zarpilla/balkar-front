@@ -119,7 +119,7 @@ h1-40 {
   .name {
     color: var(--Black, #000);
     font-variant-numeric: lining-nums tabular-nums;
-    font-family: 'DM Sans';
+    font-family: 'Inter';
     font-size: 22px;
     font-style: normal;
     font-weight: 700;

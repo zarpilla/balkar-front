@@ -59,8 +59,8 @@ tryIfUserIsLogged()
 </script>
 
 <template>
-  <LayoutGuest :loaded="!loading && !authenticated" css="col-lg-6 zoffset-lg-3 zplace-items-center">    
-    <div class="bg-white p-4">
+  <LayoutGuest :loaded="!loading && !authenticated" css="col-lg-8 offset-lg-2 zplace-items-center">    
+    <div class="zbg-white p-4">
       <LoginForm></LoginForm>
     </div>
   </LayoutGuest>

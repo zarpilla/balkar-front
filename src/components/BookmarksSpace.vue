@@ -9,6 +9,7 @@ import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 import { getApiBase } from '@/utils/config'
+import { RouterLink } from 'vue-router'
 
 const authStore = useAuthStore()
 
@@ -68,7 +69,12 @@ const authenticated = computed(() => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
-    <LearningSpaceBanner :space="space" :base="base" :authenticated="!!authenticated" template="small" />
+    <LearningSpaceBanner
+      :space="space"
+      :base="base"
+      :authenticated="!!authenticated"
+      template="small"
+    />
 
     <LearningSpaceHeader
       :space="space"
@@ -80,7 +86,7 @@ const authenticated = computed(() => {
     <div class="enrolled">
       <div class="container bg-white mt-5">
         <div class="row">
-          <div class="col-12 col-lg-8 col-offset-lg-2">
+          <div class="col-12 col-lg-8 offset-lg-2">
             <h2 class="mb-4">{{ $t('bookmarks') }}</h2>
 
             <div v-if="space.content_modules?.length > 0">
@@ -91,10 +97,10 @@ const authenticated = computed(() => {
                 <div v-if="hasBookmarkedItems(module)" class="module-bookmarks mb-4">
                   <h3 class="module-title">{{ module.title }}</h3>
 
-                  <template v-for="unit in module.units" :key="`bookmark-unit-${unit.uid}`">
+                  <template v-for="(unit, ui) in module.units" :key="`bookmark-unit-${unit.uid}`">
                     <div
                       v-if="unit.bookmarked || hasBookmarkedLessons(unit)"
-                      class="unit-bookmarks ms-3 mb-3"
+                      class="unit-bookmarks mb-3"
                     >
                       <!-- Show unit if it's bookmarked -->
                       <div
@@ -131,15 +137,15 @@ const authenticated = computed(() => {
                           :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}`"
                           class="bookmark-link"
                         >
-                          {{ unit.title }}
+                          {{ ui + 1 }}. {{ unit.title }}
                         </RouterLink>
-                        <button
-                          @click="removeBookmark(module.id.toString(), unit.id.toString(), '')"
-                          class="btn btn-medium btn-outline-secondary ms-auto"
-                          :title="$t('remove-bookmark')"
+                        <RouterLink
+                        class="btn btn-medium btn-white ms-auto"
+                          :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}`"
                         >
-                          {{ $t('remove-bookmark') }}
-                        </button>
+                        
+                          {{ $t('review-bookmark') }}
+                        </RouterLink>
                       </div>
 
                       <!-- Show bookmarked lessons -->
@@ -183,19 +189,13 @@ const authenticated = computed(() => {
                           >
                             {{ lesson.title }}
                           </RouterLink>
-                          <button
-                            @click="
-                              removeBookmark(
-                                module.id.toString(),
-                                unit.id.toString(),
-                                lesson.id.toString()
-                              )
-                            "
-                            class="btn btn-medium btn-outline-secondary ms-auto"
-                            :title="$t('remove-bookmark')"
+                          <RouterLink
+                            class="btn btn-medium btn-white ms-auto"
+                            :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}/lesson/${lesson.uid}`"
                           >
-                            {{ $t('remove-bookmark') }}
-                          </button>
+                            {{ $t('review-bookmark') }}
+                          </RouterLink>
+                          
                         </div>
                       </template>
                     </div>
@@ -203,9 +203,12 @@ const authenticated = computed(() => {
                 </div>
               </template>
 
-              <div v-if="!hasAnyBookmarks()" class="text-left py-5">
-                <p class="text-muted">{{ $t('no-bookmarks-found') }}</p>
+              <div v-if="!hasAnyBookmarks()" class="text-left mt-5 zpy-5 no-bookmarks">
+                <p class="text-bold">{{ $t('no-bookmarks-found') }}</p>
                 <p class="text-muted">
+                  <svg class="add-bookmarks-icon" width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0.75 14.4738V2.47375C0.75 2.06125 0.896875 1.70813 1.19063 1.41438C1.48438 1.12063 1.8375 0.973755 2.25 0.973755H9.75C10.1625 0.973755 10.5156 1.12063 10.8094 1.41438C11.1031 1.70813 11.25 2.06125 11.25 2.47375V14.4738L6 12.2238L0.75 14.4738ZM2.25 12.1863L6 10.5738L9.75 12.1863V2.47375H2.25V12.1863Z" fill="#797979"/>
+</svg>
                   {{ $t('add-bookmarks-from-the-learning-content-to-see-them-here') }}
                 </p>
               </div>
@@ -376,8 +379,6 @@ const authenticated = computed(() => {
 }
 
 .module-bookmarks {
-  border-left: 3px solid #44b08e;
-  padding-left: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -395,10 +396,10 @@ const authenticated = computed(() => {
 }
 
 .bookmark-item {
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem;
   border: 0px solid #e9ecef;
   border-radius: 10px;
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--Blue-Grey, #d4edda);
   transition: background-color 0.2s ease;
 }
 
@@ -425,5 +426,16 @@ const authenticated = computed(() => {
 
 .bookmark-link:hover {
   text-decoration: underline;
+}
+.no-bookmarks{
+  background-color: #E0E0E0;
+  padding: 30px 20px;
+  border-radius: 19px;
+}
+.text-bold{
+  font-weight: 600;
+}
+.add-bookmarks-icon{
+  vertical-align: -2px;
 }
 </style>

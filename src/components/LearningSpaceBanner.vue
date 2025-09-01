@@ -203,12 +203,12 @@ const goToId = (id: string) => {
 
     color: #fff;
     text-align: center;
-    font-family: 'DM Sans';
+    font-family: 'Inter';
     font-size: 50px;
     font-style: normal;
-    font-weight: 900;
+    font-weight: 700;
     line-height: 100%; /* 50px */
-    letter-spacing: -0.5px;
+    letter-spacing: 0;
 
     @media screen and (max-width: 768px) {
       font-size: 36px;
@@ -221,7 +221,7 @@ const goToId = (id: string) => {
     .free {
       color: var(--White, #fff);
       text-align: center;
-      font-family: 'DM Sans';
+      font-family: 'Inter';
       font-size: 16.971px;
       font-style: normal;
       font-weight: 800;

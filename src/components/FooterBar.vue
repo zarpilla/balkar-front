@@ -14,7 +14,8 @@
 </template>
 <style scoped>
 footer {
-  background: #f3c857;  
+  background: #f3c857;
+  width: 100%;
 }
 .img-1 {
   height: 48px;
