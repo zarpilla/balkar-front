@@ -89,8 +89,8 @@ const onScore = (payload: any) => {
 </script>
 
 <template>
-  <LayoutGuest :loaded="true" css="col-lg-4 offset-lg-4 place-items-center">
-    <div class="zbg-white p-4">
+  <LayoutGuest :loaded="true" css="the-content">
+    <div class="col-lg-8 offset-lg-2 place-items-center">
       <h3 class="mb-5">{{ $t('reset-password') }}</h3>
 
       <form @submit.prevent="submit">

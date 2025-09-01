@@ -94,7 +94,7 @@ if (readQueryStringParameter('locale')) {
 
     <div v-if="props.loaded && applicationLoaded" class="zbg-balkar pt-3 flex-grow-1">
       <div class="container">
-        <div class="row align-items-start the-content">
+        <div class="row align-items-start zthe-content">
           <div :class="props.css">
             <div class="slot">
               <div class="slot-inner">

@@ -27,7 +27,7 @@ const spaceLoaded = (space: any) => {
       <learning-space-about :uid="uid"></learning-space-about>
     </div>
   </LayoutAuthenticated>
-  <LayoutGuest css="zbg-balkar" :loaded="true" v-else>    
+  <LayoutGuest css="z" :loaded="true" v-else>    
     <div class="space">
       <learning-space-about :uid="uid"></learning-space-about>
     </div>

@@ -31,7 +31,7 @@ const tryIfUserIsLogged = () => {
               name: meResponse.data.name,
               lastname: meResponse.data.lastname,
               createdAt: meResponse.data.createdAt,
-              updatedAt: meResponse.data.updatedAt,
+              updatedAt: meResponse.data.updatedAt
             })
             loading.value = false
 
@@ -55,12 +55,11 @@ const tryIfUserIsLogged = () => {
 }
 
 tryIfUserIsLogged()
-
 </script>
 
 <template>
-  <LayoutGuest :loaded="!loading && !authenticated" css="col-lg-8 offset-lg-2 zplace-items-center">    
-    <div class="zbg-white p-4">
+  <LayoutGuest :loaded="!loading && !authenticated" css="the-content">
+    <div class="col-lg-8 offset-lg-2 p-4">
       <LoginForm></LoginForm>
     </div>
   </LayoutGuest>
