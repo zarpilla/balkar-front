@@ -268,9 +268,9 @@ const uploaded = (fileImage: string) => {
               />
             </FormField> -->
 
-              <div class="col-12 col-md-8">
+              <div class="col-12 col-md-12">
                 <div class="actions d-flex mt-4 mb-4">
-                  <button class="btn btn-primary zbtn-medium ms-auto mb-4" type="submit">
+                  <button class="btn btn-quaternary zbtn-medium ms-auto mb-4" type="submit">
                     {{ $t('changePassword.submitButton') }}
                   </button>
                 </div>
@@ -300,7 +300,7 @@ const uploaded = (fileImage: string) => {
 </template>
 <style scoped lang="scss">
 .bordered-card {
-  background-color: #CFE0FC;
+  background-color: #cfe0fc;
   border-radius: 19px;
   padding: 50px 0px;
   margin-bottom: 100px;

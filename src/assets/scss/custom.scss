@@ -97,7 +97,7 @@ cite,
   font-size: 15px;
   font-style: normal;
   font-weight: 600;
-  line-height: 23px;
+  line-height: 22px;
   /* 153.333% */
   letter-spacing: 0.75px;
   text-transform: uppercase;
@@ -123,15 +123,26 @@ cite,
   transition: all 0.3s ease;
 
   &:hover {
-    background: var(--Resilience-fosc, #F3C857);
-    color: var(--blanc, #000000);
-    border-color: var(--Resilience-fosc, #F3C857);
+    background: var(--Blau-fosc, #2D4269);
+    color: var(--negre, #fff);
+    border-color: var(--Blau-fosc, #2D4269);
+  }
+}
+
+.btn.btn-primary.btn-primary-hover-green:hover {
+  background: var(--Green, #D4EDDA);
+  color: var(--blanc, #000);
+  border-color: var(--Green, #D4EDDA);
+
+  svg path {
+    fill: var(--Green, #000);
   }
 }
 
 
 .btn.btn-primary:hover svg path {
-  fill: var(--Resilience-fosc, #000);
+  transition: all 0.3s ease;
+  fill: var(--Resilience-fosc, #fff);
 }
 
 .btn.btn-secondary {
@@ -166,14 +177,14 @@ cite,
 }
 
 .btn-primary-outlined {
-  background: transparent;
-  border: 2px solid var(--Green, #44B08E);
-  color: var(--Green, #44B08E);
+  background: #D4EDDA;
+  border: 2px solid var(--Green, #D4EDDA);
+  color: #000;
   padding: 14px 44px 14px 45px;
 }
 
 .btn-primary-outlined svg path {
-  fill: var(--Green, #44B08E);
+  fill: var(--Green, #000);
 }
 
 .btn-primary-outlined:hover {
@@ -196,6 +207,18 @@ cite,
   border-color: var(--Mimosa, #f0c05a) !important;
 }
 
+
+.btn.btn-quaternary {
+  background: var(--Blau-fosc, #2D4269);
+  border: 2px solid var(--Blau-fosc, #2D4269);
+  color: var(--Blanc, #fff);
+}
+
+.btn.btn.btn-quaternary:hover {
+  background: var(--Green, #44B08E);
+  color: var(--blanc, #000000);
+  border-color: var(--Green, #44B08E) !important; 
+}
 
 .btn.btn-white {
   border: 2px solid var(--Resilience-fosc, #fff);

@@ -53,13 +53,14 @@ const onScore = (payload: any) => {
 
 <template>
   <div class="container mt-5">
-    <div class="row">
-      <div class="col-12 col-md-9">
-        <div class="bordered-card mb-4">
+    <div class="row bordered-card">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="mb-4">
+          <h1 class="mb-5">{{ $t('change-password') }}</h1>
           <form @submit.prevent="changePassword">
             <FormField
               :label="$t('changePassword.currentPasswordLabel')"
-              css="col-12 col-md-8 mb-3"
+              css="col-12 mb-2"
             >
               <FormControl
                 type="password"
@@ -69,7 +70,7 @@ const onScore = (payload: any) => {
               />
             </FormField>
 
-            <FormField :label="$t('changePassword.newPasswordLabel')" css="col-12 col-md-8 mb-3">
+            <FormField :label="$t('changePassword.newPasswordLabel')" css="col-12 mb-2">
               <FormControl
                 type="password"
                 :placeholder="$t('changePassword.newPasswordPlaceholder')"
@@ -81,7 +82,7 @@ const onScore = (payload: any) => {
 
             <FormField
               :label="$t('changePassword.repeatPasswordLabel')"
-              css="col-12 col-md-8 mb-3"
+              css="col-12 mb-2"
               :help="passwordError"
             >
               <FormControl
@@ -92,11 +93,9 @@ const onScore = (payload: any) => {
               />
             </FormField>
 
-            <div class="col-12 col-md-8">
-              <div class="actions d-flex mt-5 mb-4">
-                <RouterLink to="/account/profile" class="btn btn-tertiary zbtn-medium me-auto">
-                  {{ $t('changePassword.cancelButton') }}
-                </RouterLink>
+            
+            <div class="col-12 col-md-12">
+              <div class="actions d-flex mt-5 mb-4">                
                 <button class="btn btn-primary zbtn-medium ms-auto" type="submit">
                   {{ $t('changePassword.submitButton') }}
                 </button>
@@ -115,3 +114,16 @@ const onScore = (payload: any) => {
     ></CustomToast>
   </div>
 </template>
+<style scoped lang="scss">
+.bordered-card {
+  background-color: #cfe0fc;
+  border-radius: 19px;
+  padding: 50px 0px;
+  margin-bottom: 100px;
+
+  @media screen {
+    margin: 0 10px;
+    margin-bottom: 100px;
+  }
+}
+</style>

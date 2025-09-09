@@ -153,6 +153,7 @@ const getButtonColorClass = (index: number) => {
   text-align: left;
   transition: background-color 0.15s ease-in-out;
   box-shadow: none !important;
+  line-height: 130%;
 }
 
 .accordion-button--primary {

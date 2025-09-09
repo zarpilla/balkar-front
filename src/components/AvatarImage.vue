@@ -85,7 +85,7 @@ const urlWithApiBase = computed(() => {
 
 <style scoped>
 .rounded {
-  border-radius: 40px !important;
+  border-radius: 50% !important;
 }
 
 .icon {

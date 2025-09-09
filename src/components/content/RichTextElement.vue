@@ -177,9 +177,9 @@ line-height: 130%; /* 36.4px */
 }
 
 .content-text__link:focus {
-  outline: 2px solid var(--GreenFocus, #2c7a7b);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline: 0;
+  outline-offset: 0px;
+  border-radius: 0px;
 }
 
 /* Text formatting styles */

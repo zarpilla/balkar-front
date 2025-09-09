@@ -334,7 +334,7 @@ const processUpload = async (event: any) => {
 }
 
 .upload-button {
-  background-color: var(--blanc, #fff);
+  background-color: var(--blanc, transparent);
   border: 2px solid var(--blanc, #000000);
   border-radius: 50px;
   height: 46px;

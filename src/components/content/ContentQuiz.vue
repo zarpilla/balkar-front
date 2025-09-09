@@ -76,12 +76,16 @@
             </svg>
             {{ getCorrectAnswerWithPrefix(question) }}
           </div>
-          <p class="quiz-answer__explanation" v-if="isQuestionCorrect(questionIndex)">
+          <p class="quiz-answer__explanation">
             {{ question.answer }}
           </p>
         </div>
       </div>
     </div>
+
+
+    submit!
+    
 
     <div v-if="allQuestionsAnswered" class="content-quiz__completion">
       <div v-if="allQuestionsCorrect" class="quiz-completion quiz-completion--success">
