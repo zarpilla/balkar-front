@@ -82,13 +82,13 @@ const getImageUrl = () => {
   // Use the best available format for display
   const formats = props.data.image.formats
   if (formats?.large?.url) {
-    return apiBase + formats.large.url
+    return formats.large.url.startsWith('http') ? formats.large.url : apiBase + formats.large.url
   }
   if (formats?.medium?.url) {
-    return apiBase + formats.medium.url
+    return formats.medium.url.startsWith('http') ? formats.medium.url : apiBase + formats.medium.url
   }
   if (props.data.image.url) {
-    return apiBase + props.data.image.url
+    return props.data.image.url.startsWith('http') ? props.data.image.url : apiBase + props.data.image.url
   }
   return ''
 }

@@ -26,14 +26,39 @@
           data-bs-parent="#accordionExample"
         >
           <div class="accordion-body">
-            <ContentText
-              :data="{
-                __component: 'content.text',
-                id: item.id,
-                text: item.text
-              }"
-              :title-as="getChildTitleAs()"
-            />
+            <template v-for="(block, blockIndex) in item.text" :key="blockIndex">
+              <!-- Handle paragraph blocks -->
+              <div v-if="block.type === 'paragraph'" class="content-text__paragraph">
+                <template v-for="(child, childIndex) in block.children" :key="childIndex">
+                  <span v-if="isTextNode(child)" :class="getTextClasses(child)">
+                    {{ child.text }}
+                  </span>
+                </template>
+              </div>
+              
+              <!-- Handle image blocks -->
+              <ContentImage
+                v-else-if="isImageElement(block)"
+                :data="{
+                  __component: 'content.image',
+                  id: blockIndex,
+                  image: block.image,
+                  caption: block.image.caption,
+                  alternativeText: block.image.alternativeText
+                }"
+              />
+              
+              <!-- Fallback for other content types using ContentText -->
+              <ContentText
+                v-else
+                :data="{
+                  __component: 'content.text',
+                  id: item.id,
+                  text: [block]
+                }"
+                :title-as="getChildTitleAs()"
+              />
+            </template>
           </div>
         </div>
       </div>
@@ -44,6 +69,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 import ContentText from './ContentText.vue'
+import ContentImage from './ContentImage.vue'
 
 interface TextChild {
   text: string
@@ -60,6 +86,50 @@ interface LinkElement {
   children: TextChild[]
 }
 
+interface ImageFormat {
+  ext: string
+  url: string
+  hash: string
+  mime: string
+  name: string
+  path?: string
+  size: number
+  width: number
+  height: number
+  sizeInBytes: number
+}
+
+interface ImageData {
+  id: number
+  name: string
+  alternativeText?: string
+  caption?: string
+  width?: number
+  height?: number
+  formats?: {
+    large?: ImageFormat
+    medium?: ImageFormat
+    small?: ImageFormat
+    thumbnail?: ImageFormat
+  }
+  hash: string
+  ext: string
+  mime: string
+  size: number
+  url: string
+  previewUrl?: string
+  provider: string
+  provider_metadata?: any
+  createdAt: string
+  updatedAt: string
+}
+
+interface ImageElement {
+  type: 'image'
+  image: ImageData
+  children: TextChild[]
+}
+
 interface RichTextElementData {
   type: string
   format?: string
@@ -70,7 +140,7 @@ interface RichTextElementData {
 interface AccordionItem {
   id: number
   title: string
-  text: RichTextElementData[]
+  text: (RichTextElementData | ImageElement)[]
 }
 
 interface ContentAccordionData {
@@ -107,6 +177,25 @@ const getButtonColorClass = (index: number) => {
   }
 
   return `accordion-button--${color}`
+}
+
+const getTextClasses = (textNode: TextChild): string => {
+  const classes = ['content-text__text']
+  
+  if (textNode.bold) classes.push('content-text__text--bold')
+  if (textNode.italic) classes.push('content-text__text--italic')
+  if (textNode.underline) classes.push('content-text__text--underline')
+  if (textNode.strikethrough) classes.push('content-text__text--strikethrough')
+  
+  return classes.join(' ')
+}
+
+const isTextNode = (node: any): node is TextChild => {
+  return node && typeof node === 'object' && 'text' in node && node.type === 'text'
+}
+
+const isImageElement = (element: any): element is ImageElement => {
+  return element && typeof element === 'object' && element.type === 'image' && 'image' in element
 }
 </script>
 
@@ -217,5 +306,39 @@ const getButtonColorClass = (index: number) => {
 
 .accordion-body :deep(.content-text__body) {
   margin-top: 0;
+}
+
+/* Text formatting styles for inline content */
+.content-text__paragraph {
+  margin-bottom: 1rem;
+}
+
+.content-text__paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.content-text__text--bold {
+  font-weight: 600;
+}
+
+.content-text__text--italic {
+  font-style: italic;
+}
+
+.content-text__text--underline {
+  text-decoration: underline;
+}
+
+.content-text__text--strikethrough {
+  text-decoration: line-through;
+}
+
+/* Ensure images in accordion have proper spacing */
+.accordion-body :deep(.content-image) {
+  margin-bottom: 1rem;
+}
+
+.accordion-body :deep(.content-image:last-child) {
+  margin-bottom: 0;
 }
 </style>

@@ -26,7 +26,7 @@
                 class="slide-media"
                 :style="{ backgroundImage: `url(${apiBase + item.image.url})` }"
               >
-                <div class="slide-logo">
+                <div class="slide-logo" v-if="item.logo && item.logo.url">
                   <img
                     :src="apiBase + item.logo.url"
                     :alt="item.logo.alternativeText || 'Logo'"
