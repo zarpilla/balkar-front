@@ -24,6 +24,7 @@
 
               <div
                 class="slide-media"
+                v-if="item.image && item.image.url"
                 :style="{ backgroundImage: `url(${apiBase + item.image.url})` }"
               >
                 <div class="slide-logo" v-if="item.logo && item.logo.url">
