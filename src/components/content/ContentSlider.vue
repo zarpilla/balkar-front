@@ -297,7 +297,7 @@ const apiBase = getApiBase()
   width: 100%;
   height: 100%;
   min-height: 400px;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;

@@ -23,7 +23,7 @@
             />
           </svg>
         </div>
-        <div class="content-video__banner-title">[{{ props.spaceTitle }}]</div>
+        <div v-if="props.spaceTitle" class="content-video__banner-title">[{{ props.spaceTitle }}]</div>
         <component v-if="data.title" :is="props.titleAs || 'h2'" class="content-video__title">
           <div class="content-video__banner-subtitle">
             {{ props.spaceSubTitle }}
@@ -33,7 +33,7 @@
       </div>
       <img
         :src="getThumbnailUrl()"
-        :alt="data.title || 'Video thumbnail'"
+        alt=""
         class="content-video__thumbnail"
       />
     </div>

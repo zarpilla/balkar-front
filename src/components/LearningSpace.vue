@@ -467,7 +467,7 @@ const selectedLesson = computed(() => {
                   class="module module-bordered"
                 >
                   <div class="module-header">
-                    <div class="d-flex">
+                    <div class="d-flex flex-wrap">
                       <h2>{{ module.shortTitle }}</h2>
                       <h2 v-if="lessonId" class="ms-2">
                         <svg
@@ -824,6 +824,7 @@ const selectedLesson = computed(() => {
                               :content="lesson.content"
                               title-as="h2"
                               :is-completed="lesson.completed"
+                              :space-title="space.name"
                               @quiz-completed="onQuizCompleted"
                             />
                           </div>
@@ -1333,4 +1334,5 @@ const selectedLesson = computed(() => {
 .rotate-180 {
   transform: rotate(180deg);
 }
+
 </style>

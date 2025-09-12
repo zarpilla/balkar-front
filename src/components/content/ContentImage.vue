@@ -1,16 +1,16 @@
 <template>
-  <div class="content-image">
+  <div class="content-image" v-if="data && data.image">
     <component v-if="data.title" :is="props.titleAs || 'h2'" class="content-image__title">
       {{ data.title }}
     </component>
     <figure class="content-image__figure">
       <img
         :src="getImageUrl()"
-        :alt="data.alternativeText || data.image.alternativeText || data.title || 'Image'"
+        :alt="data.alternativeText || ( data.image && data.image.alternativeText) || data.title || 'Image'"
         class="content-image__img"
       />
-      <figcaption v-if="data.caption || data.image.caption" class="content-image__caption">
-        {{ data.caption || data.image.caption }}
+      <figcaption v-if="data.caption || (data.image && data.image.caption)" class="content-image__caption">
+        {{ data.caption || (data.image && data.image.caption) }}
       </figcaption>
     </figure>
   </div>
