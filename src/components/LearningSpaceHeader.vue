@@ -22,6 +22,9 @@
             <RouterLink :to="`/space/${uid}/forum`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'community' }">
               {{ $t('community') }}
             </RouterLink>
+            <RouterLink :to="`/space/${uid}/certificate`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'certificate' }">
+              {{ $t('certificate') }}
+            </RouterLink>
             <RouterLink :to="`/space/${uid}/admin`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'admin' }" v-if="space.manager">
               {{ $t('admin') }}
             </RouterLink>
@@ -48,7 +51,7 @@ interface Props {
   space: Space
   uid: string
   authenticated: boolean
-  selected: 'space' | 'progress' | 'bookmarks' | 'community' | 'admin'
+  selected: 'space' | 'progress' | 'bookmarks' | 'community' | 'certificate' | 'admin'
 }
 
 defineProps<Props>()

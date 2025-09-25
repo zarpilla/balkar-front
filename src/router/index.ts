@@ -115,6 +115,12 @@ const router = createRouter({
       component: () => import('../views/ProgressView.vue')
     },
     {
+      path: '/space/:uid/certificate',
+      name: 'certificate',
+      meta: { requiresAuth: true },
+      component: () => import('../views/CertificateView.vue')
+    },
+    {
       path: '/space/:uid/forum',
       name: 'forum',
       meta: { requiresAuth: true },
