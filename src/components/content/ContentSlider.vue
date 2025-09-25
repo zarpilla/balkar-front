@@ -25,6 +25,9 @@
               <div
                 class="slide-media"
                 v-if="item.image && item.image.url"
+                v-class.contain="item.imageSize === 'contain'"
+                v-class.cover="item.imageSize === 'cover'"
+                v-class.initial="!item.imageSize || item.imageSize === 'initial'"
                 :style="{ backgroundImage: `url(${apiBase + item.image.url})` }"
               >
                 <div class="slide-logo" v-if="item.logo && item.logo.url">
@@ -155,7 +158,8 @@ interface SliderItem {
     url: string
     alternativeText?: string
     [key: string]: any
-  }
+  },
+  imageSize?: 'contain' | 'cover' | 'initial'
 }
 
 interface SliderData {
@@ -297,11 +301,21 @@ const apiBase = getApiBase()
   width: 100%;
   height: 100%;
   min-height: 400px;
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
   padding: 2rem;
+
+  &.cover {
+    background-size: cover;
+  }
+  &.contain {
+    background-size: contain;
+  }
+  &.initial {
+    background-size: auto;
+  }
 }
 
 .slide-logo {
