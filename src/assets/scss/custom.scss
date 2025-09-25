@@ -127,6 +127,13 @@ cite,
     color: var(--negre, #fff);
     border-color: var(--Blau-fosc, #2D4269);
   }
+
+  &:disabled {
+    background: var(--Green, #D4EDDA);
+    border-color: var(--Green, #D4EDDA);
+    color: var(--blanc, #000);
+    cursor: not-allowed;
+  }
 }
 
 .btn.btn-primary.btn-primary-hover-green:hover {

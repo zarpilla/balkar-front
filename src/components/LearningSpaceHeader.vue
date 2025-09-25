@@ -22,7 +22,7 @@
             <RouterLink :to="`/space/${uid}/forum`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'community' }">
               {{ $t('community') }}
             </RouterLink>
-            <RouterLink :to="`/space/${uid}/certificate`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'certificate' }">
+            <RouterLink :to="`/space/${uid}/certificate`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'certificate' }" v-if="space.certificate">
               {{ $t('certificate') }}
             </RouterLink>
             <RouterLink :to="`/space/${uid}/admin`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'admin' }" v-if="space.manager">
@@ -45,6 +45,8 @@ interface Space {
   contentCompleted: number
   contentNotCompleted: number
   manager?: boolean
+  certificate?: { id: number } | null
+  certificateProduct?: { id: number } | null
 }
 
 interface Props {

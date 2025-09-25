@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Api } from '@/service/api'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
@@ -34,7 +34,6 @@ load()
 
 const base = getApiBase()
 
-
 const authenticated = computed(() => {
   return authStore.isAuthenticated()
 })
@@ -43,15 +42,78 @@ const issueCertificate = async () => {
   if (!space.value) return
   try {
     const response = await Api.certificates.issue(props.uid)
-    console.log('Certificate issued response:', response)
-    if (response.data && response.data.url) {
-      window.open(response.data.url, '_blank')
+    if (response.data && response.data.pdfUrl) {
+      window.open(base + response.data.pdfUrl, '_blank')
     }
   } catch (error) {
     console.error('Error issuing certificate:', error)
     alert('An error occurred while issuing the certificate. Please try again later.')
   }
 }
+
+const freeOrPaid = computed(() => {
+  if (!space.value) return false
+  if (space.value.certificatePayment !== null) {
+    return space.value.certificatePayment.paid
+  }
+  return false
+})
+
+const needsPayment = computed(() => {
+  if (!space.value) return false
+  if (space.value.certificateProduct !== null) {
+    return true
+  }
+  return false
+})
+
+const pay = async () => {
+  const response = await Api.payment
+    .createCheckoutSessionForCertificate(props.uid, {
+      email: authStore.userEmail,
+      name: authStore.userName,
+      lastname: authStore.lastname,
+      locale: locale.value
+    })
+    .then((r) => r.data)
+  location.href = response.url
+}
+
+const paymentIsSuccessfully = ref(false)
+const paymentIsChecking = ref(false)
+const paymentHasResponse = ref(false)
+const checkoutSession = ref('')
+
+onMounted(async () => {
+  const queryParams = new URLSearchParams(window.location.search)
+  if (queryParams.has('success')) {
+    try {
+      paymentIsChecking.value = true
+      const paymentIntentId = queryParams.get('success')
+      if (paymentIntentId && paymentIntentId !== 'false') {
+        const response = await Api.payment.checkForCertificate(paymentIntentId).then((r) => r.data)
+        console.log(response)
+        paymentIsSuccessfully.value = response.ok
+        paymentHasResponse.value = true
+        paymentIsChecking.value = false
+        
+        if (paymentIsSuccessfully.value) {
+          checkoutSession.value = paymentIntentId
+        }
+      } else {
+        paymentIsSuccessfully.value = false
+        paymentHasResponse.value = true
+        paymentIsChecking.value = false
+      }
+    } catch (e) {
+      console.log('3')
+      paymentHasResponse.value = true
+      paymentIsSuccessfully.value = false
+      paymentIsChecking.value = false
+      console.error(e)
+    }
+  }
+})
 </script>
 
 <template>
@@ -75,24 +137,31 @@ const issueCertificate = async () => {
         <div class="row">
           <div class="col-12 col-lg-8 offset-lg-2">
             <h2 class="mb-4">{{ $t('certificate') }}</h2>
-            
+
             <div class="zmodule-type-forum mb-5" v-if="space.contentNotCompleted === 0">
               {{ $t('certificate-explanation-completed') }}
             </div>
             <div class="zmodule-type-forum mb-5" v-else>
               {{ $t('certificate-explanation-not-completed') }}
             </div>
-            <!-- <div class="ztext-center mt-4 mb-5" v-if="space.contentNotCompleted === 0">
-              This certificate will be issued to <strong>{{ authStore.name }} {{ authStore.lastname }}</strong> and cannot be changed once issued.
-            </div> -->
             
-            <div class="ztext-center mt-4 mb-5" v-if="space.contentNotCompleted === 0">
-              <a
-                @click="issueCertificate"
-                class="btn btn-primary quick-access-button"
-                >{{ $t('download-certificate') }}</a
-              >
-              </div>
+            <div
+              class="ztext-center mt-4 mb-5"
+              v-if="space.contentNotCompleted === 0 && needsPayment && !freeOrPaid && !paymentIsSuccessfully"
+            >
+              <a @click="pay" class="btn btn-primary quick-access-button">{{
+                $t('pay-download-certificate')
+              }}</a>
+            </div>
+
+            <div
+              class="ztext-center mt-4 mb-5"
+              v-if="space.contentNotCompleted === 0 && (freeOrPaid || paymentIsSuccessfully)"
+            >
+              <a @click="issueCertificate" class="btn btn-primary quick-access-button">{{
+                $t('download-certificate')
+              }}</a>
+            </div>
           </div>
         </div>
       </div>

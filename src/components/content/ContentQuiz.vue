@@ -29,25 +29,31 @@
             :text="`${getOptionPrefix(optionIndex)} ${option.option}`"
             :is-selected="selectedAnswers[questionIndex] === option.id"
             :is-correct="option.correct"
-            :is-answered="isQuestionAnswered(questionIndex)"
-            @change="onOptionChange(questionIndex, option.id, option.correct)"
+            :is-answered="isQuestionAnswered(questionIndex) && isQuizSubmitted && !changedAfterSubmit[questionIndex]"
+            @change="onOptionChange(questionIndex, option.id)"
           />
         </div>
 
         <div
-          v-if="isQuestionAnswered(questionIndex)"
+          v-if="isQuestionAnswered(questionIndex) && isQuizSubmitted"
           class="quiz-question__answer"
           :class="{
             'quiz-question__answer--correct': isQuestionCorrect(questionIndex),
             'quiz-question__answer--incorrect': !isQuestionCorrect(questionIndex)
           }"
         >
-          <div class="quiz-answer__feedback">
+          <div 
+            v-if="!changedAfterSubmit[questionIndex]"
+            class="quiz-answer__feedback"
+          >
             <span class="quiz-answer__text">
               {{ isQuestionCorrect(questionIndex) ? $t('correct-answer') : $t('incorrect-answer') }}
             </span>
           </div>
-          <div v-if="isQuestionCorrect(questionIndex)" class="quiz-answer__correct-option">
+          <div 
+            v-if="isQuestionCorrect(questionIndex) && !changedAfterSubmit[questionIndex]" 
+            class="quiz-answer__correct-option"
+          >
             <svg
               width="20"
               height="21"
@@ -76,18 +82,22 @@
             </svg>
             {{ getCorrectAnswerWithPrefix(question) }}
           </div>
-          <p class="quiz-answer__explanation">
+          <!-- Explanation is always visible once submitted, regardless of answer changes -->
+          <div class="quiz-answer__explanation">
             {{ question.answer }}
-          </p>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Submit button -->
+    <div v-if="!isQuizSubmitted || Object.keys(changedAfterSubmit).length > 0" class="content-quiz__submit">
+      <button @click="submitQuiz" class="quiz-submit-button" :disabled="!allQuestionsAnswered">
+        {{ isQuizSubmitted ? ($t('resubmit-quiz') || 'Resubmit Quiz') : ($t('submit-quiz') || 'Submit Quiz') }}
+      </button>
+    </div>
 
-    submit!
-    
-
-    <div v-if="allQuestionsAnswered" class="content-quiz__completion">
+    <div v-if="isQuizSubmitted" class="content-quiz__completion">
       <div v-if="allQuestionsCorrect" class="quiz-completion quiz-completion--success">
         <!-- <span class="quiz-completion__icon">🎉</span> -->
         <span class="quiz-completion__text">
@@ -168,6 +178,8 @@ const emit = defineEmits<{
 // Track selected answers for each question
 const selectedAnswers = ref<Record<number, number>>({})
 const questionResults = ref<Record<number, boolean>>({})
+const isQuizSubmitted = ref<boolean>(false)
+const changedAfterSubmit = ref<Record<number, boolean>>({})
 
 // Initialize with correct answers if content is completed
 onMounted(() => {
@@ -180,6 +192,7 @@ onMounted(() => {
         questionResults.value[questionIndex] = true
       }
     })
+    isQuizSubmitted.value = true
   }
 })
 
@@ -205,13 +218,13 @@ const allQuestionsCorrect = computed(() => {
   )
 })
 
-const onAnswerChange = (questionIndex: number, optionId: number, isCorrect: boolean) => {
-  questionResults.value[questionIndex] = isCorrect
-}
-
-const onOptionChange = (questionIndex: number, optionId: number, isCorrect: boolean) => {
+const onOptionChange = (questionIndex: number, optionId: number) => {
   selectedAnswers.value[questionIndex] = optionId
-  onAnswerChange(questionIndex, optionId, isCorrect)
+  
+  // If quiz has already been submitted, mark this question as changed
+  if (isQuizSubmitted.value) {
+    changedAfterSubmit.value[questionIndex] = true
+  }
 }
 
 // Helper function to generate option prefixes (A), B), C), D))
@@ -230,9 +243,26 @@ const getCorrectAnswerWithPrefix = (question: QuizQuestion): string => {
   return ''
 }
 
+// Submit quiz and calculate results
+const submitQuiz = () => {
+  // Calculate results for all answered questions
+  props.data.quiz.questions.forEach((question, questionIndex) => {
+    if (selectedAnswers.value[questionIndex] !== undefined) {
+      const selectedOption = question.options.find(
+        (option) => option.id === selectedAnswers.value[questionIndex]
+      )
+      questionResults.value[questionIndex] = selectedOption?.correct || false
+    }
+  })
+  
+  // Reset the changed after submit tracking
+  changedAfterSubmit.value = {}
+  isQuizSubmitted.value = true
+}
+
 // Watch for quiz completion
-watch([allQuestionsAnswered, allQuestionsCorrect], ([answered, correct]) => {
-  if (answered) {
+watch([allQuestionsAnswered, allQuestionsCorrect, isQuizSubmitted], ([answered, correct, submitted]) => {
+  if (answered && submitted) {
     emit('quiz-completed', {
       quizId: props.data.quiz.id,
       allCorrect: correct,
@@ -423,5 +453,30 @@ watch([allQuestionsAnswered, allQuestionsCorrect], ([answered, correct]) => {
 
 .quiz-completion__text {
   font-size: 16px;
+}
+
+.content-quiz__submit {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.quiz-submit-button {
+  background-color: var(--Green, #44b08e);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.quiz-submit-button:hover {
+  background-color: #3a9a7a;
+}
+
+.quiz-submit-button:active {
+  transform: translateY(1px);
 }
 </style>

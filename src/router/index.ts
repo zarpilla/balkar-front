@@ -103,6 +103,12 @@ const router = createRouter({
       component: () => import('../views/SpaceView.vue')
     },
     {
+      path: '/certificate-paid/:uid',
+      name: 'certificate-paid',
+      meta: { requiresAuth: false },
+      component: () => import('../views/CertificatePaidView.vue')
+    },
+    {
       path: '/space/:uid/bookmarks',
       name: 'bookmarks',
       meta: { requiresAuth: true },

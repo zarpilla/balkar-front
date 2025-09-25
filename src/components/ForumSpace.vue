@@ -100,6 +100,9 @@ const load = async () => {
       }
     }
 
+    // temporary disable comments
+    forumData.users = []
+
     forum.value = forumData
     // await fetchUnreadCounts()
   }
