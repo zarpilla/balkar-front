@@ -328,7 +328,6 @@ const authenticated = computed(() => {
   .module-menu {
     position: sticky;
     top: 0;
-    height: calc(100vh - 180px);
     overflow-y: auto;
     padding-right: 15px;
   }

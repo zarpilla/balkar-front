@@ -41,8 +41,7 @@
     <div v-if="isPlaying" class="content-video__wrapper">
       <video
         v-if="data.video && data.video.url"
-        :src="getVideoUrl()"
-        :poster="getThumbnailUrl()"
+        :src="getVideoUrl()"        
         controls
         autoplay
         class="content-video__player"
@@ -335,7 +334,7 @@ const downloadTranscript = () => {
   width: 100%;
   height: 100%;
   background: linear-gradient(180deg, rgba(68, 176, 142, 0.3) 0%, rgba(68, 176, 142, 0.1) 100%);
-  background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 42.31%, rgba(68, 176, 142, 0.5) 100%);
+  background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 80%, rgba(68, 176, 142, 0.5) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -349,8 +348,10 @@ const downloadTranscript = () => {
 }
 
 .content-video__overlay-blue {
-  /* #CFE0FC */
-  background: linear-gradient(180deg, rgba(207, 224, 252, 0.9) 42.31%, rgba(207, 224, 252, 0.5) 100%);
+  background: linear-gradient(180deg, rgba(105, 136, 186, 0.80) 5.55%, #6988BA 100%), lightgray 50% / cover no-repeat;
+  /* background: linear-gradient(180deg, rgba(207, 224, 252, 0.80) 5.55%, #CFE0FC 100%), url(<path-to-image>) lightgray 50% / cover no-repeat; */
+    
+  
 }
 
 .content-video__play-button {
@@ -404,6 +405,10 @@ const downloadTranscript = () => {
   &:hover {
     background: var(--Blue-Grey, #cfe0fc);
   }
+}
+
+video {
+  object-fit: cover;
 }
 
 /* Responsive adjustments */

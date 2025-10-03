@@ -7,6 +7,7 @@ import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 import BaseProgressBar from '@/components/BaseProgressBar.vue'
 import { getApiBase } from '@/utils/config'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 
@@ -22,10 +23,16 @@ const locale = useI18n().locale
 
 const loaded = ref(false)
 const space = ref<any>(null)
+const router = useRouter()
+
 const load = async () => {
   const response = await Api.learningSpaces.get(props.uid, locale.value)
   if (response.data) {
     space.value = response.data
+  }
+  if (space.value.contentNotCompleted === 0) {
+    // redirect to certificate page
+    router.push(`/space/${props.uid}/certificate`)
   }
   loaded.value = true
   emit('loaded', space.value)
@@ -35,7 +42,6 @@ load()
 
 const base = getApiBase()
 
-const toastVisible = ref(false)
 
 const authenticated = computed(() => {
   return authStore.isAuthenticated()
@@ -345,7 +351,6 @@ const authenticated = computed(() => {
   .module-menu {
     position: sticky;
     top: 0;
-    height: calc(100vh - 180px);
     overflow-y: auto;
     padding-right: 15px;
   }

@@ -158,7 +158,7 @@ line-height: 130%; /* 36.4px */
 }
 
 .content-text__list-item {
-  margin-bottom: 0.5rem;
+  margin-bottom: 2px;
 }
 
 .content-text__list-item:last-child {

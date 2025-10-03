@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import SpaceContent from '@/components/SpaceContent.vue'
 import { getApiBase } from '@/utils/config'
 
 const authStore = useAuthStore()
@@ -96,7 +97,7 @@ onMounted(async () => {
         paymentIsSuccessfully.value = response.ok
         paymentHasResponse.value = true
         paymentIsChecking.value = false
-        
+
         if (paymentIsSuccessfully.value) {
           checkoutSession.value = paymentIntentId
         }
@@ -132,22 +133,36 @@ onMounted(async () => {
       selected="certificate"
     />
 
-    <div class="enrolled">
+    <div class="enrolled" v-if="space.contentNotCompleted === 0">
       <div class="container bg-white mt-5">
         <div class="row">
-          <div class="col-12 col-lg-8 offset-lg-2">
-            <h2 class="mb-4">{{ $t('certificate') }}</h2>
+          
+          <div class="col-12 col-lg-8 offset-lg-2" >
+            <div v-if="space.certificateLesson">
+              <h1 class="mb-5">{{ space.certificateLesson.title }}</h1>
+              <SpaceContent
+                :content="space.certificateLesson.content"
+                title-as="h2"
+                :is-completed="false"
+                :space-title="space.name"
+              />
+            </div>
 
-            <div class="zmodule-type-forum mb-5" v-if="space.contentNotCompleted === 0">
+            <!-- <div class="zmodule-type-forum mb-5" v-if="space.contentNotCompleted === 0">
               {{ $t('certificate-explanation-completed') }}
             </div>
             <div class="zmodule-type-forum mb-5" v-else>
               {{ $t('certificate-explanation-not-completed') }}
-            </div>
-            
+            </div> -->
+
             <div
-              class="ztext-center mt-4 mb-5"
-              v-if="space.contentNotCompleted === 0 && needsPayment && !freeOrPaid && !paymentIsSuccessfully"
+              class="text-center mt-4 mb-5"
+              v-if="
+                space.contentNotCompleted === 0 &&
+                needsPayment &&
+                !freeOrPaid &&
+                !paymentIsSuccessfully
+              "
             >
               <a @click="pay" class="btn btn-primary quick-access-button">{{
                 $t('pay-download-certificate')
@@ -155,17 +170,34 @@ onMounted(async () => {
             </div>
 
             <div
-              class="ztext-center mt-4 mb-5"
+              class="text-center mt-4 mb-5"
               v-if="space.contentNotCompleted === 0 && (freeOrPaid || paymentIsSuccessfully)"
             >
               <a @click="issueCertificate" class="btn btn-primary quick-access-button">{{
                 $t('download-certificate')
               }}</a>
             </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+        <div class="enrolled" v-else>
+      <div class="container bg-white mt-5">
+        <div class="row">
+          <div class="col-12 col-lg-8 offset-lg-2">
+            <h2 class="mb-4">{{ $t('certificate') }}</h2>
+
+            
+            <div class="zmodule-type-forum mb-5" >
+              {{ $t('certificate-explanation-not-completed') }}
+            </div>
+            
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -273,7 +305,6 @@ onMounted(async () => {
   .module-menu {
     position: sticky;
     top: 0;
-    height: calc(100vh - 180px);
     overflow-y: auto;
     padding-right: 15px;
   }

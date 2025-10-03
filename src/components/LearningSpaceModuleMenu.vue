@@ -294,7 +294,6 @@ a.side-unit.router-link-exact-active .unit-num {
   .module-menu {
     position: sticky;
     top: 0;
-    height: calc(100vh - 180px);
     overflow-y: auto;
     padding-right: 15px;
   }

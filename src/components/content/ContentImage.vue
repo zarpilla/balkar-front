@@ -1,5 +1,5 @@
 <template>
-  <div class="content-image" v-if="data && data.image">
+  <div class="content-image" v-if="data && data.image" :class="data.cssClass || ''">
     <component v-if="data.title" :is="props.titleAs || 'h2'" class="content-image__title">
       {{ data.title }}
     </component>
@@ -65,6 +65,7 @@ interface ContentImageData {
   image: ImageData
   caption?: string
   alternativeText?: string
+  cssClass?: string
 }
 
 interface Props {
@@ -128,5 +129,9 @@ const getImageUrl = () => {
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 19.6px */
+}
+.certificate-image figure{
+  background: #FFF;
+box-shadow: 0 0 16.5px 0 rgba(0, 0, 0, 0.15);
 }
 </style>

@@ -86,13 +86,13 @@
         </button>
 
         <div class="slide-indicators">
-          <button
+          <div
             v-for="(item, index) in data.items"
             :key="item.id"
             @click="goToSlide(index)"
             :class="['indicator', { 'indicator--active': currentSlide === index }]"
             :aria-label="`Go to slide ${index + 1}`"
-          />
+          ></div>
         </div>
 
         <button
