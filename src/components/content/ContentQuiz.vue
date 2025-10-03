@@ -92,7 +92,7 @@
 
     <!-- Submit button -->
     <div v-if="!isQuizSubmitted || Object.keys(changedAfterSubmit).length > 0" class="content-quiz__submit">
-      <button @click="submitQuiz" class="quiz-submit-button" :disabled="!allQuestionsAnswered">
+      <button @click="submitQuiz" class="btn btn-primary btn-primary-hover-green" :disabled="!allQuestionsAnswered">
         {{ isQuizSubmitted ? ($t('resubmit-quiz') || 'Resubmit Quiz') : ($t('submit-quiz') || 'Submit Quiz') }}
       </button>
     </div>
@@ -457,7 +457,7 @@ watch([allQuestionsAnswered, allQuestionsCorrect, isQuizSubmitted], ([answered, 
 
 .content-quiz__submit {
   margin: 2rem 0;
-  text-align: center;
+  text-align: left;
 }
 
 .quiz-submit-button {

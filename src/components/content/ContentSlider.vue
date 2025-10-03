@@ -3,7 +3,9 @@
     <div class="slider-container">
       <div class="slider-wrapper">
         <div class="slider-track" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
-          <div v-for="item in data.items" :key="item.id" class="slide">
+          <div v-for="item in data.items" :key="item.id" class="slide"
+            :class="`slide--${item.color}`"
+          >
             <div class="slide-content">
               <div class="slide-text">
                 <div class="slider-header">
@@ -21,13 +23,14 @@
                   </template>
                 </div>
               </div>
-
               <div
                 class="slide-media"
                 v-if="item.image && item.image.url"
-                v-class.contain="item.imageSize === 'contain'"
-                v-class.cover="item.imageSize === 'cover'"
-                v-class.initial="!item.imageSize || item.imageSize === 'initial'"
+                :class="{
+                  contain: item.imageSize === 'contain',
+                  cover: item.imageSize === 'cover',
+                  initial: !item.imageSize || item.imageSize === 'initial'
+                }"
                 :style="{ backgroundImage: `url(${apiBase + item.image.url})` }"
               >
                 <div class="slide-logo" v-if="item.logo && item.logo.url">
@@ -122,7 +125,7 @@
             <g mask="url(#mask0_71_2870)">
               <path
                 d="M13.3143 12.7278L10.139 15.9031L11.5847 17.3746L16.2315 12.7278L11.5847 8.08101L10.139 9.55249L13.3143 12.7278ZM12.6173 23.054C11.1888 23.054 9.84644 22.7829 8.59009 22.2408C7.33374 21.6987 6.24089 20.9629 5.31153 20.0336C4.38217 19.1042 3.64643 18.0114 3.10431 16.755C2.56218 15.4986 2.29112 14.1562 2.29112 12.7278C2.29112 11.2993 2.56218 9.95693 3.10431 8.70058C3.64643 7.44423 4.38217 6.35137 5.31153 5.42202C6.24089 4.49266 7.33374 3.75692 8.59009 3.2148C9.84644 2.67267 11.1888 2.40161 12.6173 2.40161C14.0458 2.40161 15.3882 2.67267 16.6445 3.2148C17.9009 3.75692 18.9937 4.49266 19.9231 5.42202C20.8524 6.35137 21.5882 7.44423 22.1303 8.70058C22.6724 9.95693 22.9435 11.2993 22.9435 12.7278C22.9435 14.1562 22.6724 15.4986 22.1303 16.755C21.5882 18.0114 20.8524 19.1042 19.9231 20.0336C18.9937 20.9629 17.9009 21.6987 16.6445 22.2408C15.3882 22.7829 14.0458 23.054 12.6173 23.054ZM12.6173 20.9887C14.9235 20.9887 16.8768 20.1885 18.4774 18.5879C20.078 16.9873 20.8782 15.034 20.8782 12.7278C20.8782 10.4216 20.078 8.46824 18.4774 6.86768C16.8768 5.26713 14.9235 4.46685 12.6173 4.46685C10.3111 4.46685 8.35775 5.26713 6.75719 6.86768C5.15664 8.46824 4.35636 10.4216 4.35636 12.7278C4.35636 15.034 5.15664 16.9873 6.75719 18.5879C8.35775 20.1885 10.3111 20.9887 12.6173 20.9887Z"
-                fill="white"
+                fill="#1C1B1F"
               />
             </g>
           </svg>
@@ -158,8 +161,9 @@ interface SliderItem {
     url: string
     alternativeText?: string
     [key: string]: any
-  },
+  }
   imageSize?: 'contain' | 'cover' | 'initial'
+  color?: 'loop' | 'primary' | 'secondary' | 'tertiary'
 }
 
 interface SliderData {
@@ -257,7 +261,6 @@ const apiBase = getApiBase()
   @media screen and (max-width: 768px) {
     padding: 2rem 1.5rem;
     text-align: center;
-    
   }
 }
 
@@ -266,7 +269,7 @@ const apiBase = getApiBase()
   font-family: 'Inter';
   font-size: 14px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 110%; /* 15.4px */
   letter-spacing: 0.42px;
 }
@@ -339,7 +342,6 @@ const apiBase = getApiBase()
 
   @media screen and (max-width: 768px) {
     top: calc(100% - 100px);
-    
   }
 }
 
@@ -353,7 +355,6 @@ const apiBase = getApiBase()
   background: transparent;
   padding: 0 10px;
 }
-
 
 .nav-button:disabled {
   cursor: not-allowed;
@@ -371,11 +372,8 @@ const apiBase = getApiBase()
   bottom: -9rem;
   left: 5.5rem;
 
-
-
   @media screen and (max-width: 768px) {
     top: calc(100% - 40px);
-    
   }
 }
 
@@ -428,6 +426,16 @@ const apiBase = getApiBase()
   background-color: var(--Blue-Grey, #cfe0fc);
 }
 
+.content-slider--loop .slide.slide--primary {
+  background-color: var(--Green, #44b08e)!important;
+}
+.content-slider--loop .slide.slide--secondary {
+  background-color: var(--Mimosa, #f0c05a)!important;
+}
+.content-slider--loop .slide.slide--tertiary {
+  background-color: var(--Blue-Grey, #cfe0fc)!important;
+}
+
 /* Ensure all text remains black */
 .content-slider .slider-title,
 .content-slider .slide-pre-title,
@@ -442,9 +450,9 @@ const apiBase = getApiBase()
     padding: 1rem;
   }
 
-//   .slider-title {
-//     font-size: 1.8rem;
-//   }
+  //   .slider-title {
+  //     font-size: 1.8rem;
+  //   }
 
   .slide {
     padding: 2rem 1.5rem;
@@ -471,9 +479,9 @@ const apiBase = getApiBase()
 }
 
 @media (max-width: 480px) {
-//   .slider-title {
-//     font-size: 1.5rem;
-//   }
+  //   .slider-title {
+  //     font-size: 1.5rem;
+  //   }
 
   .slide-title {
     font-size: 1.5rem;

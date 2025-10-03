@@ -6,10 +6,18 @@
     <figure class="content-image__figure">
       <img
         :src="getImageUrl()"
-        :alt="data.alternativeText || ( data.image && data.image.alternativeText) || data.title || 'Image'"
+        :alt="
+          data.alternativeText ||
+          (data.image && data.image.alternativeText) ||
+          data.title ||
+          'Image'
+        "
         class="content-image__img"
       />
-      <figcaption v-if="data.caption || (data.image && data.image.caption)" class="content-image__caption">
+      <figcaption
+        v-if="data.caption || (data.image && data.image.caption)"
+        class="content-image__caption"
+      >
         {{ data.caption || (data.image && data.image.caption) }}
       </figcaption>
     </figure>
@@ -89,7 +97,9 @@ const getImageUrl = () => {
     return formats.medium.url.startsWith('http') ? formats.medium.url : apiBase + formats.medium.url
   }
   if (props.data.image.url) {
-    return props.data.image.url.startsWith('http') ? props.data.image.url : apiBase + props.data.image.url
+    return props.data.image.url.startsWith('http')
+      ? props.data.image.url
+      : apiBase + props.data.image.url
   }
   return ''
 }
@@ -130,8 +140,9 @@ const getImageUrl = () => {
   font-weight: 400;
   line-height: 140%; /* 19.6px */
 }
-.certificate-image figure{
-  background: #FFF;
-box-shadow: 0 0 16.5px 0 rgba(0, 0, 0, 0.15);
+.certificate-image figure {
+  background: #fff;
+  box-shadow: 0 0 16.5px 0 rgba(0, 0, 0, 0.15);
+  margin: 0 10% 50px;
 }
 </style>

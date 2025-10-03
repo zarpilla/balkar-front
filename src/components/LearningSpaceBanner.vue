@@ -224,7 +224,7 @@ const goToId = (id: string) => {
       font-family: 'Inter';
       font-size: 16.971px;
       font-style: normal;
-      font-weight: 800;
+      font-weight: 700;
       line-height: 110%; /* 18.669px */
       letter-spacing: 1.697px;
       text-transform: uppercase;
