@@ -334,7 +334,7 @@ const downloadTranscript = () => {
   width: 100%;
   height: 100%;
   background: linear-gradient(180deg, rgba(68, 176, 142, 0.3) 0%, rgba(68, 176, 142, 0.1) 100%);
-  background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 80%, rgba(68, 176, 142, 0.5) 100%);
+  background: linear-gradient(180deg, rgba(68, 176, 142, 0.8) 0%, rgba(68, 176, 142, 1) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -344,11 +344,11 @@ const downloadTranscript = () => {
 
 .content-video__overlay-yellow {  
    /* #F0C05A */
-  background: linear-gradient(180deg, rgba(240, 192, 90, 0.9) 42.31%, rgba(240, 192, 90, 0.5) 100%); 
+  background: linear-gradient(180deg, rgba(240, 192, 90, 0.8) 0%, rgba(240, 192, 90, 1) 100%);
 }
 
 .content-video__overlay-blue {
-  background: linear-gradient(180deg, rgba(105, 136, 186, 0.80) 5.55%, #6988BA 100%), lightgray 50% / cover no-repeat;
+  background: linear-gradient(180deg, rgba(105, 136, 186, 0.80) 5.55%, #6988BA 100%);
   /* background: linear-gradient(180deg, rgba(207, 224, 252, 0.80) 5.55%, #CFE0FC 100%), url(<path-to-image>) lightgray 50% / cover no-repeat; */
     
   
