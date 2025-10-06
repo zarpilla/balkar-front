@@ -241,7 +241,7 @@ const downloadTranscript = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .content-video {
   margin-bottom: 2rem;
 }
@@ -349,8 +349,17 @@ const downloadTranscript = () => {
 
 .content-video__overlay-blue {
   background: linear-gradient(180deg, rgba(105, 136, 186, 0.80) 5.55%, #6988BA 100%);
-  /* background: linear-gradient(180deg, rgba(207, 224, 252, 0.80) 5.55%, #CFE0FC 100%), url(<path-to-image>) lightgray 50% / cover no-repeat; */
+  background: linear-gradient(180deg, rgba(207, 224, 252, 0.80) 0%, #CFE0FC 100%);
     
+  .content-video__banner-title {
+    color: var(--Black, #000);
+  }
+  .content-video__title {
+    color: var(--Black, #000);
+  }
+  .content-video__banner-subtitle{
+    color: var(--Black, #000);
+   } 
   
 }
 
