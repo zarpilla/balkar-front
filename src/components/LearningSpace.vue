@@ -699,13 +699,13 @@ const selectedLesson = computed(() => {
                           </div>
                         </div>
 
-                        <div
+                        <!-- <div
                           v-if="!unit.completed && unit.lessons.length === 0 && !canMarkAsCompleted"
                           class="alert alert-info mt-3"
                         >
                           <span class="fw-bold">{{ $t('quiz-required') }}</span>
                             {{ $t(quizCompletionMessage.key, quizCompletionMessage.params) }}
-                        </div>
+                        </div> -->
 
 
                           

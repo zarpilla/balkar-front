@@ -98,11 +98,10 @@
     </div>
 
     <div v-if="isQuizSubmitted" class="content-quiz__completion">
-      <div v-if="allQuestionsCorrect" class="quiz-completion quiz-completion--success">
-        <!-- <span class="quiz-completion__icon">🎉</span> -->
+      <div v-if="allQuestionsCorrect || isCompleted" class="quiz-completion quiz-completion--success">
         <span class="quiz-completion__text">
           <span class="fw-bold">{{ $t('congratulations') }}&nbsp;</span>
-          <template v-if="data.quiz.minToPass && data.quiz.minToPass > 0 && data.quiz.minToPass < 100">
+          <template v-if="data.quiz.minToPass && data.quiz.minToPass > 0 && data.quiz.minToPass <= 100">
             {{ $t('you-ve-answered-achieved-correct-answers', { minToPass: data.quiz.minToPass, correctAnswersCount, totalQuestions: data.quiz.questions.length }) }}
           </template>
           <template v-else>
@@ -110,14 +109,12 @@
           </template>
         </span>
       </div>
-      <!-- <div v-else class="quiz-completion quiz-completion--partial">
-        <span class="quiz-completion__icon">📝</span>
+
+      <div v-else class="quiz-completion quiz-completion--partial">
         <span class="quiz-completion__text">
-          You've completed the quiz. Correct answers: {{ correctAnswersCount }}/{{
-            data.quiz.questions.length
-          }}
+          {{ $t('you-ve-not-answered-achieved-correct-answers', { minToPass: data.quiz.minToPass, correctAnswersCount, totalQuestions: data.quiz.questions.length }) }}
         </span>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
