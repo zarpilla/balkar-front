@@ -101,7 +101,7 @@
       <div v-if="allQuestionsCorrect" class="quiz-completion quiz-completion--success">
         <!-- <span class="quiz-completion__icon">🎉</span> -->
         <span class="quiz-completion__text">
-          <span class="fw-bold">{{ $t('congratulations') }}</span>
+          <span class="fw-bold">{{ $t('congratulations') }}&nbsp;</span>
           <template v-if="data.quiz.minToPass && data.quiz.minToPass > 0 && data.quiz.minToPass < 100">
             {{ $t('you-ve-answered-achieved-correct-answers', { minToPass: data.quiz.minToPass, correctAnswersCount, totalQuestions: data.quiz.questions.length }) }}
           </template>
