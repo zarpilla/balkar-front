@@ -33,6 +33,15 @@
                   <span v-if="isTextNode(child)" :class="getTextClasses(child)">
                     {{ child.text }}
                   </span>
+                  <span v-else-if="child.type === 'link'">
+                    <a :href="child.url" target="_blank" rel="noopener noreferrer" class="link">
+                      <template v-for="(linkChild, linkChildIndex) in child.children" :key="linkChildIndex">
+                        <span v-if="isTextNode(linkChild)" :class="getTextClasses(linkChild)">
+                          {{ linkChild.text }}
+                        </span>
+                      </template>
+                    </a>
+                  </span>
                 </template>
               </div>
               
@@ -340,5 +349,12 @@ const isImageElement = (element: any): element is ImageElement => {
 
 .accordion-body :deep(.content-image:last-child) {
   margin-bottom: 0;
+}
+.link {
+  color: var(--GreenHover, #36a07b);
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
 }
 </style>

@@ -178,9 +178,12 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   if (to.meta.requiresAuth && !authStore.isAuthenticated()) next({ name: 'login' })
 
-  to.meta.transition = 'slide-right' 
+  to.meta.transition = 'fade' 
 
-  //scrollTo({ top: 0, behavior: 'smooth' })
+  // Delay scroll to top to allow for fade transition to complete
+  setTimeout(() => {
+    scrollTo({ top: 0, behavior: 'smooth' })
+  }, 500) // Increased delay to account for fade out (200ms) + fade in (300ms)
 
   next()
 })

@@ -41,7 +41,14 @@ interface Props {
 defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'quiz-completed', payload: { quizId: number, allCorrect: boolean, score: number }): void
+  (e: 'quiz-completed', payload: { 
+    quizId: number; 
+    allCorrect: boolean; 
+    score: number;
+    minToPass?: number;
+    correctAnswers: number;
+    totalQuestions: number;
+  }): void
 }>()
 
 // Map component types to actual Vue components
@@ -58,7 +65,14 @@ const getComponentName = (componentType: string) => {
   return componentMap[componentType] || 'div'
 }
 
-const onQuizCompleted = (payload: { quizId: number, allCorrect: boolean, score: number }) => {
+const onQuizCompleted = (payload: { 
+  quizId: number; 
+  allCorrect: boolean; 
+  score: number;
+  minToPass?: number;
+  correctAnswers: number;
+  totalQuestions: number;
+}) => {
   emit('quiz-completed', payload)
 }
 </script>

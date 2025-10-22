@@ -102,8 +102,13 @@
         <!-- <span class="quiz-completion__icon">🎉</span> -->
         <span class="quiz-completion__text">
           <span class="fw-bold">{{ $t('congratulations') }}</span>
-          {{ $t('you-ve-answered-all-questions-correctly') }}</span
-        >
+          <template v-if="data.quiz.minToPass && data.quiz.minToPass > 0 && data.quiz.minToPass < 100">
+            You've achieved {{ data.quiz.minToPass }}% correct answers ({{ correctAnswersCount }} out of {{ data.quiz.questions.length }} questions)!
+          </template>
+          <template v-else>
+            {{ $t('you-ve-answered-all-questions-correctly') }}
+          </template>
+        </span>
       </div>
       <!-- <div v-else class="quiz-completion quiz-completion--partial">
         <span class="quiz-completion__icon">📝</span>
@@ -153,6 +158,7 @@ interface Quiz {
   updatedAt: string
   publishedAt: string
   locale: string
+  minToPass?: number
 }
 
 interface ContentQuizData {
@@ -172,7 +178,14 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'quiz-completed', payload: { quizId: number; allCorrect: boolean; score: number }): void
+  (e: 'quiz-completed', payload: { 
+    quizId: number; 
+    allCorrect: boolean; 
+    score: number;
+    minToPass?: number;
+    correctAnswers: number;
+    totalQuestions: number;
+  }): void
 }>()
 
 // Track selected answers for each question
@@ -212,10 +225,25 @@ const correctAnswersCount = computed(() => {
   return Object.values(questionResults.value).filter((result) => result).length
 })
 
+const requiredCorrectAnswers = computed(() => {
+  if (props.data.quiz.minToPass && props.data.quiz.minToPass > 0) {
+    const totalQuestions = props.data.quiz.questions.length
+    return Math.ceil((props.data.quiz.minToPass / 100) * totalQuestions)
+  }
+  // Default: all questions must be correct
+  return props.data.quiz.questions.length
+})
+
 const allQuestionsCorrect = computed(() => {
-  return (
-    allQuestionsAnswered.value && correctAnswersCount.value === props.data.quiz.questions.length
-  )
+  if (!allQuestionsAnswered.value) return false
+  
+  // If minToPass is defined, use it as the percentage threshold
+  if (props.data.quiz.minToPass && props.data.quiz.minToPass > 0) {
+    return correctAnswersCount.value >= requiredCorrectAnswers.value
+  }
+  
+  // Default behavior: all questions must be correct (100%)
+  return correctAnswersCount.value === props.data.quiz.questions.length
 })
 
 const onOptionChange = (questionIndex: number, optionId: number) => {
@@ -265,8 +293,11 @@ watch([allQuestionsAnswered, allQuestionsCorrect, isQuizSubmitted], ([answered, 
   if (answered && submitted) {
     emit('quiz-completed', {
       quizId: props.data.quiz.id,
-      allCorrect: correct,
-      score: correctAnswersCount.value / props.data.quiz.questions.length
+      allCorrect: correct, // This now reflects whether the quiz passes (either all correct or meets minToPass percentage)
+      score: correctAnswersCount.value / props.data.quiz.questions.length,
+      minToPass: props.data.quiz.minToPass, // This is now a percentage (0-100)
+      correctAnswers: correctAnswersCount.value,
+      totalQuestions: props.data.quiz.questions.length
     })
   }
 })

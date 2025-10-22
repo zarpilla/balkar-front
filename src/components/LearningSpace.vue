@@ -65,7 +65,13 @@ const base = getApiBase()
 const toastVisible = ref(false)
 
 // Quiz completion tracking
-const quizCompletions = ref<Record<string, { allCorrect: boolean; score: number }>>({})
+const quizCompletions = ref<Record<string, { 
+  allCorrect: boolean; 
+  score: number;
+  minToPass?: number;
+  correctAnswers?: number;
+  totalQuestions?: number;
+}>>({})
 
 const paymentIsSuccessfully = ref(false)
 const paymentIsChecking = ref(false)
@@ -232,12 +238,22 @@ const removeBookmark = async () => {
   await load()
 }
 
-const onQuizCompleted = (payload: { quizId: number; allCorrect: boolean; score: number }) => {
+const onQuizCompleted = (payload: { 
+  quizId: number; 
+  allCorrect: boolean; 
+  score: number;
+  minToPass?: number;
+  correctAnswers: number;
+  totalQuestions: number;
+}) => {
   // Store quiz completion status using a unique key
   const quizKey = `${moduleId.value}-${unitId.value}-${lessonId.value}-${payload.quizId}`
   quizCompletions.value[quizKey] = {
-    allCorrect: payload.allCorrect,
-    score: payload.score
+    allCorrect: payload.allCorrect, // This now reflects whether the quiz passes the requirements
+    score: payload.score,
+    minToPass: payload.minToPass,
+    correctAnswers: payload.correctAnswers,
+    totalQuestions: payload.totalQuestions
   }
 }
 
@@ -256,6 +272,41 @@ const canMarkAsCompleted = computed(() => {
     const completion = quizCompletions.value[quizKey]
     return completion && completion.allCorrect
   })
+})
+
+const quizCompletionMessage = computed(() => {
+  const currentContent = getCurrentContent()
+  if (!currentContent) return { key: '', params: {} }
+
+  // Find all quizzes in the current content
+  const quizzes = currentContent.filter((item: any) => item.__component === 'content.quiz')
+  
+  // Check if any quiz has minToPass configured (as percentage)
+  const quizWithMinToPass = quizzes.find((quiz: any) => {
+    const minToPass = quiz.quiz.minToPass
+    return minToPass && minToPass > 0 && minToPass < 100
+  })
+  
+  if (quizWithMinToPass) {
+    const minToPassPercentage = quizWithMinToPass.quiz.minToPass
+    const totalQuestions = quizWithMinToPass.quiz.questions?.length || 0
+    const requiredCorrectAnswers = Math.ceil((minToPassPercentage / 100) * totalQuestions)
+    
+    return {
+      key: 'please-complete-minimum-quizzes-correctly-before-marking-this-lesson-as-completed',
+      params: { 
+        percentage: minToPassPercentage,
+        requiredAnswers: requiredCorrectAnswers,
+        totalQuestions
+      }
+    }
+  }
+  
+  // Default message for traditional all-correct requirement (100%)
+  return {
+    key: 'please-complete-all-quizzes-correctly-before-marking-this-lesson-as-completed',
+    params: {}
+  }
 })
 
 const getCurrentContent = () => {
@@ -653,7 +704,7 @@ const selectedLesson = computed(() => {
                           class="alert alert-info mt-3"
                         >
                           <span class="fw-bold">{{ $t('quiz-required') }}</span>
-                            {{ $t('please-complete-all-quizzes-correctly-before-marking-this-lesson-as-completed') }}
+                            {{ $t(quizCompletionMessage.key, quizCompletionMessage.params) }}
                         </div>
 
 
@@ -835,7 +886,7 @@ const selectedLesson = computed(() => {
                             class="alert alert-info mt-3"
                           >
                             <span class="fw-bold">{{ $t('quiz-required') }}</span>
-                            {{ $t('please-complete-all-quizzes-correctly-before-marking-this-lesson-as-completed') }}
+                            {{ $t(quizCompletionMessage.key, quizCompletionMessage.params) }}
                           </div>
 
 
