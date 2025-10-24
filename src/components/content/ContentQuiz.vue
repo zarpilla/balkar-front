@@ -98,7 +98,7 @@
     </div>
 
     <div v-if="isQuizSubmitted" class="content-quiz__completion">
-      <div v-if="allQuestionsCorrect || isCompleted" class="quiz-completion quiz-completion--success">
+      <div v-if="allQuestionsCorrect" class="quiz-completion quiz-completion--success">
         <span class="quiz-completion__text">
           <span class="fw-bold">{{ $t('congratulations') }}&nbsp;</span>
           <template v-if="data.quiz.minToPass && data.quiz.minToPass > 0 && data.quiz.minToPass <= 100">
