@@ -381,7 +381,12 @@ const createPrivateChannel = async (userId: number) => {
     const channel = await Api.channels.createPrivate(props.uid, userId)
     createPrivateChannelModal.value?.hide()
     showCreatePrivateChannelModal.value = false
-    router.push(`/space/${props.uid}/forum/channel/${channel.data.data.uid}`)
+    // router.push(`/space/${props.uid}/forum/channel/${channel.data.data.uid}`)
+     window.history.replaceState(
+        {},
+        '',
+        `/space/${props.uid}/forum/channel/${channel.data.data.uid}`
+      )
   } catch (error) {
     console.error('Error creating private channel:', error)
   }

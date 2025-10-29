@@ -382,22 +382,24 @@ const apiBase = getApiBase()
   height: 8px;
   border-radius: 50%;
   border: none;
-  background: #dee2e6;
+  background: #2C3036;
+  opacity: 0.5;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .indicator--active {
-  background: #fff;
+  background: #2C3036;
   transform: scale(1);
+  opacity: 1;
 }
 
 .indicator:hover {
-  opacity: 0.5;
+  opacity: 1;
 }
 
 .indicator--active:hover {
-  background: #fff;
+  background: #2C3036;
 }
 
 /* Color variations */

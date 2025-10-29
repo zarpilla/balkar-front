@@ -32,7 +32,12 @@ const load = async () => {
   }
   if (space.value.contentNotCompleted === 0) {
     // redirect to certificate page
-    router.push(`/space/${props.uid}/certificate`)
+    // router.push(`/space/${props.uid}/certificate`)
+    window.history.replaceState(
+        {},
+        '',
+        `/space/${props.uid}/certificate`
+      )
   }
   loaded.value = true
   emit('loaded', space.value)

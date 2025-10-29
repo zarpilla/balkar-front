@@ -152,7 +152,11 @@ const selectContentAfterLoad = () => {
     if (unit && unit.lessons.length > 0) {
       // If lessonId is not set, select the first lesson
     } else {
-      router.push(`/space/${props.uid}/module/${moduleId.value}/unit/${unitId.value}`)
+      window.history.replaceState(
+        {},
+        '',
+        `/space/${props.uid}/module/${moduleId.value}/unit/${unitId.value}`
+      )
     }
   }
   // window.scrollTo(0, 0)

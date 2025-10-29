@@ -20,12 +20,12 @@ import { RouterView } from 'vue-router'
 
 /* Fade transition styles */
 .fade-enter-active {
-  transition: opacity 0.3s ease-in;
-  transition-delay: 0.2s;
+  transition: opacity 0.15s ease-in;
+  transition-delay: 0.1s;
 }
 
 .fade-leave-active {
-  transition: opacity 0.2s ease-out;
+  transition: opacity 0.1s ease-out;
 }
 
 .fade-enter-from {
@@ -38,12 +38,12 @@ import { RouterView } from 'vue-router'
 
 /* Keep the existing slide-right transition for backward compatibility */
 .slide-right-enter-active {
-  transition: opacity 0.3s ease-in;
-  transition-delay: 0.2s;
+  transition: opacity 0.15s ease-in;
+  transition-delay: 0.1s;
 }
 
 .slide-right-leave-active {
-  transition: opacity 0.2s ease-out;
+  transition: opacity 0.1s ease-out;
 }
 
 .slide-right-enter-from {
