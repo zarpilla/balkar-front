@@ -18,6 +18,11 @@ const props = defineProps({
   css: {
     type: String,
     required: true
+  },
+  container: {
+    type: Boolean,
+    required: false,
+    default: true
   }
 })
 
@@ -93,8 +98,8 @@ if (readQueryStringParameter('locale')) {
     </header>
 
     <div v-if="props.loaded && applicationLoaded" class="zbg-balkar pt-3 flex-grow-1">
-      <div class="container">
-        <div class="row align-items-start zthe-content">
+      <div :class="props.container ? 'container' : 'z'">
+        <div class="align-items-start" :class="props.container ? 'row' : 'z'">
           <div :class="props.css">
             <div class="slot">
               <div class="slot-inner">

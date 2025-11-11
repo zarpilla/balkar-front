@@ -156,7 +156,6 @@ cite,
   border-radius: 30px;
   background: var(--Mimosa, #F0C05A);
   border: 2px solid var(--Mimosa, #F0C05A);
-
   transition: all 0.3s ease;
 }
 
@@ -353,4 +352,7 @@ img {
 .mention-selected {
   background-color: #f2f2f2 !important;
   border-radius: 4px;
+}
+.text-capitalize {
+  text-transform: capitalize;
 }

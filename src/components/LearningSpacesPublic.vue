@@ -26,12 +26,6 @@ const load = async () => {
 
 load()
 
-const authStore = useAuthStore()
-
-const mySpaces = computed(() => {
-  return spaces.value.filter((space: any) => space.enrolled === true)
-})
-
 const otherSpaces = computed(() => {
   return spaces.value.filter((space: any) => space.enrolled === false)
 })
@@ -41,28 +35,12 @@ const base = getApiBase()
 </script>
 
 <template>
-  <div class="learning-spaces mb-4" v-if="loaded">
-    <div v-if="authStore.createdAt !== authStore.updatedAt">
-      <h3 class="mb-4" v-if="mySpaces.length > 0">{{ $t('els-meus-espais-formatius') }}</h3>
+  <div class="learning-spaces mb-4 col-12" v-if="loaded">
+    <div class="row">
 
-      <div v-for="space in mySpaces" :key="space.id" class="col-12 col-md-4 space">
-        <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
-          <div class="overlay"></div>
-          <RouterLink :to="`/space/${space.uid}/about`" class="z">
-            <img :src="base + space.bannerOther.url" class="w-100" />
-          </RouterLink>
-        </div>
-        <div class="banner-name mb-4">
-          <RouterLink :to="`/space/${space.uid}`" class="z">
-            <div class="name zms-3">{{ space.name }}</div>
-            <div class="name-more zms-3">{{ space.nameMore }}</div>
-          </RouterLink>
-        </div>
-      </div>
-
-      <h1 v-if="otherSpaces.length > 0" class="mt-5 mb-4 h1-40">
+      <!-- <h1 class="mt-5 mb-4 h1-40">
         {{ $t('all-courses') }}
-      </h1>
+      </h1> -->
 
       <div v-for="space in otherSpaces" :key="space.id" class="col-12 col-md-4 space">
         <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
@@ -76,13 +54,14 @@ const base = getApiBase()
             <div class="name zms-3">{{ space.name }}</div>
             <div class="name-more zms-3">{{ space.nameMore }}</div>
           </RouterLink>
+          <div class="btn btn-secondary mt-3">
+          <RouterLink :to="`/space/${space.uid}/about`" class="text-dark text-capitalize">
+            {{ $t('enroll') }}
+          </RouterLink>
         </div>
+        </div>
+        
       </div>
-    </div>
-    <div v-else>
-      <h3>{{ $t('omple-perfil') }}</h3>
-      <div class="mt-4 text" v-html="$t('omple-perfil-desc')"></div>
-      <Profile redirect="/dashboard"></Profile>
     </div>
   </div>
 </template>

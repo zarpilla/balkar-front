@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
+import DashboardView from '../views/DashboardView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -11,7 +12,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: LoginView
+      component: DashboardView
     },
     {
       path: '/login',
@@ -45,20 +46,20 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      meta: { requiresAuth: true },
-      component: () => import('../views/DashboardView.vue')
+      meta: { requiresAuth: false },
+      component: DashboardView
     },
     {
       path: '/spaces',
       name: 'spaces',
       meta: { requiresAuth: true },
-      component: () => import('../views/DashboardView.vue')
+      component: DashboardView
     },
     {
       path: '/agenda',
       name: 'agenda',
       meta: { requiresAuth: true },
-      component: () => import('../views/DashboardView.vue')
+      component: DashboardView
     },
     {
       path: '/space/:uid',

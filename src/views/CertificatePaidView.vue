@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
+import LayoutGuest from '@/layouts/LayoutGuest.vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import LearningSpaceAbout from '@/components/LearningSpaceAbout.vue'
 import CertificateSpace from '@/components/CertificateSpace.vue'
 import { useAuthStore } from '@/stores/auth'
-import LayoutGuest from '@/layouts/LayoutGuest.vue'
+
 
 import { ref } from 'vue'
 const { t } = useI18n()
