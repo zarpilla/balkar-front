@@ -1,4 +1,31 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+// Safe translation function with fallbacks
+const safeTranslation = (key: string, fallback: string = '') => {
+  try {
+    const i18n = useI18n()
+    
+    // Check if the translation key exists
+    if (!i18n.te(key)) {
+      return fallback
+    }
+    
+    // Get the raw translation without processing linked messages
+    const messages = i18n.getLocaleMessage(i18n.locale.value)
+    const rawTranslation = messages[key]
+    
+    if (rawTranslation && rawTranslation !== key) {
+      return rawTranslation
+    }
+    
+    return fallback
+  } catch (error) {
+    console.warn(`Translation error for key: ${key}`, error)
+    return fallback
+  }
+}
+</script>
 
 <template>
   <footer class="footer pt-5 pb-5" >
@@ -47,10 +74,10 @@
               />
             </g>
           </svg>
-            {{ $t('footer-contact') }}
+            {{ safeTranslation('footer-contact', 'Contact') }}
           </div>
           <div class="footer-contact-email">
-            {{ $t('footer-contact-email') }}
+            {{ safeTranslation('footer-contact-email', 'info@example.com') }}
           </div>
         </div>
       </div>
