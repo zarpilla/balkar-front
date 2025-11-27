@@ -57,11 +57,10 @@ const base = getApiBase()
       </div>
       <div class="col-12 col-md-6 space">
         <div class="mt-5 banner-coming-soon">
-          <div class="coming-name mb-4">
+          <div class="coming-name">
             {{ $t('coming-soon') }}
+          </div>
         </div>
-        </div>
-        
       </div>
     </div>
   </div>
@@ -130,12 +129,15 @@ h1-40 {
 .banner-coming-soon {
   border-radius: 20px;
   border: 1px solid #000;
-  
+
   height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 228px 60px;
+  padding: 238px 60px;
+  @media screen and (max-width: 768px) {
+    padding: 100px 20px;
+  }
 }
 .coming-name {
   color: var(--Black, #000);
