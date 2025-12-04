@@ -263,7 +263,7 @@ const isImageElement = (element: any): element is ImageElement => {
 }
 
 .accordion-button--tertiary {
-  background: var(--theme-primary, #44b08e);
+  background: var(--theme-accent-blue-light, #44b08e);
 }
 
 .accordion-button:not(.collapsed) {
