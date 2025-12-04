@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import BaseProgressBar from '@/components/BaseProgressBar.vue'
 import { getApiBase } from '@/utils/config'
 import { useRouter } from 'vue-router'
@@ -55,6 +56,8 @@ const authenticated = computed(() => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
+    <LearningSpaceTheme :theme-styles="space.theme?.styles" />
+    
     <LearningSpaceBanner
       :space="space"
       :base="base"
@@ -133,7 +136,7 @@ const authenticated = computed(() => {
                             <g mask="url(#mask0_71_4297)">
                               <path
                                 d="M7.95 13.2988L13.2375 8.01126L12.1875 6.96126L7.95 11.1988L5.8125 9.06125L4.7625 10.1113L7.95 13.2988ZM9 17.3488C7.9625 17.3488 6.9875 17.1519 6.075 16.7581C5.1625 16.3644 4.36875 15.83 3.69375 15.155C3.01875 14.48 2.48438 13.6863 2.09063 12.7738C1.69687 11.8613 1.5 10.8863 1.5 9.84875C1.5 8.81125 1.69687 7.83626 2.09063 6.92375C2.48438 6.01125 3.01875 5.2175 3.69375 4.5425C4.36875 3.8675 5.1625 3.33313 6.075 2.93938C6.9875 2.54563 7.9625 2.34875 9 2.34875C10.0375 2.34875 11.0125 2.54563 11.925 2.93938C12.8375 3.33313 13.6313 3.8675 14.3063 4.5425C14.9813 5.2175 15.5156 6.01125 15.9094 6.92375C16.3031 7.83626 16.5 8.81125 16.5 9.84875C16.5 10.8863 16.3031 11.8613 15.9094 12.7738C15.5156 13.6863 14.9813 14.48 14.3063 15.155C13.6313 15.83 12.8375 16.3644 11.925 16.7581C11.0125 17.1519 10.0375 17.3488 9 17.3488Z"
-                                fill="#44B08E"
+                                fill="var(--icon-success, #44B08E)"
                               />
                             </g>
                           </svg>
@@ -203,7 +206,7 @@ const authenticated = computed(() => {
                               <g mask="url(#mask0_71_4297)">
                                 <path
                                   d="M7.95 13.2988L13.2375 8.01126L12.1875 6.96126L7.95 11.1988L5.8125 9.06125L4.7625 10.1113L7.95 13.2988ZM9 17.3488C7.9625 17.3488 6.9875 17.1519 6.075 16.7581C5.1625 16.3644 4.36875 15.83 3.69375 15.155C3.01875 14.48 2.48438 13.6863 2.09063 12.7738C1.69687 11.8613 1.5 10.8863 1.5 9.84875C1.5 8.81125 1.69687 7.83626 2.09063 6.92375C2.48438 6.01125 3.01875 5.2175 3.69375 4.5425C4.36875 3.8675 5.1625 3.33313 6.075 2.93938C6.9875 2.54563 7.9625 2.34875 9 2.34875C10.0375 2.34875 11.0125 2.54563 11.925 2.93938C12.8375 3.33313 13.6313 3.8675 14.3063 4.5425C14.9813 5.2175 15.5156 6.01125 15.9094 6.92375C16.3031 7.83626 16.5 8.81125 16.5 9.84875C16.5 10.8863 16.3031 11.8613 15.9094 12.7738C15.5156 13.6863 14.9813 14.48 14.3063 15.155C13.6313 15.83 12.8375 16.3644 11.925 16.7581C11.0125 17.1519 10.0375 17.3488 9 17.3488Z"
-                                  fill="#44B08E"
+                                  fill="var(--icon-success, #44B08E)"
                                 />
                               </g>
                             </svg>
@@ -254,7 +257,7 @@ const authenticated = computed(() => {
 
 <style scoped lang="scss">
 .module-item-block {
-  border-bottom: 1px solid #898989;
+  border-bottom: 1px solid var(--color-border-grey, #898989);
 }
 
 .quick-access {
@@ -263,7 +266,7 @@ const authenticated = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .quick-access-name {
   font-family: Inter;
@@ -271,7 +274,7 @@ const authenticated = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -281,7 +284,7 @@ const authenticated = computed(() => {
   max-width: 100%;
 }
 .module-type-monitoring {
-  background: var(--Canya, #f5d634);
+  background: var(--theme-secondary, #f5d634);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -290,9 +293,9 @@ const authenticated = computed(() => {
 }
 .module-upload {
   margin-top: 5rem;
-  background-color: #bbdff7;
+  background-color: var(--theme-info-bg, #bbdff7);
 
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 18px;
   font-style: normal;
@@ -308,7 +311,7 @@ const authenticated = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  border: 2px solid #000000;
+  border: 2px solid var(--color-black, #000000);
   border-radius: 16px;
   line-height: 30px;
   height: 30px;
@@ -325,7 +328,7 @@ const authenticated = computed(() => {
   line-height: 20px;
 }
 .uploaded-file {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light, #eee);
 }
 .uploaded-file:last-child {
   border-bottom: none !important;
@@ -334,7 +337,7 @@ const authenticated = computed(() => {
   cursor: pointer;
 }
 .module-type-forum {
-  background: var(--Canya, #a5dda3);
+  background: var(--theme-success, #a5dda3);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -342,7 +345,7 @@ const authenticated = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -362,7 +365,7 @@ const authenticated = computed(() => {
 }
 
 .module-header h2 {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -410,7 +413,7 @@ const authenticated = computed(() => {
 }
 
 .module-title {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -424,27 +427,26 @@ const authenticated = computed(() => {
 
 .bookmark-item {
   padding: 0.75rem 1.5rem;
-  border: 0px solid #e9ecef;
+  border: 0px solid var(--color-background-grey, #e9ecef);
   border-radius: 10px;
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--theme-accent-blue-light, #cfe0fc);
   transition: background-color 0.2s ease;
 
   &.completed {
-    background-color: #d4edda;
+    background-color: var(--theme-success-bg, #d4edda);
   }
 }
 
 .zbookmark-item:hover {
-  background-color: #e9ecef;
+  background-color: var(--color-background-grey, #e9ecef);
 }
 
 .bookmark-link {
-  color: #000;
+  color: var(--color-black, #000);
   text-decoration: none;
   flex-grow: 1;
 
-  color: var(--Black, #000);
-  color: var(--Negre, #000);
+  color: var(--neutral-black, #000);
 
   /* Subtitle H4 */
   font-family: Inter;

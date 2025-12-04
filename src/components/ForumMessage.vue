@@ -169,7 +169,7 @@ const hasChildren = computed(() => {
   background: rgba(242, 90, 1, 0.8);
   background: #efdda2;
   padding: 0.8rem 1rem;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 26px;
   font-style: normal;
@@ -181,7 +181,7 @@ const hasChildren = computed(() => {
 
 .topic {
   padding: 0.5rem 1rem;
-  background: var(--Canya, #efdda2);
+  background: var(--theme-accent-light, #efdda2);
   font-family: Inter;
   font-size: 20px;
   font-style: normal;
@@ -203,7 +203,7 @@ const hasChildren = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .quick-access-name {
   font-family: Inter;
@@ -211,7 +211,7 @@ const hasChildren = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -221,7 +221,7 @@ const hasChildren = computed(() => {
   max-width: 100%;
 }
 .module-type-monitoring {
-  background: var(--Canya, #f5d634);
+  background: var(--theme-secondary, #f5d634);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -230,9 +230,9 @@ const hasChildren = computed(() => {
 }
 .module-upload {
   margin-top: 5rem;
-  background-color: #bbdff7;
+  background-color: var(--theme-info-bg, #bbdff7);
 
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 18px;
   font-style: normal;
@@ -265,7 +265,7 @@ const hasChildren = computed(() => {
   line-height: 20px;
 }
 .uploaded-file {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light, #eee);
 }
 .uploaded-file:last-child {
   border-bottom: none !important;
@@ -274,7 +274,7 @@ const hasChildren = computed(() => {
   cursor: pointer;
 }
 .module-type-forum {
-  background: var(--Canya, #a5dda3);
+  background: var(--theme-success, #a5dda3);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -282,7 +282,7 @@ const hasChildren = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -307,7 +307,7 @@ const hasChildren = computed(() => {
 }
 .forum-image {
   border-radius: 8px;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-border-light, #eee);
   padding: 6px;
   max-width: 100%;
 

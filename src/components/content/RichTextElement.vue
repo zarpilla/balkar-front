@@ -120,7 +120,7 @@ const getTextClasses = (textNode: TextChild): string => {
 }
 
 .content-text__quote {
-color: var(--Negre, #000);
+color: var(--neutral-black, #000);
 
 /* Quote */
 font-family: Inter;
@@ -166,13 +166,13 @@ line-height: 130%; /* 36.4px */
 }
 
 .content-text__link {
-  color: var(--Green, #44B08E);
+  color: var(--theme-primary, #44B08E);
   text-decoration: underline;
   transition: color 0.2s ease;  
 }
 
 .content-text__link:hover {
-    color: var(--GreenHover, #36a07b);
+    color: var(--theme-primary-hover, #36a07b);
   text-decoration: none;
 }
 

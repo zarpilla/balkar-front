@@ -5,6 +5,8 @@ import { Modal } from 'bootstrap'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
+import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import { getApiBase } from '@/utils/config'
 
 const authStore = useAuthStore()
@@ -111,11 +113,21 @@ const closeContentDetailsModal = () => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
+    <LearningSpaceTheme :theme-styles="space.theme?.styles" />
+    
     <LearningSpaceBanner
       :space="space"
       :base="base"
       :authenticated="!!authenticated"
       template="small"
+    />
+
+
+    <LearningSpaceHeader
+      :space="space"
+      :uid="uid"
+      :authenticated="!!authenticated"
+      selected="bookmarks"
     />
 
     <div class="enrolled mt-5" v-if="authenticated">
@@ -425,7 +437,7 @@ const closeContentDetailsModal = () => {
 
 <style scoped>
 .module-item-block {
-  border-bottom: 1px solid #898989;
+  border-bottom: 1px solid var(--color-border-grey, #898989);
 }
 
 .quick-access {
@@ -434,7 +446,7 @@ const closeContentDetailsModal = () => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .quick-access-name {
   font-family: Inter;
@@ -442,7 +454,7 @@ const closeContentDetailsModal = () => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -452,7 +464,7 @@ const closeContentDetailsModal = () => {
   max-width: 100%;
 }
 .module-type-monitoring {
-  background: var(--Canya, #f5d634);
+  background: var(--theme-secondary, #f5d634);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -461,9 +473,9 @@ const closeContentDetailsModal = () => {
 }
 .module-upload {
   margin-top: 5rem;
-  background-color: #bbdff7;
+  background-color: var(--theme-info-bg, #bbdff7);
 
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 18px;
   font-style: normal;
@@ -496,7 +508,7 @@ const closeContentDetailsModal = () => {
   line-height: 20px;
 }
 .uploaded-file {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light, #eee);
 }
 .uploaded-file:last-child {
   border-bottom: none !important;
@@ -505,7 +517,7 @@ const closeContentDetailsModal = () => {
   cursor: pointer;
 }
 .module-type-forum {
-  background: var(--Canya, #a5dda3);
+  background: var(--theme-success, #a5dda3);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -513,7 +525,7 @@ const closeContentDetailsModal = () => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -533,7 +545,7 @@ const closeContentDetailsModal = () => {
 }
 
 .module-header h2 {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -585,10 +597,10 @@ const closeContentDetailsModal = () => {
 
 .alert-info {
   border-radius: 10px;
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--theme-accent-blue-light, #cfe0fc);
   border: 0;
 
-  color: var(--Black, #000);
+  color: var(--neutral-black, #000);
 
   /* Text */
   font-family: Inter;
@@ -614,7 +626,7 @@ const closeContentDetailsModal = () => {
 }
 
 .progress {
-  background-color: #e9ecef;
+  background-color: var(--color-background-grey, #e9ecef);
   border-radius: 0.25rem;
   background-color: rgba(240, 192, 90, 0.5)!important;  
   border-radius: 10px;  

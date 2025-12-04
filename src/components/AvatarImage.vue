@@ -160,7 +160,7 @@ const urlWithApiBase = computed(() => {
 .first-letter{
   text-decoration: none;
   font-weight: bold;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   text-transform: uppercase;
   color: #fff;
 }

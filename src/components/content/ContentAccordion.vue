@@ -242,7 +242,7 @@ const isImageElement = (element: any): element is ImageElement => {
 
 .accordion-button {
   border-radius: 10px;
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--theme-accent-blue-light, #cfe0fc);
   border: none;
   color: #1f2937;
   font-weight: 600;
@@ -255,32 +255,32 @@ const isImageElement = (element: any): element is ImageElement => {
 }
 
 .accordion-button--primary {
-  background: var(--Green, #44b08e);
+  background: var(--theme-primary, #44b08e);
 }
 
 .accordion-button--secondary {
-  background: var(--Resilience-fosc, #f3c857);
+  background: var(--theme-secondary, #f3c857);
 }
 
 .accordion-button--tertiary {
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--theme-primary, #44b08e);
 }
 
 .accordion-button:not(.collapsed) {
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--theme-accent-blue-light, #cfe0fc);
   color: #000;
 }
 
 .accordion-button:not(.collapsed).accordion-button--primary {
-  background: var(--Green, #44b08e);
+  background: var(--theme-primary, #44b08e);
 }
 
 .accordion-button:not(.collapsed).accordion-button--secondary {
-  background: var(--Resilience-fosc, #f3c857);
+  background: var(--theme-secondary, #f3c857);
 }
 
 .accordion-button:not(.collapsed).accordion-button--tertiary {
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--theme-accent-blue-light, #cfe0fc);
 }
 
 .accordion-button::after {
@@ -351,7 +351,7 @@ const isImageElement = (element: any): element is ImageElement => {
   margin-bottom: 0;
 }
 .link {
-  color: var(--GreenHover, #36a07b);
+  color: var(--theme-primary-hover, #36a07b);
   text-decoration: underline;
   &:hover {
     text-decoration: none;

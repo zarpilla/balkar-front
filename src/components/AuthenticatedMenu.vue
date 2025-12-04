@@ -35,8 +35,8 @@ a {
 
 }
 a.router-link-active {
-  background: var(--Resilience-fosc, #000000)!important;
-  color: var(--blanc, #FFF)!important;
+  background: var(--theme-secondary, #000000)!important;
+  color: var(--neutral-white, #FFF)!important;
   border-color: #000000!important;
 }
 

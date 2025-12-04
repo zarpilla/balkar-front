@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import { getApiBase } from '@/utils/config'
 import { RouterLink } from 'vue-router'
 
@@ -69,6 +70,8 @@ const authenticated = computed(() => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
+    <LearningSpaceTheme :theme-styles="space.theme?.styles" />
+    
     <LearningSpaceBanner
       :space="space"
       :base="base"
@@ -129,7 +132,7 @@ const authenticated = computed(() => {
                           <g mask="url(#mask0_bookmark_unit)">
                             <path
                               d="M3.75 16.5988V4.59879C3.75 4.18629 3.89688 3.83316 4.19063 3.53941C4.48438 3.24566 4.8375 3.09879 5.25 3.09879H12.75C13.1625 3.09879 13.5156 3.24566 13.8094 3.53941C14.1031 3.83316 14.25 4.18629 14.25 4.59879V16.5988L9 14.3488L3.75 16.5988Z"
-                              fill="#44B08E"
+                              fill="var(--icon-primary, #44B08E)"
                             />
                           </g>
                         </svg>
@@ -179,7 +182,7 @@ const authenticated = computed(() => {
                             <g mask="url(#mask0_bookmark_lesson)">
                               <path
                                 d="M3.75 16.5988V4.59879C3.75 4.18629 3.89688 3.83316 4.19063 3.53941C4.48438 3.24566 4.8375 3.09879 5.25 3.09879H12.75C13.1625 3.09879 13.5156 3.24566 13.8094 3.53941C14.1031 3.83316 14.25 4.18629 14.25 4.59879V16.5988L9 14.3488L3.75 16.5988Z"
-                                fill="#44B08E"
+                                fill="var(--icon-primary, #44B08E)"
                               />
                             </g>
                           </svg>
@@ -226,7 +229,7 @@ const authenticated = computed(() => {
 
 <style scoped>
 .module-item-block {
-  border-bottom: 1px solid #898989;
+  border-bottom: 1px solid var(--color-border-grey, #898989);
 }
 
 .quick-access {
@@ -235,7 +238,7 @@ const authenticated = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .quick-access-name {
   font-family: Inter;
@@ -243,7 +246,7 @@ const authenticated = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -253,7 +256,7 @@ const authenticated = computed(() => {
   max-width: 100%;
 }
 .module-type-monitoring {
-  background: var(--Canya, #f5d634);
+  background: var(--theme-secondary, #f5d634);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -262,9 +265,9 @@ const authenticated = computed(() => {
 }
 .module-upload {
   margin-top: 5rem;
-  background-color: #bbdff7;
+  background-color: var(--theme-info-bg, #bbdff7);
 
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 18px;
   font-style: normal;
@@ -280,7 +283,7 @@ const authenticated = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  border: 2px solid #000000;
+  border: 2px solid var(--color-black, #000000);
   border-radius: 16px;
   line-height: 30px;
   height: 30px;
@@ -297,7 +300,7 @@ const authenticated = computed(() => {
   line-height: 20px;
 }
 .uploaded-file {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light, #eee);
 }
 .uploaded-file:last-child {
   border-bottom: none !important;
@@ -306,7 +309,7 @@ const authenticated = computed(() => {
   cursor: pointer;
 }
 .module-type-forum {
-  background: var(--Canya, #a5dda3);
+  background: var(--theme-success, #a5dda3);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -314,7 +317,7 @@ const authenticated = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -334,7 +337,7 @@ const authenticated = computed(() => {
 }
 
 .module-header h2 {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -354,7 +357,7 @@ const authenticated = computed(() => {
   padding-top: 20px;
   padding-bottom: 20px;
 
-  color: var(--Black, #000);
+  color: var(--neutral-black, #000);
 
   /* Subtitle H4 */
   font-family: Inter;
@@ -382,7 +385,7 @@ const authenticated = computed(() => {
 }
 
 .module-title {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -396,23 +399,22 @@ const authenticated = computed(() => {
 
 .bookmark-item {
   padding: 0.75rem 1.5rem;
-  border: 0px solid #e9ecef;
+  border: 0px solid var(--color-background-grey, #e9ecef);
   border-radius: 10px;
-  background: var(--Blue-Grey, #d4edda);
+  background: var(--theme-success-bg, #d4edda);
   transition: background-color 0.2s ease;
 }
 
 .zbookmark-item:hover {
-  background-color: #e9ecef;
+  background-color: var(--color-background-grey, #e9ecef);
 }
 
 .bookmark-link {
-  color: #000;
+  color: var(--color-black, #000);
   text-decoration: none;
   flex-grow: 1;
 
-  color: var(--Black, #000);
-  color: var(--Negre, #000);
+  color: var(--neutral-black, #000);
 
   /* Subtitle H4 */
   font-family: Inter;

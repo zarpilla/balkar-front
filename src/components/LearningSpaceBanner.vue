@@ -34,7 +34,7 @@
                   width="24"
                   height="25"
                 >
-                  <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+                  <rect y="0.312622" width="24" height="24" fill="var(--icon-placeholder, #D9D9D9)" />
                 </mask>
                 <g mask="url(#mask0_64_2203)">
                   <path
@@ -64,7 +64,7 @@
                   width="24"
                   height="25"
                 >
-                  <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+                  <rect y="0.312622" width="24" height="24" fill="var(--icon-placeholder, #D9D9D9)" />
                 </mask>
                 <g mask="url(#mask0_64_2203)">
                   <path
@@ -99,7 +99,7 @@
                   width="24"
                   height="25"
                 >
-                  <rect y="0.312622" width="24" height="24" fill="#D9D9D9" />
+                  <rect y="0.312622" width="24" height="24" fill="var(--icon-placeholder, #D9D9D9)" />
                 </mask>
                 <g mask="url(#mask0_64_2203)">
                   <path
@@ -187,7 +187,7 @@ const goToId = (id: string) => {
 <style scoped lang="scss">
 .banner-full {
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 42.31%, rgba(68, 176, 142, 0) 100%);
+  background: linear-gradient(180deg, rgba(var(--theme-primary-rgb, 68, 176, 142), 0.9) 42.31%, rgba(var(--theme-primary-rgb, 68, 176, 142), 0) 100%);
   overflow: hidden;
   position: relative;
   text-align: center;
@@ -196,12 +196,10 @@ const goToId = (id: string) => {
     width: 40%;
     position: absolute;
     top: 120px;
-    color: #fff;
+    color: var(--color-text-inverse);
     font-size: 36px;
     font-weight: bold;
     margin: auto;
-
-    color: #fff;
     text-align: center;
     font-family: 'Inter';
     font-size: 50px;
@@ -215,11 +213,10 @@ const goToId = (id: string) => {
       width: 100%;
       top: 20px;
       padding: 20px;
-      
     }
 
     .free {
-      color: var(--White, #fff);
+      color: var(--color-text-inverse);
       text-align: center;
       font-family: 'Inter';
       font-size: 16.971px;
@@ -228,7 +225,6 @@ const goToId = (id: string) => {
       line-height: 110%; /* 18.669px */
       letter-spacing: 1.697px;
       text-transform: uppercase;
-
       margin-bottom: 8px;
     }
   }
@@ -248,7 +244,7 @@ const goToId = (id: string) => {
     left: 0;
     width: 100%;
     height: 1200px;
-    background: linear-gradient(180deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%);
+    background: linear-gradient(180deg, var(--theme-primary) 0%, rgba(var(--theme-primary-rgb, 68, 176, 142), 0) 100%);
     overflow: hidden;
     pointer-events: none;
   }
@@ -256,7 +252,7 @@ const goToId = (id: string) => {
 
 .banner-small {
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 42.31%, rgba(68, 176, 142, 0) 100%);
+  background: linear-gradient(180deg, rgba(var(--theme-primary-rgb, 68, 176, 142), 0.9) 42.31%, rgba(var(--theme-primary-rgb, 68, 176, 142), 0) 100%);
   overflow: hidden;
   position: relative;
   text-align: left;
@@ -265,15 +261,12 @@ const goToId = (id: string) => {
     width: 40%;
     position: absolute;
     top: 34px;
-    color: #fff;
+    color: var(--color-text-inverse);
     font-size: 36px;
     font-weight: bold;
     margin: 0;
     left: 0;
     padding-left: 45px;
-
-    color: var(--White, #fff);
-
     /* Title H1 */
     font-family: Inter;
     font-size: 30px;
@@ -300,7 +293,7 @@ const goToId = (id: string) => {
     left: 0;
     width: 100%;
     height: 1200px;
-    background: linear-gradient(90deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%);
+    background: linear-gradient(90deg, var(--theme-primary) 0%, rgba(var(--theme-primary-rgb, 68, 176, 142), 0) 100%);
     overflow: hidden;
     pointer-events: none;
   }

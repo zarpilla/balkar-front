@@ -1,0 +1,129 @@
+// ========================================
+// BALKAR THEME SYSTEM
+// ========================================
+// This file serves as the main entry point for the theme system.
+// It imports the active theme and provides utility functions.
+
+// Import the active theme (blue theme)
+@import 'theme-default';
+
+// ========================================
+// THEME UTILITY FUNCTIONS
+// ========================================
+
+// Function to get a theme color with fallback
+@function theme-color($color-name, $fallback: null) {
+  @if map-has-key($theme-colors, $color-name) {
+    @return map-get($theme-colors, $color-name);
+  } @else if $fallback {
+    @return $fallback;
+  } @else {
+    @warn "Color '#{$color-name}' not found in theme colors.";
+    @return $theme-primary;
+  }
+}
+
+// Map of theme colors for the function
+$theme-colors: (
+  'primary': $theme-primary,
+  'primary-light': $theme-primary-light,
+  'primary-hover': $theme-primary-hover,
+  'secondary': $theme-secondary,
+  'secondary-light': $theme-secondary-light,
+  'secondary-hover': $theme-secondary-hover,
+  'accent': $theme-accent-blue,
+  'accent-light': $theme-accent-blue-light,
+  'accent-bg': $theme-accent-blue-bg,
+  'success': $theme-success,
+  'success-light': $theme-success-light,
+  'warning': $theme-warning,
+  'error': $theme-error,
+  'info': $theme-info
+) !default;
+
+// ========================================
+// THEME MIXINS
+// ========================================
+
+// Mixin for button theming
+@mixin theme-button($type: 'primary', $style: 'filled') {
+  @if $type == 'primary' {
+    @if $style == 'filled' {
+      background-color: $theme-primary;
+      border-color: $theme-primary;
+      color: $neutral-white;
+      
+      &:hover {
+        background-color: $theme-primary-hover;
+        border-color: $theme-primary-hover;
+      }
+    } @else if $style == 'outlined' {
+      background-color: transparent;
+      border-color: $theme-primary;
+      color: $theme-primary;
+      
+      &:hover {
+        background-color: $theme-primary;
+        color: $neutral-white;
+      }
+    }
+  } @else if $type == 'secondary' {
+    @if $style == 'filled' {
+      background-color: $theme-secondary;
+      border-color: $theme-secondary;
+      color: $neutral-black;
+      
+      &:hover {
+        background-color: $theme-secondary-hover;
+        border-color: $theme-secondary-hover;
+      }
+    } @else if $style == 'outlined' {
+      background-color: transparent;
+      border-color: $theme-secondary;
+      color: $theme-secondary;
+      
+      &:hover {
+        background-color: $theme-secondary;
+        color: $neutral-black;
+      }
+    }
+  }
+}
+
+// Mixin for theme-aware text colors
+@mixin theme-text($type: 'primary') {
+  @if $type == 'primary' {
+    color: $color-text-primary; // Use semantic text color (black)
+  } @else if $type == 'secondary' {
+    color: $color-text-secondary; // Use semantic secondary text color
+  } @else if $type == 'muted' {
+    color: $color-text-muted;
+  } @else if $type == 'accent' {
+    color: $theme-accent-blue;
+  } @else if $type == 'inverse' {
+    color: $color-text-inverse; // Use semantic inverse text color (white)
+  } @else if $type == 'brand-primary' {
+    color: $theme-primary; // Use brand color if specifically needed
+  } @else if $type == 'brand-secondary' {
+    color: $theme-secondary; // Use brand color if specifically needed
+  }
+}
+
+// Mixin for theme-aware backgrounds
+@mixin theme-background($type: 'primary') {
+  @if $type == 'primary' {
+    background-color: $theme-primary-light;
+  } @else if $type == 'secondary' {
+    background-color: $theme-secondary-light;
+  } @else if $type == 'muted' {
+    background-color: $neutral-grey-100;
+  } @else if $type == 'accent' {
+    background-color: $theme-accent-blue-light;
+  } @else if $type == 'success' {
+    background-color: $theme-success-light;
+  } @else if $type == 'warning' {
+    background-color: $theme-warning;
+  } @else if $type == 'info' {
+    background-color: $theme-info;
+  }
+}

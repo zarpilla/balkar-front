@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import SpaceContent from '@/components/SpaceContent.vue'
 import { getApiBase } from '@/utils/config'
 
@@ -119,6 +120,8 @@ onMounted(async () => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
+    <LearningSpaceTheme :theme-styles="space.theme?.styles" />
+    
     <LearningSpaceBanner
       :space="space"
       :base="base"
@@ -203,7 +206,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .module-item-block {
-  border-bottom: 1px solid #898989;
+  border-bottom: 1px solid var(--color-border-grey, #898989);
 }
 
 .quick-access {
@@ -212,7 +215,7 @@ onMounted(async () => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .quick-access-name {
   font-family: Inter;
@@ -220,7 +223,7 @@ onMounted(async () => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -230,7 +233,7 @@ onMounted(async () => {
   max-width: 100%;
 }
 .module-type-monitoring {
-  background: var(--Canya, #f5d634);
+  background: var(--theme-secondary, #f5d634);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -239,9 +242,9 @@ onMounted(async () => {
 }
 .module-upload {
   margin-top: 5rem;
-  background-color: #bbdff7;
+  background-color: var(--theme-info-bg, #bbdff7);
 
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 18px;
   font-style: normal;
@@ -274,7 +277,7 @@ onMounted(async () => {
   line-height: 20px;
 }
 .uploaded-file {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light, #eee);
 }
 .uploaded-file:last-child {
   border-bottom: none !important;
@@ -283,7 +286,7 @@ onMounted(async () => {
   cursor: pointer;
 }
 .module-type-forum {
-  background: var(--Canya, #a5dda3);
+  background: var(--theme-success, #a5dda3);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -291,7 +294,7 @@ onMounted(async () => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -311,7 +314,7 @@ onMounted(async () => {
 }
 
 .module-header h2 {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -359,7 +362,7 @@ onMounted(async () => {
 }
 
 .module-title {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -373,18 +376,18 @@ onMounted(async () => {
 
 .bookmark-item {
   padding: 0.75rem 1.5rem;
-  border: 0px solid #e9ecef;
+  border: 0px solid var(--color-background-grey, #e9ecef);
   border-radius: 10px;
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--theme-accent-blue-light, #cfe0fc);
   transition: background-color 0.2s ease;
 
   &.completed {
-    background-color: #d4edda;
+    background-color: var(--theme-success-bg, #d4edda);
   }
 }
 
 .zbookmark-item:hover {
-  background-color: #e9ecef;
+  background-color: var(--color-background-grey, #e9ecef);
 }
 
 .bookmark-link {
@@ -392,8 +395,7 @@ onMounted(async () => {
   text-decoration: none;
   flex-grow: 1;
 
-  color: var(--Black, #000);
-  color: var(--Negre, #000);
+  color: var(--neutral-black, #000);
 
   /* Subtitle H4 */
   font-family: Inter;

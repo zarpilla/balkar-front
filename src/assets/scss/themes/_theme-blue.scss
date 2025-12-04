@@ -1,0 +1,233 @@
+// ========================================
+// BALKAR BLUE THEME
+// ========================================
+// An alternative theme with blue as the primary color
+// This is a complete theme that doesn't import the default theme
+
+// ========================================
+// NEUTRAL COLORS (Shared across themes)
+// ========================================
+$neutral-white: #FFFFFF !default;
+$neutral-black: #000000 !default;
+$neutral-grey-50: #F9FAFB !default;
+$neutral-grey-100: #F3F4F6 !default;
+$neutral-grey-200: #E5E7EB !default;
+$neutral-grey-300: #D1D5DB !default;
+$neutral-grey-400: #9CA3AF !default;
+$neutral-grey-500: #6B7280 !default;
+$neutral-grey-600: #4B5563 !default;
+$neutral-grey-700: #374151 !default;
+$neutral-grey-800: #1F2937 !default;
+$neutral-grey-900: #111827 !default;
+
+// ========================================
+// BLUE THEME COLORS
+// ========================================
+$theme-primary: #2563EB !default;          // Bright blue primary color
+$theme-primary-light: #DBEAFE !default;    // Light blue backgrounds
+$theme-primary-hover: #1D4ED8 !default;    // Darker blue for hover states
+
+$theme-secondary: #F59E0B !default;        // Amber secondary (replaces green)
+$theme-secondary-light: #FEF3C7 !default;  // Light amber backgrounds
+$theme-secondary-hover: #D97706 !default;  // Darker amber for hover
+
+$theme-accent-blue: #3B82F6 !default;      // Medium blue accent
+$theme-accent-blue-light: #EFF6FF !default; // Very light blue
+$theme-accent-blue-bg: #BFDBFE !default;   // Light blue background
+
+// Status colors adjusted for blue theme
+$theme-success: #10B981 !default;          // Green for success (emerald)
+$theme-success-light: #D1FAE5 !default;    // Light green
+$theme-success-bg: #D4EDDA !default;       // Success background (#d4edda equivalent)
+$theme-warning: #F59E0B !default;          // Amber for warning
+$theme-warning-light: #FEF3C7 !default;    // Light warning
+$theme-warning-bg: #FFF3CD !default;       // Warning background
+$theme-error: #EF4444 !default;            // Red for error
+$theme-error-light: #FEE2E2 !default;      // Light error
+$theme-error-bg: #F8D7DA !default;         // Error background
+$theme-info: #3B82F6 !default;             // Blue for info
+$theme-info-light: #EFF6FF !default;       // Light info
+$theme-info-bg: #BBDFF7 !default;          // Info background (#bbdff7)
+
+// ========================================
+// SEMANTIC MAPPINGS
+// ========================================
+// Map theme colors to semantic names for easier usage
+$color-primary: $theme-primary !default;
+$color-primary-light: $theme-primary-light !default;
+$color-primary-hover: $theme-primary-hover !default;
+
+$color-secondary: $theme-secondary !default;
+$color-secondary-light: $theme-secondary-light !default;
+$color-secondary-hover: $theme-secondary-hover !default;
+
+$color-accent: $theme-accent-blue !default;
+$color-accent-light: $theme-accent-blue-light !default;
+
+$color-success: $theme-success !default;
+$color-success-light: $theme-success-light !default;
+$color-warning: $theme-warning !default;
+$color-error: $theme-error !default;
+$color-info: $theme-info !default;
+
+// Text colors
+$color-text-primary: $neutral-black !default;
+$color-text-secondary: $neutral-grey-600 !default;
+$color-text-muted: $neutral-grey-500 !default;
+$color-text-inverse: $neutral-white !default;
+
+// Background colors
+$color-background-primary: $neutral-white !default;
+$color-background-secondary: $neutral-grey-100 !default;
+$color-background-muted: $neutral-grey-200 !default;
+
+// Border colors
+$color-border-primary: $neutral-grey-300 !default;
+$color-border-secondary: $neutral-grey-400 !default;
+$color-border-accent: $theme-primary !default;
+
+// Common utility colors (legacy - for backward compatibility)
+$color-border-light: #EEE !default;        // Light borders (#eee)
+$color-border-medium: #DEE2E6 !default;    // Medium borders
+$color-border-grey: #898989 !default;      // Grey borders  
+$color-background-light: #F8F9FA !default; // Light backgrounds
+$color-background-grey: #E9ECEF !default;  // Grey backgrounds
+$color-muted-text: #797979 !default;       // Muted text color
+$color-placeholder: #D9D9D9 !default;      // Placeholder color
+$color-dark-grey: #6B7280 !default;        // Dark grey text
+$color-black: #000000 !default;            // Pure black
+$color-white: #FFFFFF !default;            // Pure white
+
+// ========================================
+// UPDATE CSS CUSTOM PROPERTIES
+// ========================================
+:root {
+  // Override primary colors with BLUE values
+  --theme-primary: #{$theme-primary};                    // #2563EB (BLUE!)
+  --theme-primary-rgb: 37, 99, 235;                      // RGB for blue primary
+  --theme-primary-light: #{$theme-primary-light};        // #DBEAFE
+  --theme-primary-hover: #{$theme-primary-hover};        // #1D4ED8
+  
+  // Override secondary colors with AMBER values
+  --theme-secondary: #{$theme-secondary};                // #F59E0B (AMBER!)
+  --theme-secondary-rgb: 245, 158, 11;                   // RGB for amber secondary
+  --theme-secondary-light: #{$theme-secondary-light};    // #FEF3C7
+  --theme-secondary-hover: #{$theme-secondary-hover};    // #D97706
+  
+  // Override accent colors
+  --theme-accent-blue: #{$theme-accent-blue};            // #3B82F6
+  --theme-accent-blue-rgb: 59, 130, 246;                 // RGB for blue accent
+  --theme-accent-blue-light: #{$theme-accent-blue-light}; // #EFF6FF
+  --theme-accent-blue-bg: #{$theme-accent-blue-bg};      // #BFDBFE
+  
+  // Update semantic colors to use BLUE
+  --color-primary: #{$theme-primary};                    // #2563EB (BLUE!)
+  --color-primary-light: #{$theme-primary-light};        // #DBEAFE
+  --color-primary-hover: #{$theme-primary-hover};        // #1D4ED8
+  --color-secondary: #{$theme-secondary};                // #F59E0B (AMBER!)
+  --color-secondary-light: #{$theme-secondary-light};    // #FEF3C7
+  --color-secondary-hover: #{$theme-secondary-hover};    // #D97706
+  --color-accent: #{$theme-accent-blue};                 // #3B82F6
+  --color-accent-light: #{$color-accent-light};     // #EFF6FF
+  
+  // Text colors
+  --color-text-primary: #{$color-text-primary};          // Black primary text
+  --color-text-secondary: #{$color-text-secondary};      // Grey secondary text
+  --color-text-muted: #{$color-text-muted};              // Muted grey text
+  --color-text-inverse: #{$color-text-inverse};          // White inverse text
+  
+  // Background colors
+  --color-background-primary: #{$color-background-primary};   // White primary background
+  --color-background-secondary: #{$color-background-secondary}; // Light grey secondary background
+  --color-background-muted: #{$color-background-muted};       // Muted grey background
+  
+  // Border colors
+  --color-border-primary: #{$color-border-primary};      // Light grey primary border
+  --color-border-secondary: #{$color-border-secondary};  // Medium grey secondary border
+  --color-border-accent: #{$color-border-accent};        // Blue accent border
+  
+  // Update status colors
+  --theme-success: #{$theme-success};                    // #10B981 (Green success)
+  --theme-success-light: #{$theme-success-light};        // #D1FAE5 (Light green)
+  --theme-success-bg: #{$theme-success-bg};              // #D4EDDA (Success background)
+  --theme-warning: #{$theme-warning};                    // #F59E0B (Amber warning)
+  --theme-warning-light: #{$theme-warning-light};        // #FEF3C7 (Light warning)
+  --theme-warning-bg: #{$theme-warning-bg};              // #FFF3CD (Warning background)
+  --theme-error: #{$theme-error};                        // #EF4444 (Red error)
+  --theme-error-light: #{$theme-error-light};            // #FEE2E2 (Light error)
+  --theme-error-bg: #{$theme-error-bg};                  // #F8D7DA (Error background)
+  --theme-info: #{$theme-info};                          // #3B82F6 (Blue info)
+  --theme-info-light: #{$theme-info-light};              // #EFF6FF (Light info)
+  --theme-info-bg: #{$theme-info-bg};                    // #BBDFF7 (Info background)
+  
+  // Utility colors
+  --color-border-light: #{$color-border-light};          // #EEE (Light borders)
+  --color-border-medium: #{$color-border-medium};        // #DEE2E6 (Medium borders)
+  --color-border-grey: #{$color-border-grey};            // #898989 (Grey borders)
+  --color-background-light: #{$color-background-light};  // #F8F9FA (Light backgrounds)
+  --color-background-grey: #{$color-background-grey};    // #E9ECEF (Grey backgrounds)
+  --color-muted-text: #{$color-muted-text};              // #797979 (Muted text)
+  --color-placeholder: #{$color-placeholder};            // #D9D9D9 (Placeholder)
+  --color-dark-grey: #{$color-dark-grey};                // #6B7280 (Dark grey)
+  --color-black: #{$color-black};                        // #000000 (Black)
+  --color-white: #{$color-white};                        // #FFFFFF (White)
+  
+  // Update SVG icon colors for blue theme - ALL BLUE NOW!
+  --icon-primary: #{$theme-primary};                     // #2563EB (BLUE ICONS!)
+  --icon-secondary: #{$theme-secondary};                 // #F59E0B (Amber icons)
+  --icon-accent: #{$theme-accent-blue};                  // #3B82F6 (Blue accent)
+  --icon-success: #{$theme-success};                     // #10B981 (Green success)
+  --icon-warning: #{$theme-warning};                     // #F59E0B (Amber warning)
+  --icon-error: #{$theme-error};                         // #EF4444 (Red error)
+  --icon-muted: #{$theme-primary-light};                 // #DBEAFE (Light blue muted)
+  --icon-neutral: #{$neutral-black};                     // #000000 (Black neutral)
+  --icon-neutral-light: #{$theme-primary-light};         // #DBEAFE (Light blue)
+  --icon-placeholder: #D9D9D9;                           // Keep grey placeholders
+  --icon-dark: #1F2937;                                  // Dark grey for icons
+  --icon-orange: #F97316;                                // Keep orange accent
+  
+  // Progress bar colors  
+  --progress-bar-bg: rgba(245, 158, 11, 0.5); // Progress bar background (amber secondary with 50% opacity)
+  --progress-bar-fill: rgba(245, 158, 11, 1); // Progress bar fill (amber secondary fully opaque)
+  
+  // Update legacy variables for backward compatibility - SWAPPED COLORS
+  --Green: #{$theme-success};                            // Now green success color
+  --Blau-fosc: #{$theme-primary};                        // Now BLUE primary
+  --Mimosa: #{$theme-secondary};                         // Now amber secondary
+  --Blue-Grey: #{$theme-primary-light};                  // Light blue
+}
+
+// ========================================
+// THEME UTILITY MIXINS
+// ========================================
+@mixin theme-background($type) {
+  @if $type == 'primary' {
+    background-color: var(--theme-primary, #{$theme-primary});
+  } @else if $type == 'secondary' {
+    background-color: var(--theme-secondary, #{$theme-secondary});
+  } @else if $type == 'accent' {
+    background-color: var(--theme-accent-blue, #{$theme-accent-blue});
+  }
+}
+
+@mixin theme-text($type) {
+  @if $type == 'primary' {
+    color: var(--theme-primary, #{$theme-primary});
+  } @else if $type == 'secondary' {
+    color: var(--theme-secondary, #{$theme-secondary});
+  } @else if $type == 'accent' {
+    color: var(--theme-accent-blue, #{$theme-accent-blue});
+  }
+}
+
+@mixin theme-button($type, $style) {
+  @if $type == 'primary' and $style == 'filled' {
+    background-color: var(--theme-primary, #{$theme-primary});
+    border-color: var(--theme-primary, #{$theme-primary});
+    color: $neutral-white;
+  } @else if $type == 'secondary' and $style == 'filled' {
+    background-color: var(--theme-secondary, #{$theme-secondary});
+    border-color: var(--theme-secondary, #{$theme-secondary});
+    color: $neutral-black;
+  }
+}

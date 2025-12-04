@@ -296,7 +296,7 @@ const downloadTranscript = () => {
 .content-video__banner {
   border-radius: 20px;
   border-radius: 13.182px;
-  background: linear-gradient(180deg, rgba(68, 176, 142, 0.9) 42.31%, rgba(68, 176, 142, 0) 100%);
+  background: linear-gradient(180deg, rgba(var(--theme-primary-rgb, 68, 176, 142), 0.9) 42.31%, rgba(var(--theme-primary-rgb, 68, 176, 142), 0) 100%);
   overflow: hidden;
   position: relative;
   text-align: center;
@@ -333,8 +333,7 @@ const downloadTranscript = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, rgba(68, 176, 142, 0.3) 0%, rgba(68, 176, 142, 0.1) 100%);
-  background: linear-gradient(180deg, rgba(68, 176, 142, 0.8) 0%, rgba(68, 176, 142, 1) 100%);
+  background: linear-gradient(180deg, rgba(var(--theme-primary-rgb, 68, 176, 142), 0.8) 0%, rgba(var(--theme-primary-rgb, 68, 176, 142), 1) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -343,22 +342,21 @@ const downloadTranscript = () => {
 }
 
 .content-video__overlay-yellow {  
-   /* #F0C05A */
-  background: linear-gradient(180deg, rgba(240, 192, 90, 0.8) 0%, rgba(240, 192, 90, 1) 100%);
+   /* Using theme secondary color */
+  background: linear-gradient(180deg, rgba(var(--theme-secondary-rgb, 240, 192, 90), 0.8) 0%, rgba(var(--theme-secondary-rgb, 240, 192, 90), 1) 100%);
 }
 
 .content-video__overlay-blue {
-  background: linear-gradient(180deg, rgba(105, 136, 186, 0.80) 5.55%, #6988BA 100%);
-  background: linear-gradient(180deg, rgba(207, 224, 252, 0.80) 0%, #CFE0FC 100%);
+  background: linear-gradient(180deg, rgba(var(--theme-accent-blue-rgb, 207, 224, 252), 0.80) 0%, var(--theme-accent-blue-light, #CFE0FC) 100%);
     
   .content-video__banner-title {
-    color: var(--Black, #000);
+    color: var(--neutral-black, #000);
   }
   .content-video__title {
-    color: var(--Black, #000);
+    color: var(--neutral-black, #000);
   }
   .content-video__banner-subtitle{
-    color: var(--Black, #000);
+    color: var(--neutral-black, #000);
    } 
   
 }
@@ -402,7 +400,7 @@ const downloadTranscript = () => {
   background: var(--Light-Grey, #e0e0e0);
   border: none;
 
-  color: var(--Black, #000);
+  color: var(--neutral-black, #000);
   font-family: Inter;
   font-size: 18px;
   font-style: normal;
@@ -412,7 +410,7 @@ const downloadTranscript = () => {
   text-transform: none;
 
   &:hover {
-    background: var(--Blue-Grey, #cfe0fc);
+    background: var(--theme-accent-blue-light, #cfe0fc);
   }
 }
 

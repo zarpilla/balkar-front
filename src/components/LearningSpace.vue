@@ -11,6 +11,7 @@ import { useI18n } from 'vue-i18n'
 import SpaceContent from '@/components/SpaceContent.vue'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import LearningSpaceEnrollment from '@/components/LearningSpaceEnrollment.vue'
 import LearningSpaceModuleMenu from '@/components/LearningSpaceModuleMenu.vue'
 import { getApiBase } from '@/utils/config'
@@ -459,6 +460,8 @@ const selectedLesson = computed(() => {
 
 <template>
   <div class="learning-space mb-5" v-if="loaded && space">
+    <LearningSpaceTheme :theme-styles="space.theme?.styles" />
+    
     <LearningSpaceBanner
       :space="space"
       :base="base"
@@ -552,7 +555,7 @@ const selectedLesson = computed(() => {
                           <g mask="url(#mask0_91_6626)">
                             <path
                               d="M15.4 12.3488L9.4 18.3488L8 16.9488L12.6 12.3488L8 7.74875L9.4 6.34875L15.4 12.3488Z"
-                              fill="#44B08E"
+                              fill="var(--icon-primary, #44B08E)"
                             />
                           </g>
                         </svg>
@@ -616,12 +619,12 @@ const selectedLesson = computed(() => {
                             width="18"
                             height="19"
                           >
-                            <rect y="0.848785" width="18" height="18" fill="#D9D9D9" />
+                            <rect y="0.848785" width="18" height="18" fill="var(--icon-placeholder, #D9D9D9)" />
                           </mask>
                           <g mask="url(#mask0_71_4374_filled)">
                             <path
                               d="M3.75 16.5988V4.59879C3.75 4.18629 3.89688 3.83316 4.19063 3.53941C4.48438 3.24566 4.8375 3.09879 5.25 3.09879H12.75C13.1625 3.09879 13.5156 3.24566 13.8094 3.53941C14.1031 3.83316 14.25 4.18629 14.25 4.59879V16.5988L9 14.3488L3.75 16.5988Z"
-                              fill="#44B08E"
+                              fill="var(--icon-primary, #44B08E)"
                             />
                           </g>
                         </svg>
@@ -1199,7 +1202,7 @@ const selectedLesson = computed(() => {
 
 <style scoped>
 .module-item-block {
-  border-bottom: 1px solid #898989;
+  border-bottom: 1px solid var(--color-border-grey, #898989);
 }
 
 .quick-access {
@@ -1208,7 +1211,7 @@ const selectedLesson = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .quick-access-name {
   font-family: Inter;
@@ -1216,7 +1219,7 @@ const selectedLesson = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -1226,7 +1229,7 @@ const selectedLesson = computed(() => {
   max-width: 100%;
 }
 .module-type-monitoring {
-  background: var(--Canya, #f5d634);
+  background: var(--theme-secondary, #f5d634);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -1235,9 +1238,9 @@ const selectedLesson = computed(() => {
 }
 .module-upload {
   margin-top: 5rem;
-  background-color: #bbdff7;
+  background-color: var(--theme-info-bg, #bbdff7);
 
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 18px;
   font-style: normal;
@@ -1270,7 +1273,7 @@ const selectedLesson = computed(() => {
   line-height: 20px;
 }
 .uploaded-file {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light, #eee);
 }
 .uploaded-file:last-child {
   border-bottom: none !important;
@@ -1279,7 +1282,7 @@ const selectedLesson = computed(() => {
   cursor: pointer;
 }
 .module-type-forum {
-  background: var(--Canya, #a5dda3);
+  background: var(--theme-success, #a5dda3);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -1287,7 +1290,7 @@ const selectedLesson = computed(() => {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -1307,7 +1310,7 @@ const selectedLesson = computed(() => {
 }
 
 .module-header h2 {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -1327,7 +1330,7 @@ const selectedLesson = computed(() => {
   padding-top: 20px;
   padding-bottom: 20px;
 
-  color: var(--Black, #000);
+  color: var(--neutral-black, #000);
 
   /* Subtitle H4 */
   font-family: Inter;
@@ -1359,10 +1362,10 @@ const selectedLesson = computed(() => {
 
 .alert-info {
   border-radius: 10px;
-  background: var(--Blue-Grey, #cfe0fc);
+  background: var(--theme-accent-blue-light, #cfe0fc);
   border: 0;
 
-  color: var(--Black, #000);
+  color: var(--neutral-black, #000);
 
   /* Text */
   font-family: Inter;

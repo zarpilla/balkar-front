@@ -1,10 +1,10 @@
 @import '../node_modules/bootstrap/scss/bootstrap';
+@import 'themes/index';
 
 
 
 body {
-  color: var(--Negre, #000);
-
+  @include theme-text('primary');
   /* Text */
   font-family: Inter;
   font-size: 17px;
@@ -15,8 +15,7 @@ body {
 }
 
 h1 {
-  color: var(--Negre, #000);
-
+  @include theme-text('primary');
   /* Title H1 */
   font-family: Inter;
   font-size: 30px;
@@ -25,13 +24,11 @@ h1 {
   line-height: 120%;
   /* 36px */
   letter-spacing: 0.3px;
-
   margin: 20px 0;
 }
 
 h2 {
-  color: var(--Negre, #000);
-
+  @include theme-text('primary');
   /* Subtitle H2 */
   font-family: Inter;
   font-size: 26px;
@@ -44,8 +41,7 @@ h2 {
 }
 
 h3 {
-  color: var(--Negre, #000);
-
+  @include theme-text('primary');
   /* Subtitle H3 */
   font-family: Inter;
   font-size: 23px;
@@ -54,12 +50,10 @@ h3 {
   line-height: 130%;
   /* 29.9px */
   margin: 20px 0;
-  margin: 20px 0;
 }
 
 h4 {
-  color: var(--Negre, #000);
-
+  @include theme-text('primary');
   /* Subtitle H4 */
   font-family: Inter;
   font-size: 20px;
@@ -72,16 +66,14 @@ h4 {
 }
 
 a {
-  color: var(--Green, #44B08E);
+  @include theme-text('accent');
   text-decoration: none;
 }
-
 
 cite,
 .quote,
 .cite {
-  color: var(--Negre, #000);
-
+  @include theme-text('primary');
   /* Quote */
   font-family: Inter;
   font-size: 28px;
@@ -92,7 +84,7 @@ cite,
 }
 
 .btn {
-  color: var(--Black, #000);
+  color: $neutral-black;
   font-family: Inter;
   font-size: 15px;
   font-style: normal;
@@ -101,68 +93,62 @@ cite,
   /* 153.333% */
   letter-spacing: 0.75px;
   text-transform: uppercase;
-
-
   padding: 13px 44px 13px 45px;
   border-radius: 30px;
-  border: 1px solid var(--Green, #44B08E);
-  background: var(--Green, #44B08E);
+  border: 1px solid var(--theme-primary, #{$theme-primary});
+  background: var(--theme-primary, #{$theme-primary});
 
   @media screen and (max-width: 768px) {
     padding: 10px 20px;
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.5px;
-    
   }
 }
 
 .btn.btn-primary {
-  background: var(--Green, #44B08E);
-
+  @include theme-button('primary', 'filled');
   transition: all 0.3s ease;
 
   &:hover {
-    background: var(--Blau-fosc, #2D4269);
-    color: var(--negre, #fff);
-    border-color: var(--Blau-fosc, #2D4269);
+    background: var(--theme-accent-blue, #{$theme-accent-blue});
+    color: $neutral-white;
+    border-color: var(--theme-accent-blue, #{$theme-accent-blue});
   }
 
   &:disabled {
-    background: var(--Green, #D4EDDA);
-    border-color: var(--Green, #D4EDDA);
-    color: var(--blanc, #000);
+    background: var(--theme-primary-light, #{$theme-primary-light});
+    border-color: var(--theme-primary-light, #{$theme-primary-light});
+    color: $neutral-black;
     cursor: not-allowed;
   }
 }
 
 .btn.btn-primary.btn-primary-hover-green:hover {
-  background: var(--Green, #D4EDDA);
-  color: var(--blanc, #000);
-  border-color: var(--Green, #D4EDDA);
+  background: var(--theme-primary-light, #{$theme-primary-light});
+  color: $neutral-black;
+  border-color: var(--theme-primary-light, #{$theme-primary-light});
 
   svg path {
-    fill: var(--Green, #000);
+    fill: $neutral-black;
   }
 }
 
-
 .btn.btn-primary:hover svg path {
   transition: all 0.3s ease;
-  fill: var(--Resilience-fosc, #fff);
+  fill: $neutral-white;
 }
 
 .btn.btn-secondary {
+  @include theme-button('secondary', 'filled');
   border-radius: 30px;
-  background: var(--Mimosa, #F0C05A);
-  border: 2px solid var(--Mimosa, #F0C05A);
   transition: all 0.3s ease;
 }
 
 .btn.btn-secondary:hover {
-  background: var(--Blue-Grey, #CFE0FC);
-  color: var(--blanc, #000000);
-  border-color: var(--Blue-Grey, #CFE0FC);
+  background: var(--theme-accent-blue-light, #{$theme-accent-blue-light});
+  color: $neutral-black;
+  border-color: var(--theme-accent-blue-light, #{$theme-accent-blue-light});
 }
 
 .btn.btn-primary svg,
@@ -172,7 +158,7 @@ cite,
 }
 
 .btn.btn-secondary:hover svg path {
-  fill: var(--blanc, #000000);
+  fill: $neutral-black;
 }
 
 .btn.btn-primary.icon-left svg,
@@ -183,54 +169,53 @@ cite,
 }
 
 .btn-primary-outlined {
-  background: #D4EDDA;
-  border: 2px solid var(--Green, #D4EDDA);
-  color: #000;
+  background: var(--theme-primary-light, #{$theme-primary-light});
+  border: 2px solid var(--theme-primary-light, #{$theme-primary-light});
+  color: $neutral-black;
   padding: 14px 44px 14px 45px;
 }
 
 .btn-primary-outlined svg path {
-  fill: var(--Green, #000);
+  fill: $neutral-black;
 }
 
 .btn-primary-outlined:hover {
-  background: var(--Green, #44B08E);
-  color: var(--blanc, #000000);
+  background: var(--theme-primary, #{$theme-primary});
+  color: $neutral-black;
 }
 
 .btn-primary-outlined:hover svg path {
-  fill: var(--blanc, #000000);
+  fill: $neutral-black;
 }
 
 .btn.btn-tertiary {
-  background: var(--Blue-Grey, #CFE0FC);
-  border: 1px solid var(--Blue-Grey, #CFE0FC);
+  background: var(--theme-accent-blue-light, #{$theme-accent-blue-light});
+  border: 1px solid var(--theme-accent-blue-light, #{$theme-accent-blue-light});
 }
 
-.btn.btn.btn-tertiary:hover {
-  background: var(--Resilience-fosc, #F3C857);
-  color: var(--blanc, #000000);
-  border-color: var(--Mimosa, #f0c05a) !important;
+.btn.btn-tertiary:hover {
+  background: var(--theme-secondary-light, #{$theme-secondary-light});
+  color: $neutral-black;
+  border-color: var(--theme-secondary, #{$theme-secondary}) !important;
 }
-
 
 .btn.btn-quaternary {
-  background: var(--Blau-fosc, #2D4269);
-  border: 2px solid var(--Blau-fosc, #2D4269);
-  color: var(--Blanc, #fff);
+  background: var(--theme-accent-blue, #{$theme-accent-blue});
+  border: 2px solid var(--theme-accent-blue, #{$theme-accent-blue});
+  color: $neutral-white;
 }
 
-.btn.btn.btn-quaternary:hover {
-  background: var(--Green, #44B08E);
-  color: var(--blanc, #000000);
-  border-color: var(--Green, #44B08E) !important; 
+.btn.btn-quaternary:hover {
+  background: var(--theme-primary, #{$theme-primary});
+  color: $neutral-black;
+  border-color: var(--theme-primary, #{$theme-primary}) !important; 
 }
 
 .btn.btn-white {
-  border: 2px solid var(--Resilience-fosc, #fff);
+  border: 2px solid $neutral-white;
   border-radius: 25px;
-  background: var(--Resilience-fosc, #fff);
-  color: var(--Resilience-fosc, #44B08E);
+  background: $neutral-white;
+  color: var(--theme-primary, #{$theme-primary});
   text-align: center;
   font-family: Inter;
   font-size: 13px;
@@ -241,9 +226,12 @@ cite,
   text-transform: uppercase;
   padding: 8px 40px;
   line-height: 26px;
-}
 
-.btn.btn.btn-white:hover {}
+  &:hover {
+    background: var(--theme-primary, #{$theme-primary});
+    color: $neutral-white;
+  }
+}
 
 .btn.btn-primary svg,
 .btn.btn-secondary svg,
@@ -258,19 +246,18 @@ cite,
   line-height: 30px;
 }
 
-.bg-balkar {
-}
+
 
 .bg-white {
-  background: var(--blanc, #FFF);
+  @include theme-background('primary');
 }
 
 a {
-  color: #0A0A0A;
+  color: $neutral-grey-900;
 }
 
 .border {
-  border-color: #fff !important;
+  border-color: $neutral-white !important;
 }
 
 
@@ -280,11 +267,10 @@ input[type='number'],
 input[type='password'],
 textarea {
   border-radius: 4px;
-  border: 1px solid var(--gray-0250, #C2C2C2);
-  background: var(--gray-0210, #FFF);
+  border: 1px solid $neutral-grey-400;
+  background: $neutral-white;
   padding: 6px 12px !important;
-
-  color: var(--gray-02100, #0A0A0A);
+  color: $neutral-grey-900;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -296,10 +282,9 @@ textarea {
   font-family: 'Inter', sans-serif;
 }
 
-
 input[type='radio'],
 input[type='checkbox'] {
-  accent-color: #F06500;
+  accent-color: var(--theme-error, #{$theme-error});
 }
 
 textarea {
@@ -308,7 +293,7 @@ textarea {
 }
 
 select {
-  color: var(--gray-02100, #0A0A0A);
+  color: $neutral-grey-900;
   /* Body Text/SF Pro/14/Regular */
   font-family: Inter;
   font-size: 16px;
@@ -329,8 +314,8 @@ input[type="number"][disabled],
 input[type="date"][disabled],
 textarea[disabled],
 select[disabled] {
-  border: 1px solid var(--neutral-medium, #eee) !important;
-  background: var(--neutral-medium, #eee) !important;
+  border: 1px solid $neutral-grey-200 !important;
+  background: $neutral-grey-200 !important;
 }
 
 .zzzrounded {
@@ -350,9 +335,10 @@ img {
 }
 
 .mention-selected {
-  background-color: #f2f2f2 !important;
+  background-color: $neutral-grey-100 !important;
   border-radius: 4px;
 }
+
 .text-capitalize {
   text-transform: capitalize;
 }

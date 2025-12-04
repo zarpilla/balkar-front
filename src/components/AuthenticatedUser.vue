@@ -367,8 +367,8 @@ a .user-name,
   font-weight: 600;
 }
 .bg-secondary {
-  background: var(--Mimosa, #f0c05a) !important;
+  background: var(--theme-secondary, #f0c05a) !important;
   color: #000 !important;
-  border-color: var(--Mimosa, #f0c05a) !important;
+  border-color: var(--theme-secondary, #f0c05a) !important;
 }
 </style>

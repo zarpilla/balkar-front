@@ -35,13 +35,13 @@ const computedPercent = computed(() => {
 .progress-bar {
   width: 50%;
   height: 10px;
-  background-color: rgba(240, 192, 90, 0.5);
+  background-color: var(--progress-bar-bg);
   border-radius: 5px;
   margin-top: 20px;
 }
 .progress-bar-inner {
   height: 100%;
-  background-color: rgba(240, 192, 90, 1);
+  background-color: var(--progress-bar-fill);
   border-radius: 5px;
   transition: width 0.3s ease;
 }

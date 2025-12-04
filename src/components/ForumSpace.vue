@@ -15,6 +15,7 @@ import { replaceMentionValues } from '@/utils/mentions'
 import { useI18n } from 'vue-i18n'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
+import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import AvatarImage from '@/components/AvatarImage.vue'
 import { getApiBase } from '@/utils/config'
 
@@ -438,6 +439,8 @@ const showEditingMessage = ref(false)
 const deleteMessage = async (message: any) => {
   await Api.messages.remove(message.id)
 
+  console.log('deleteMessage', message)
+
   editMessageModal.value?.hide()
   showEditingMessage.value = false
 
@@ -452,13 +455,31 @@ const deleteMessage = async (message: any) => {
   ) {
     ;(showChildrenMessagesParent.value as any).text = message.text
   } else {
-    const index = forum.value.channels
-      .find((channel: any) => channel.id.toString() === message.channelId.toString())
-      .messages.findIndex((m: any) => m.id === message.id)
-    if (index > -1) {
-      forum.value.channels
-        .find((channel: any) => channel.id.toString() === message.channelId.toString())
-        .messages.splice(index, 1)
+    if (forum.value && forum.value.channels) {
+      let targetChannel = null
+      
+      // First try to use the current channelId from the route
+      if (channelId.value) {
+        targetChannel = forum.value.channels
+          .find((channel: any) => channel.uid.toString() === channelId.value.toString())
+      }
+      
+      // If no channel found or no channelId, search all channels for the message
+      if (!targetChannel) {
+        targetChannel = forum.value.channels
+          .find((channel: any) => 
+            channel.messages && 
+            channel.messages.some((m: any) => m.id === message.id)
+          )
+      }
+      
+      // Remove the message from the found channel
+      if (targetChannel && targetChannel.messages) {
+        const messageIndex = targetChannel.messages.findIndex((m: any) => m.id === message.id)
+        if (messageIndex > -1) {
+          targetChannel.messages.splice(messageIndex, 1)
+        }
+      }
     }
   }
 }
@@ -514,6 +535,8 @@ const loadAfterEdit = async (message: any) => {
 
 <template>
   <div class="learning-space mb-5" v-if="forum && space">
+    <LearningSpaceTheme :theme-styles="space.theme?.styles" />
+    
     <LearningSpaceBanner :space="space" :base="base" :authenticated="true" template="small" />
 
     <LearningSpaceHeader :space="space" :uid="uid" :authenticated="true" selected="community" />
@@ -535,8 +558,8 @@ const loadAfterEdit = async (message: any) => {
               >
                 {{ channel.name }}
                 <svg
-                  v-if="channelId && channel.uid.toString() === channelId.toString()"
-                  class="rotate-90 ms-auto mt-1"
+                  v-if="channelId && channel.uid.toString() === channelId.toString()"                
+                  class="ms-2 rotate-90 mt-1"
                   width="12"
                   height="8"
                   viewBox="0 0 12 8"
@@ -545,7 +568,7 @@ const loadAfterEdit = async (message: any) => {
                 >
                   <path
                     d="M6 3.14879L1.4 7.74879L0 6.34879L6 0.348785L12 6.34879L10.6 7.74879L6 3.14879Z"
-                    fill="#44B08E"
+                    fill="var(--icon-primary, #44B08E)"
                   />
                 </svg>
               </RouterLink>
@@ -569,7 +592,6 @@ const loadAfterEdit = async (message: any) => {
                 </span>
                 <svg
                   v-if="channelId && channel.uid.toString() === channelId.toString()"
-                  class="rotate-90 ms-auto"
                   width="12"
                   height="8"
                   viewBox="0 0 12 8"
@@ -578,7 +600,7 @@ const loadAfterEdit = async (message: any) => {
                 >
                   <path
                     d="M6 3.14879L1.4 7.74879L0 6.34879L6 0.348785L12 6.34879L10.6 7.74879L6 3.14879Z"
-                    fill="#44B08E"
+                    fill="var(--icon-primary, #44B08E)"
                   />
                 </svg>
               </RouterLink>
@@ -782,7 +804,7 @@ h3 {
   line-height: 150%; /* 27px */
 }
 .module {
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 26px;
   font-style: normal;
@@ -797,7 +819,7 @@ h3 {
 
 .topic {
   padding: 0.5rem 1rem;
-  background: var(--Canya, #efdda2);
+  background: var(--theme-accent-light, #efdda2);
   font-family: Inter;
   font-size: 20px;
   font-style: normal;
@@ -819,7 +841,7 @@ h3 {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .quick-access-name {
   font-family: Inter;
@@ -827,7 +849,7 @@ h3 {
   font-style: normal;
   font-weight: 400;
   line-height: 40px; /* 100% */
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
 }
 .arrow-down {
   vertical-align: -4px;
@@ -837,7 +859,7 @@ h3 {
   max-width: 100%;
 }
 .module-type-monitoring {
-  background: var(--Canya, #f5d634);
+  background: var(--theme-secondary, #f5d634);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -846,9 +868,9 @@ h3 {
 }
 .module-upload {
   margin-top: 5rem;
-  background-color: #bbdff7;
+  background-color: var(--theme-info-bg, #bbdff7);
 
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 18px;
   font-style: normal;
@@ -864,7 +886,7 @@ h3 {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  border: 2px solid #000000;
+  border: 2px solid var(--color-black, #000000);
   border-radius: 16px;
   line-height: 30px;
   height: 30px;
@@ -881,7 +903,7 @@ h3 {
   line-height: 20px;
 }
 .uploaded-file {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light, #eee);
 }
 .uploaded-file:last-child {
   border-bottom: none !important;
@@ -890,7 +912,7 @@ h3 {
   cursor: pointer;
 }
 .module-type-forum {
-  background: var(--Canya, #a5dda3);
+  background: var(--theme-success, #a5dda3);
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -898,7 +920,7 @@ h3 {
   font-size: 14px;
   line-height: 20px;
   margin-top: 6px;
-  color: var(--Nabiu, #000000);
+  color: var(--neutral-black, #000000);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -925,7 +947,7 @@ h3 {
 @media (min-width: 1024px) {
 }
 .forum-link {
-  color: var(--Green, #44b08e);
+  color: var(--theme-primary, #44b08e);
 
   /* Sidebar - Module */
   font-family: Inter;
@@ -938,7 +960,7 @@ h3 {
   margin: 20px 0 0 0;
   padding-bottom: 20px;
 
-  border-bottom: 1px solid #898989;
+  border-bottom: 1px solid var(--color-border-grey, #898989);
   display: block;
 }
 
