@@ -36,7 +36,6 @@ const otherSpaces = computed(() => {
   return spaces.value.filter((space: any) => space.enrolled === false)
 })
 
-
 const base = getApiBase()
 </script>
 
@@ -44,38 +43,54 @@ const base = getApiBase()
   <div class="learning-spaces mb-4" v-if="loaded">
     <div v-if="authStore.createdAt !== authStore.updatedAt">
       <h3 class="mb-4" v-if="mySpaces.length > 0">{{ $t('els-meus-espais-formatius') }}</h3>
-
-      <div v-for="space in mySpaces" :key="space.id" class="col-12 col-md-4 space">
-        <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
-          <div class="overlay"></div>
-          <RouterLink :to="`/space/${space.uid}/about`" class="z">
-            <img :src="base + space.bannerOther.url" class="w-100" />
-          </RouterLink>
+      <div class="row">
+        <div v-for="space in mySpaces" :key="space.id" class="col-12 col-md-4 space">
+          <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
+            <div class="overlay"></div>
+            <RouterLink :to="`/space/${space.uid}/about`" class="z">
+              <img :src="base + space.bannerOther.url" class="w-100" />
+            </RouterLink>
+          </div>
+          <div class="banner-name mb-4">
+            <RouterLink :to="`/space/${space.uid}`" class="z">
+              <div class="name zms-3">{{ space.name }}</div>
+              <div class="name-more zms-3">{{ space.nameMore }}</div>
+            </RouterLink>
+          </div>
         </div>
-        <div class="banner-name mb-4">
-          <RouterLink :to="`/space/${space.uid}`" class="z">
-            <div class="name zms-3">{{ space.name }}</div>
-            <div class="name-more zms-3">{{ space.nameMore }}</div>
-          </RouterLink>
+
+        <div class="col-12 col-md-4 space" v-if="otherSpaces.length === 0">
+          <div class="mt-5 banner-coming-soon">
+            <div class="coming-name">
+              {{ $t('coming-soon') }}
+            </div>
+          </div>
         </div>
       </div>
-
       <h1 v-if="otherSpaces.length > 0" class="mt-5 mb-4 h1-40">
         {{ $t('all-courses') }}
       </h1>
-
-      <div v-for="space in otherSpaces" :key="space.id" class="col-12 col-md-4 space">
-        <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
-          <div class="overlay"></div>
-          <RouterLink :to="`/space/${space.uid}/about`" class="z">
-            <img :src="base + space.bannerOther.url" class="w-100" />
-          </RouterLink>
+      <div class="row" v-if="otherSpaces.length > 0">
+        <div v-for="space in otherSpaces" :key="space.id" class="col-12 col-md-4 space">
+          <div v-if="space.bannerOther && space.bannerOther.url" class="mt-5 banner-other">
+            <div class="overlay"></div>
+            <RouterLink :to="`/space/${space.uid}/about`" class="z">
+              <img :src="base + space.bannerOther.url" class="w-100" />
+            </RouterLink>
+          </div>
+          <div class="banner-name mb-4">
+            <RouterLink :to="`/space/${space.uid}/about`" class="z">
+              <div class="name zms-3">{{ space.name }}</div>
+              <div class="name-more zms-3">{{ space.nameMore }}</div>
+            </RouterLink>
+          </div>
         </div>
-        <div class="banner-name mb-4">
-          <RouterLink :to="`/space/${space.uid}/about`" class="z">
-            <div class="name zms-3">{{ space.name }}</div>
-            <div class="name-more zms-3">{{ space.nameMore }}</div>
-          </RouterLink>
+        <div class="col-12 col-md-4 space" v-if="otherSpaces.length === 0">
+          <div class="mt-5 banner-coming-soon">
+            <div class="coming-name">
+              {{ $t('coming-soon') }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -146,5 +161,30 @@ h1-40 {
   background: linear-gradient(180deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%);
   overflow: hidden;
   pointer-events: none;
+}
+
+.banner-coming-soon {
+  border-radius: 20px;
+  border: 1px solid #000;
+
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 160px 60px;
+  @media screen and (max-width: 768px) {
+    padding: 100px 20px;
+  }
+}
+.coming-name {
+  color: var(--Black, #000);
+  font-family: 'Inter';
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 31.2px */
+  letter-spacing: 0px;
+  text-align: center;
+  padding: 0 20px;
 }
 </style>
