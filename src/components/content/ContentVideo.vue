@@ -347,7 +347,7 @@ const downloadTranscript = () => {
 }
 
 .content-video__overlay-blue {
-  background: linear-gradient(180deg, rgba(var(--theme-accent-blue-rgb, 207, 224, 252), 0.80) 0%, var(--theme-accent-blue-light, #CFE0FC) 100%);
+  background: linear-gradient(180deg, rgba(var(--theme-accent-blue-rgb-light, 207, 224, 252), 0.80) 0%, var(--theme-accent-blue-light, #CFE0FC) 100%);
     
   .content-video__banner-title {
     color: var(--neutral-black, #000);

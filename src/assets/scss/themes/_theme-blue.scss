@@ -119,6 +119,7 @@ $color-white: #FFFFFF !default;            // Pure white
   --theme-accent-blue-rgb: 59, 130, 246;                 // RGB for blue accent
   --theme-accent-blue-light: #{$theme-accent-blue-light}; // #EFF6FF
   --theme-accent-blue-bg: #{$theme-accent-blue-bg};      // #BFDBFE
+  --theme-accent-blue-light-rgb: 239, 246, 255;          // RGB for light blue accent
   
   // Update semantic colors to use BLUE
   --color-primary: #{$theme-primary};                    // #2563EB (BLUE!)
