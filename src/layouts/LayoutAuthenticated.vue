@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { siteConfig } from '@/stores/site'
 import { ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
@@ -112,7 +113,8 @@ if (!sessionStorage.getItem('autoenroll')) {
         <div class="row w-100">
           <div class="col-6 col-md-2">
             <RouterLink to="/">
-              <img src="@/assets/logo-color.svg" alt="" />
+              <img v-if="siteConfig.logoHeader" :src="siteConfig.logoHeader" :alt="siteConfig.siteName || ''" />
+                <img v-else src="@/assets/logo-color.svg" alt="" />
             </RouterLink>
           </div>
 

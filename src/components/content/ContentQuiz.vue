@@ -376,7 +376,7 @@ watch([allQuestionsAnswered, allQuestionsCorrect, isQuizSubmitted], ([answered, 
 }
 
 /* .quiz-question__answer--correct {
-  background-color: #d4edda;
+  background-color: var(--theme-primary-light, #d4edda);
   border-left-color: #28a745;
 }
 

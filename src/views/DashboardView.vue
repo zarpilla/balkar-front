@@ -50,14 +50,14 @@ const { t } = useI18n()
 
 <style>
 .about {
-  background: #cfe0fc;
+  background: var(--theme-accent-blue-light, #cfe0fc);
   margin-top: 3rem;
 }
 .about-circled {
   border-radius: 1rem;
   padding: 3rem;
   margin-top: 3rem;
-  background: #cfe0fc url('@/assets/images/bg-about.svg') no-repeat center right;
+  background: var(--theme-accent-blue-light, #cfe0fc) url('@/assets/images/bg-about.svg') no-repeat center right;
 }
 h4 {
   font-weight: 500;

@@ -8,7 +8,7 @@
             :total="space.contentNotCompleted"
           >{{ $t('completed') }}</BaseProgressBar>
         </div>
-        <div class="col-12 col-lg-8 content-menu" v-if="space.forum">
+        <div class="col-12 col-lg-8 content-menu">
           <div class="d-flex">
             <RouterLink :to="`/space/${uid}`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'space' }">
               {{ $t('content') }}
@@ -19,7 +19,8 @@
             <RouterLink :to="`/space/${uid}/bookmarks`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'bookmarks' }">
               {{ $t('bookmarks') }}
             </RouterLink>
-            <RouterLink :to="`/space/${uid}/forum`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'community' }">
+            <!-- Spaces without a forum keep the other tabs -->
+            <RouterLink :to="`/space/${uid}/forum`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'community' }" v-if="space.forum">
               {{ $t('community') }}
             </RouterLink>
             <RouterLink :to="`/space/${uid}/certificate`" class="d-flex me-1 me-md-4" :class="{ active: selected === 'certificate' }" v-if="space.certificate">

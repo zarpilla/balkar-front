@@ -300,7 +300,7 @@ const uploaded = (fileImage: string) => {
 </template>
 <style scoped lang="scss">
 .bordered-card {
-  background-color: #cfe0fc;
+  background-color: var(--theme-accent-blue-light, #cfe0fc);
   border-radius: 19px;
   padding: 50px 0px;
   margin-bottom: 100px;

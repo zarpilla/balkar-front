@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { siteConfig } from '@/stores/site'
 
 // Safe translation function with fallbacks
 const safeTranslation = (key: string, fallback: string = '') => {
@@ -31,21 +32,38 @@ const safeTranslation = (key: string, fallback: string = '') => {
   <footer class="footer pt-5 pb-5" >
     <div class="d-flex container pt-4 pb-4">
       <div class="row w-auto w-md-100 pt-5 pb-5">
-        <div class="col-12 col-md-3 text-center text-md-start mb-4 mb-md-0">
+        <!-- Sites with their own footer logo (set in Strapi administration) -->
+        <div
+          v-if="siteConfig.logoFooter"
+          class="col-12 col-md-9 d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-5 mb-4 mb-md-0"
+        >
           <RouterLink to="/">
-            <img class="img-1" src="@/assets/logo.svg" alt="" />
+            <img class="img-1" :src="siteConfig.logoFooter" :alt="siteConfig.siteName || ''" />
           </RouterLink>
+          <template v-for="logo in siteConfig.footerLogos" :key="logo.image">
+            <a v-if="logo.url" :href="logo.url" target="_blank">
+              <img class="img-2" :src="logo.image" :alt="logo.alt" />
+            </a>
+            <img v-else class="img-2" :src="logo.image" :alt="logo.alt" />
+          </template>
         </div>
-        <div class="col-12 col-md-3 text-center text-md-start mb-4 mb-md-0">
-          <a class="ms-50" href="#" target="_blank">
-            <img class="img-2" src="@/assets/logo-2.svg" alt="" />
-          </a>
-        </div>
-        <div class="col-12 col-md-3 text-center text-md-start mb-4 mb-md-0">
-          <a class="ms-50" href="#" target="_blank">
-            <img class="img-2" src="@/assets/logo-3.svg" alt="" />
-          </a>
-        </div>
+        <template v-else>
+          <div class="col-12 col-md-3 text-center text-md-start mb-4 mb-md-0">
+            <RouterLink to="/">
+              <img class="img-1" src="@/assets/logo.svg" alt="" />
+            </RouterLink>
+          </div>
+          <div class="col-12 col-md-3 text-center text-md-start mb-4 mb-md-0">
+            <a class="ms-50" href="#" target="_blank">
+              <img class="img-2" src="@/assets/logo-2.svg" alt="" />
+            </a>
+          </div>
+          <div class="col-12 col-md-3 text-center text-md-start mb-4 mb-md-0">
+            <a class="ms-50" href="#" target="_blank">
+              <img class="img-2" src="@/assets/logo-3.svg" alt="" />
+            </a>
+          </div>
+        </template>
         <div class="col-12 col-md-3 text-center text-md-start mb-4 mb-md-0">
           
           <div class="footer-contact">
@@ -87,7 +105,7 @@ const safeTranslation = (key: string, fallback: string = '') => {
 <style scoped>
 footer { 
   position: relative;
-  background-color: #fbf9f3;
+  background-color: var(--footer-bg, #fbf9f3);
   width: 100%;
 }
 
@@ -100,7 +118,7 @@ footer::before {
   bottom: 0;
   background: url('@/assets/bg-footer.png') no-repeat center center;
   background-size: cover;
-  opacity: 0.25;
+  opacity: var(--footer-bg-image-opacity, 0.25);
   z-index: 0;
 }
 
@@ -109,11 +127,11 @@ footer > * {
   z-index: 1;
 }
 .img-1 {
-  height: 48px;
+  height: var(--footer-logo-height, 48px);
 }
 
 .img-2 {
-  height: 48px;
+  height: var(--footer-logo-height, 48px);
 }
 .footer-contact {
   margin-top: 16px;

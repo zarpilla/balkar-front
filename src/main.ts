@@ -11,6 +11,7 @@ import axios from 'axios'
 import Vue3linkify from 'vue-3-linkify'
 import { useLocaleStore } from '@/stores/locale'
 import { getApiBase } from '@/utils/config'
+import { loadSiteConfig, siteConfig } from '@/stores/site'
 
 // @ts-ignore
 import { createI18n } from 'vue-i18n'
@@ -21,87 +22,90 @@ const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 
-// Get current locale from localStorage, default to 'en'
-const currentLocale = localStorage.getItem('locale') || 'en'
+// Site branding (name, theme, default locale) is loaded before anything else.
+loadSiteConfig().then(() => {
+  // Get current locale from localStorage, else the site's default locale, else 'en'
+  const currentLocale = localStorage.getItem('locale') || siteConfig.defaultLocale || 'en'
 
-// Create i18n instance
-const i18n = createI18n({
-  legacy: false,
-  locale: currentLocale,
-  fallbackLocale: 'en',
-  availableLocales: [] // Will be populated after loading locales
-})
+  // Create i18n instance
+  const i18n = createI18n({
+    legacy: false,
+    locale: currentLocale,
+    fallbackLocale: 'en',
+    availableLocales: [] // Will be populated after loading locales
+  })
 
-// First, get the list of available locales
-const apiBase = getApiBase()
+  // First, get the list of available locales
+  const apiBase = getApiBase()
 
-axios
-  .get(apiBase + '/api/i18n/locales?_sort=name')
-  .then((localesResponse) => {
-    const availableLocales = localesResponse.data.map((locale: any) => locale.code)
-    const localeData = localesResponse.data // Store full locale data with names
+  axios
+    .get(apiBase + '/api/i18n/locales?_sort=name')
+    .then((localesResponse) => {
+      const availableLocales = localesResponse.data.map((locale: any) => locale.code)
+      const localeData = localesResponse.data // Store full locale data with names
 
-    // Store locale data in Pinia store
-    const localeStore = useLocaleStore()
-    localeStore.setAvailableLocales(localeData)
+      // Store locale data in Pinia store
+      const localeStore = useLocaleStore()
+      localeStore.setAvailableLocales(localeData)
 
-    // availableLocales is used by vue-i18n and the language switcher
+      // availableLocales is used by vue-i18n and the language switcher
 
-    // Then load translations for all available locales
-    return axios
-      .get(
-        apiBase + '/api/translations?_limit=-1&locale=en&populate=localizations'
-      )
-      .then((response) => {
-        const translations = response.data.data
+      // Then load translations for all available locales
+      return axios
+        .get(
+          apiBase + '/api/translations?_limit=-1&locale=en&populate=localizations'
+        )
+        .then((response) => {
+          const translations = response.data.data
 
-        // Build translations for current locale only
-        const localeTranslations: Record<string, string> = {}
+          // Build translations for current locale only
+          const localeTranslations: Record<string, string> = {}
 
-        translations.forEach((translation: any) => {
-          const mainKey = translation.attributes.key
+          translations.forEach((translation: any) => {
+            const mainKey = translation.attributes.key
 
-          if (currentLocale === 'en') {
-            // For English, use the main entry
-            localeTranslations[mainKey] =
-              translation.attributes.text || translation.attributes.textHtml
-          } else {
-            // For other locales, look in localizations.data
-            const localization = translation.attributes.localizations?.data?.find(
-              (loc: any) => loc.attributes.locale === currentLocale
-            )
-
-            if (localization) {
+            if (currentLocale === 'en') {
+              // For English, use the main entry
               localeTranslations[mainKey] =
-                localization.attributes.text || localization.attributes.textHtml
+                translation.attributes.text || translation.attributes.textHtml
+            } else {
+              // For other locales, look in localizations.data
+              const localization = translation.attributes.localizations?.data?.find(
+                (loc: any) => loc.attributes.locale === currentLocale
+              )
+
+              if (localization) {
+                localeTranslations[mainKey] =
+                  localization.attributes.text || localization.attributes.textHtml
+              }
             }
-          }
+          })
+
+          // Set locale messages for all available locales
+          availableLocales.forEach((locale: string) => {
+            if (locale === currentLocale) {
+              // Set translations for current locale
+              i18n.global.setLocaleMessage(locale, localeTranslations)
+            } else {
+              // Set empty translations for other locales (they'll be loaded when switched)
+              i18n.global.setLocaleMessage(locale, {})
+            }
+          })
+
+          // Configure and mount the app after i18n is ready
+          app.use(router)
+          app.use(i18n)
+          app.use(Vue3linkify)
+          app.mount('#app')
         })
+    })
+    .catch((error) => {
+      console.error('Error loading locales or translations:', error)
 
-        // Set locale messages for all available locales
-        availableLocales.forEach((locale: string) => {
-          if (locale === currentLocale) {
-            // Set translations for current locale
-            i18n.global.setLocaleMessage(locale, localeTranslations)
-          } else {
-            // Set empty translations for other locales (they'll be loaded when switched)
-            i18n.global.setLocaleMessage(locale, {})
-          }
-        })
-
-        // Configure and mount the app after i18n is ready
-        app.use(router)
-        app.use(i18n)
-        app.use(Vue3linkify)
-        app.mount('#app')
-      })
-  })
-  .catch((error) => {
-    console.error('Error loading locales or translations:', error)
-
-    // Fallback: just mount the app with basic i18n
-    app.use(router)
-    app.use(i18n)
-    app.use(Vue3linkify)
-    app.mount('#app')
-  })
+      // Fallback: just mount the app with basic i18n
+      app.use(router)
+      app.use(i18n)
+      app.use(Vue3linkify)
+      app.mount('#app')
+    })
+})

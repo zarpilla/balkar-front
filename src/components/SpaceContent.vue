@@ -23,6 +23,7 @@ import ContentVideo from './content/ContentVideo.vue'
 import ContentAccordion from './content/ContentAccordion.vue'
 import ContentQuiz from './content/ContentQuiz.vue'
 import ContentSlider from './content/ContentSlider.vue'
+import ContentMarkdown from './content/ContentMarkdown.vue'
 
 interface ContentItem {
   __component: string
@@ -58,7 +59,8 @@ const componentMap: Record<string, any> = {
   'content.video': ContentVideo,
   'content.accordion': ContentAccordion,
   'content.quiz': ContentQuiz,
-  'content.slider': ContentSlider
+  'content.slider': ContentSlider,
+  'content.markdown': ContentMarkdown
 }
 
 const getComponentName = (componentType: string) => {

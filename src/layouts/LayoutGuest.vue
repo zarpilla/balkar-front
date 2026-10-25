@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { siteConfig } from '@/stores/site'
 import { ref } from 'vue'
 import { useApplicationStore } from '@/stores/application.js'
 import { useI18n } from 'vue-i18n'
@@ -64,7 +65,8 @@ if (readQueryStringParameter('locale')) {
           <div class="d-flex align-items-center">
             <div class="col-6 col-md-2">
               <RouterLink to="/" class="logo">
-                <img src="@/assets/logo-color.svg" alt="" />
+                <img v-if="siteConfig.logoHeader" :src="siteConfig.logoHeader" :alt="siteConfig.siteName || ''" />
+                <img v-else src="@/assets/logo-color.svg" alt="" />
               </RouterLink>
             </div>
 
@@ -170,7 +172,7 @@ header {
   fill: #fff;
 }
 .the-content {
-  background-color: #d4edda;
+  background-color: var(--theme-primary-light, #d4edda);
   border-radius: 19px;
   padding: 50px 0px;
   margin-bottom: 100px;

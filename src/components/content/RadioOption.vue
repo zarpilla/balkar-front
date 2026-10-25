@@ -129,12 +129,12 @@ const optionClass = computed(() => ({
 
 .radio-option--selected {
   background-color: #e8f4fd;
-  border-color: #44b08e;
+  border-color: var(--theme-primary, #44b08e);
 } */
 
 /* .radio-option--correct {
   background-color: var(--theme-success-bg, #d4edda);
-  border-color: #44b08e;
+  border-color: var(--theme-primary, #44b08e);
 }
 
 .radio-option--incorrect {

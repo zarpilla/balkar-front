@@ -628,19 +628,19 @@ const closeContentDetailsModal = () => {
 .progress {
   background-color: var(--color-background-grey, #e9ecef);
   border-radius: 0.25rem;
-  background-color: rgba(240, 192, 90, 0.5)!important;  
+  background-color: rgba(var(--theme-secondary-rgb, 240, 192, 90), 0.5)!important;  
   border-radius: 10px;  
   height: 20px!important;
 }
 
 .progress-bar {
   transition: width 0.3s ease;
-  background-color: rgba(240, 192, 90, 0.5)!important;  
+  background-color: rgba(var(--theme-secondary-rgb, 240, 192, 90), 0.5)!important;  
   color: #000;
 }
 
 .bg-progress {
-  background-color: rgba(240, 192, 90, 1)!important;
+  background-color: rgba(var(--theme-secondary-rgb, 240, 192, 90), 1)!important;
 }
 
 .badge {

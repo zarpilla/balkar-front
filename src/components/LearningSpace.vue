@@ -9,6 +9,7 @@ import { useAuthStore } from '@/stores/auth'
 
 import { useI18n } from 'vue-i18n'
 import SpaceContent from '@/components/SpaceContent.vue'
+import FileUploadSubmission from '@/components/FileUploadSubmission.vue'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
@@ -197,11 +198,9 @@ const emailIsValid = (msg: any) => {
   canPayLastname.value = msg.lastname
 }
 
-const pageModules = computed(() => {
-  return moduleId.value
-    ? space.value.modules.filter((m: any) => m.moduleId.toString() === moduleId.value)
-    : space.value.modules
-})
+const uploaded = async () => {
+  await load()
+}
 
 const complete = async () => {
   await Api.progresses.complete({
@@ -763,7 +762,7 @@ const selectedLesson = computed(() => {
                             class="btn btn-primary-outlined"
                             @click="complete()"
                             v-if="
-                              !unit.completed && unit.lessons.length === 0 && canMarkAsCompleted
+                              !unit.completed && unit.lessons.length === 0 && canMarkAsCompleted && module.moduleType !== 'Monitoring'
                             "
                           >
                             <svg
@@ -794,7 +793,7 @@ const selectedLesson = computed(() => {
                             {{ $t('mark-as-completed') }}
                           </button>
                           <button
-                            v-if="unit.completed && unit.lessons.length === 0"
+                            v-if="unit.completed && unit.lessons.length === 0 && module.moduleType !== 'Monitoring'"
                             class="btn btn-primary btn-primary-hover-green"
                             @click="notcomplete()"
                           >
@@ -1055,135 +1054,38 @@ const selectedLesson = computed(() => {
               </template>
             </template>
 
-            <div
-              v-for="module in pageModules"
-              :key="`module.uid-${module.moduleId}`"
-              class="d-block mb-3"
-            >
-              <RouterLink
-                :to="`/space/${uid}/module/${module.moduleId}`"
-                class="d-flex module"
-                :class="'module-type-' + module.moduleType.toLowerCase()"
+            <!-- Modules migrated from Balkar can accept file submissions -->
+            <template v-for="module in space.content_modules" :key="`upload-${module.uid}`">
+              <div
+                v-if="moduleId && module.uid.toString() === moduleId.toString() && module.uploadFiles"
+                class="module-upload mt-4"
               >
-                {{ module.name }}
-                <span
-                  class="ms-auto completed-pct"
-                  v-if="module.moduleType.toLowerCase() !== 'monitoring'"
-                >
-                  {{ (module.completedPct * 100).toFixed(0) }}%
-                </span>
-              </RouterLink>
-
-              <div v-if="moduleId === module.moduleId">
-                <div
-                  v-for="content in module.contents"
-                  :key="`module.uid-${module.moduleId}-content-${content.id}`"
-                >
-                  <div v-if="content.text" class="mt-4 mb-4">
-                    <vue-markdown
-                      class="mt-4 mb-4"
-                      :options="{ html: true }"
-                      :linkify="true"
-                      :source="content.text"
-                    ></vue-markdown>
-                  </div>
-                  <div v-if="content.media" class="mt-4 mb-4">
-                    <div v-if="content.media.mime.startsWith('image')">
-                      <img :src="base + content.media.url" class="zw-100" />
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  v-for="(unit, j) in module.units"
-                  :key="`module.uid-${module.moduleId}-unit-${unit.uid}`"
-                >
-                  <div class="d-block mt-3 mb-3 ms-3 ms-md-5">
-                    <RouterLink
-                      :to="`/space/${uid}/module/${module.moduleId}/unit/${unit.uid}`"
-                      class="d-flex unit"
+                <FileUploadSubmission
+                  :multiple="false"
+                  :learningSpace="String(space.id)"
+                  :moduleId="String(module.uid)"
+                  :accept="'*/*'"
+                  @uploaded="uploaded"
+                />
+                <div v-for="sub in module.submissions || []" :key="sub.id" class="uploaded-file">
+                  <div v-if="sub.file && sub.file.length" class="d-flex px-2 py-4">
+                    <a :href="apiBase + sub.file[0].url" target="_blank">{{ sub.file[0].name }}</a>
+                    <svg
+                      @click="removeSubmission(sub.id)"
+                      class="remove-file ms-auto clickable"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24"
+                      viewBox="0 -960 960 960"
+                      width="24"
                     >
-                      <span class="pe-1">{{ j + 1 }}.</span>
-                      <span class="unit-name">{{ unit.title }}</span>
-
-                      <svg
-                        v-if="unit.completed"
-                        class="completed-check ms-auto"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="24"
-                        viewBox="0 -960 960 960"
-                        width="24"
-                      >
-                        <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
-                      </svg>
-                    </RouterLink>
-
-                    <div v-if="unitId === unit.uid">
-                      <div
-                        v-for="content in unit.contents"
-                        :key="`module.uid-${module.moduleId}-unit-${unit.uid}-content-${content.id}`"
-                      >
-                        <div v-if="content.text" class="mt-4 mb-4">
-                          <vue-markdown
-                            class="mt-4 mb-4"
-                            :linkify="true"
-                            :options="{ html: true }"
-                            :source="content.text"
-                          ></vue-markdown>
-                        </div>
-                        <div v-if="content.media" class="mt-4 mb-4">
-                          <div v-if="content.media.mime.startsWith('image')">
-                            <img :src="base + content.media.url" class="zw-100" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div
-                        class="d-flex w-100"
-                        v-if="!unit.completed && module.moduleType !== 'Monitoring'"
-                      >
-                        <button
-                          class="btn btn-tertiary btn-medium mb-2 ms-auto"
-                          @click="complete()"
-                        >
-                          {{ $t('mark-as-completed') }}
-                        </button>
-                      </div>
-                      <div
-                        class="d-flex w-100"
-                        v-if="unit.completed && module.moduleType !== 'Monitoring'"
-                      >
-                        <button
-                          class="btn btn-tertiary btn-medium mb-2 ms-auto"
-                          @click="notcomplete()"
-                        >
-                          {{ $t('mark-as-not-completed') }}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  v-if="module.units.length === 0 && module.moduleType !== 'Monitoring'"
-                  class="mt-4 mb-4"
-                >
-                  <div class="d-flex w-100" v-if="!module.completed">
-                    <button class="btn btn-tertiary btn-medium mb-2 ms-auto" @click="complete()">
-                      {{ $t('mark-as-completed') }}
-                    </button>
-                  </div>
-                  <div
-                    class="d-flex w-100"
-                    v-if="module.completed && module.moduleType !== 'Monitoring'"
-                  >
-                    <button class="btn btn-tertiary btn-medium mb-2 ms-auto" @click="notcomplete()">
-                      {{ $t('mark-as-not-completed') }}
-                    </button>
+                      <path
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>

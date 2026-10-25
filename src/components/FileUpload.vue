@@ -363,7 +363,7 @@ export default {
   outline: 2px dashed #aaa; /* the dash box */
   outline-offset: -10px;
   background: #f9f9f9;
-  background: #BBDFF7;
+  background: var(--theme-accent-blue-bg, #BBDFF7);
   color: dimgray;
   padding: 10px 10px;
   min-height: 80px; /* minimum height */

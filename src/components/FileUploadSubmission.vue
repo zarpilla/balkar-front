@@ -217,7 +217,7 @@ export default defineComponent({
 .dropbox {
   outline: 2px dashed #000000; /* the dash box */
   outline-offset: -10px;
-  background: #BBDFF7;
+  background: var(--theme-accent-blue-bg, #BBDFF7);
   color: #000000;
   padding: 10px 10px;
   min-height: 80px; /* minimum height */

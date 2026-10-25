@@ -230,7 +230,7 @@ export default defineComponent({
 }
 
 .zdropbox:hover svg{
-  fill: #F3C857; /* when mouse over to the drop zone, change color */
+  fill: var(--theme-secondary-light, #F3C857); /* when mouse over to the drop zone, change color */
 }
 
 .dropbox p {

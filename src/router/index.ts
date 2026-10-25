@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import { useAuthStore } from '@/stores/auth'
+import { siteConfig } from '@/stores/site'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -177,7 +178,15 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  if (to.meta.requiresAuth && !authStore.isAuthenticated()) next({ name: 'login' })
+  if (to.meta.requiresAuth && !authStore.isAuthenticated()) return next({ name: 'login' })
+  // Sites without a public catalogue (e.g. Balkar) start at the login page.
+  if (
+    !siteConfig.publicHome &&
+    !authStore.isAuthenticated() &&
+    (to.name === 'home' || to.name === 'dashboard')
+  ) {
+    return next({ name: 'login' })
+  }
 
   // to.meta.transition = 'fade' 
 

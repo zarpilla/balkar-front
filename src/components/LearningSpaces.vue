@@ -116,7 +116,7 @@ h1-40 {
   border-radius: 20px;
   overflow: hidden;
   background:
-    linear-gradient(180deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%),
+    linear-gradient(180deg, rgba(var(--card-overlay-rgb, var(--theme-primary-rgb, 68, 176, 142)), var(--card-overlay-opacity, 1)) 0%, rgba(var(--card-overlay-rgb, var(--theme-primary-rgb, 68, 176, 142)), 0) 100%),
     lightgray 50% / cover no-repeat;
   position: relative;
 
@@ -158,7 +158,7 @@ h1-40 {
   left: 0;
   width: 100%;
   height: 500px;
-  background: linear-gradient(180deg, #44b08e 0%, rgba(68, 176, 142, 0) 100%);
+  background: linear-gradient(180deg, rgba(var(--card-overlay-rgb, var(--theme-primary-rgb, 68, 176, 142)), var(--card-overlay-opacity, 1)) 0%, rgba(var(--card-overlay-rgb, var(--theme-primary-rgb, 68, 176, 142)), 0) 100%);
   overflow: hidden;
   pointer-events: none;
 }
