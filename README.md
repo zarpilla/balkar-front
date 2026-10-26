@@ -1,5 +1,14 @@
 # balkar-front
 
+Vue frontend shared by the two e-learning sites: **URR** (edu.urbanresilienceresearch.net) and **Balkar** (area.balkar.earth). Backend: [zarpilla/balkar](https://github.com/zarpilla/balkar).
+
+## Documentation
+
+- **[Course administrator manual](https://github.com/zarpilla/balkar/blob/main/docs/manual/README.md)** (in the backend repo): what each content type is for and how changes in the admin panel show up on the site, with screenshots of both sites.
+- [Theme migration guide](THEME_MIGRATION_GUIDE.md): how the colour themes work in the code.
+
+## Development
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
