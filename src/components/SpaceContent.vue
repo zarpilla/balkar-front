@@ -49,6 +49,7 @@ const emit = defineEmits<{
     minToPass?: number;
     correctAnswers: number;
     totalQuestions: number;
+    answers?: (number | null)[];
   }): void
 }>()
 
@@ -74,6 +75,7 @@ const onQuizCompleted = (payload: {
   minToPass?: number;
   correctAnswers: number;
   totalQuestions: number;
+  answers?: (number | null)[];
 }) => {
   emit('quiz-completed', payload)
 }

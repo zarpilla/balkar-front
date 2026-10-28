@@ -19,6 +19,8 @@ export interface SiteConfig {
   defaultLocale: string | null
   // When false, '/' sends guests to the login page instead of the public catalogue.
   publicHome: boolean
+  // Notification emails (NOTIFICATIONS_ENABLED on the backend): announcements, email settings
+  notificationsEnabled: boolean
 }
 
 export const siteConfig = reactive<SiteConfig>({
@@ -30,7 +32,8 @@ export const siteConfig = reactive<SiteConfig>({
   favicon: null,
   styles: null,
   defaultLocale: null,
-  publicHome: true
+  publicHome: true,
+  notificationsEnabled: false
 })
 
 const absoluteUrl = (url: string | null) =>
@@ -74,6 +77,7 @@ export async function loadSiteConfig() {
     siteConfig.styles = data.styles || null
     siteConfig.defaultLocale = data.defaultLocale || null
     siteConfig.publicHome = data.publicHome !== false
+    siteConfig.notificationsEnabled = data.notificationsEnabled === true
     applyToDocument()
   } catch (error) {
     // Older backends have no /site-config: keep the bundled defaults.

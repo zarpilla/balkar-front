@@ -45,6 +45,13 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
+      // Public certificate check (link and QR code on the certificate)
+      path: '/verify/:code',
+      name: 'verify',
+      meta: { requiresAuth: false },
+      component: () => import('../views/VerifyView.vue')
+    },
+    {
       path: '/dashboard',
       name: 'dashboard',
       meta: { requiresAuth: false },

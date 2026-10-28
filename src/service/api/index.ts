@@ -14,6 +14,7 @@ import { payment } from './payments'
 import { bookmarks } from './bookmarks'
 import { userChannelReads } from './user-channel-reads'
 import { certificates } from './certificates'
+import { quizAttempts } from './quiz-attempts'
 
 export const Api = {
   learningSpaces,
@@ -31,5 +32,6 @@ export const Api = {
   payment,
   bookmarks,
   userChannelReads,
-  certificates
+  certificates,
+  quizAttempts
 }

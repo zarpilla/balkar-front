@@ -40,16 +40,33 @@ const authenticated = computed(() => {
   return authStore.isAuthenticated()
 })
 
+const issued = ref<any>(null)
+const linkCopied = ref(false)
+
 const issueCertificate = async () => {
   if (!space.value) return
   try {
     const response = await Api.certificates.issue(props.uid)
+    if (response.data) {
+      issued.value = response.data
+    }
     if (response.data && response.data.pdfUrl) {
       window.open(base + response.data.pdfUrl, '_blank')
     }
   } catch (error) {
     console.error('Error issuing certificate:', error)
     alert('An error occurred while issuing the certificate. Please try again later.')
+  }
+}
+
+const copyVerifyUrl = async () => {
+  if (!issued.value?.verifyUrl) return
+  try {
+    await navigator.clipboard.writeText(issued.value.verifyUrl)
+    linkCopied.value = true
+    setTimeout(() => (linkCopied.value = false), 2500)
+  } catch (error) {
+    console.warn('Could not copy the link', error)
   }
 }
 
@@ -180,6 +197,27 @@ onMounted(async () => {
                 $t('download-certificate')
               }}</a>
             </div>
+
+            <div v-if="issued && issued.verifyUrl" class="certificate-share mb-5">
+              <h2 class="certificate-share__title">{{ $t('certificate-share-title') }}</h2>
+              <p class="mb-2">{{ $t('certificate-verify-explanation') }}</p>
+              <div class="certificate-share__link">
+                <a :href="issued.verifyUrl" target="_blank" rel="noopener">{{ issued.verifyUrl }}</a>
+                <button type="button" class="btn btn-outline-primary btn-sm" @click="copyVerifyUrl">
+                  {{ linkCopied ? $t('certificate-link-copied') : $t('certificate-copy-link') }}
+                </button>
+              </div>
+              <div class="certificate-share__actions">
+                <a
+                  v-if="issued.pdfUrl"
+                  :href="base + issued.pdfUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-outline-primary quick-access-button"
+                  >{{ $t('certificate-open-pdf') }}</a
+                >
+              </div>
+            </div>
           </div>          
         </div>
       </div>
@@ -205,6 +243,31 @@ onMounted(async () => {
 </template>
 
 <style scoped lang="scss">
+.certificate-share {
+  padding: 1.5rem;
+  border-radius: 10px;
+  background: var(--theme-accent-blue-light, #cfe0fc);
+}
+.certificate-share__title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.certificate-share__link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  a {
+    overflow-wrap: anywhere;
+  }
+}
+.certificate-share__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
 .module-item-block {
   border-bottom: 1px solid var(--color-border-grey, #898989);
 }

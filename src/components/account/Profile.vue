@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { siteConfig } from '@/stores/site'
 import { Api } from '@/service/api'
 import { useAuthStore } from '@/stores/auth'
 import { ref, onMounted } from 'vue'
@@ -40,7 +41,8 @@ const editedAccount = ref<any>({
   // location: '',
   // country: '',
   // interests: [],
-  allowPrivateMessages: false
+  allowPrivateMessages: false,
+  emailNotifications: true
 })
 
 const avatar = ref<any>(null)
@@ -73,6 +75,8 @@ const load = async () => {
   editedAccount.value.motivation = account.value.motivation || ''
   editedAccount.value.occupation = account.value.occupation || ''
   editedAccount.value.allowPrivateMessages = account.value.allowPrivateMessages
+  // Not set yet on older accounts: emails are on by default
+  editedAccount.value.emailNotifications = account.value.emailNotifications !== false
 
   editedAccount.value.interests = account.value.interests.map((interest: any) => interest.id)
   const myAvatar = await Api.avatars.mine()
@@ -267,6 +271,20 @@ const uploaded = (fileImage: string) => {
                 :inputValue="editedAccount.allowPrivateMessages"
               />
             </FormField> -->
+
+              <div class="col-12 mt-3">
+                <div v-if="siteConfig.notificationsEnabled" class="form-check profile-email-notifications">
+                  <input
+                    id="profile-email-notifications"
+                    v-model="editedAccount.emailNotifications"
+                    class="form-check-input"
+                    type="checkbox"
+                  />
+                  <label class="form-check-label" for="profile-email-notifications">
+                    {{ $t('profile-email-notifications') }}
+                  </label>
+                </div>
+              </div>
 
               <div class="col-12 col-md-12">
                 <div class="actions d-flex mt-4 mb-4">

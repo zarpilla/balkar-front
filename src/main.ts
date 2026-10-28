@@ -53,7 +53,7 @@ loadSiteConfig().then(() => {
       // Then load translations for all available locales
       return axios
         .get(
-          apiBase + '/api/translations?_limit=-1&locale=en&populate=localizations'
+          apiBase + '/api/translations?pagination[pageSize]=1000&locale=en&populate=localizations'
         )
         .then((response) => {
           const translations = response.data.data
@@ -74,10 +74,13 @@ loadSiteConfig().then(() => {
                 (loc: any) => loc.attributes.locale === currentLocale
               )
 
-              if (localization) {
-                localeTranslations[mainKey] =
-                  localization.attributes.text || localization.attributes.textHtml
-              }
+              const localized =
+                localization &&
+                (localization.attributes.text || localization.attributes.textHtml)
+              // Untranslated keys show the English text rather than the bare key
+              localeTranslations[mainKey] =
+                localized || translation.attributes.text || translation.attributes.textHtml
+
             }
           })
 

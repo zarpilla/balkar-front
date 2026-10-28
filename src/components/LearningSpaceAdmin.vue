@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { siteConfig } from '@/stores/site'
 import { Api } from '@/service/api'
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { Modal } from 'bootstrap'
@@ -8,6 +9,9 @@ import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import { getApiBase } from '@/utils/config'
+import AdminQuizzes from '@/components/admin/AdminQuizzes.vue'
+import AdminSubmissions from '@/components/admin/AdminSubmissions.vue'
+import AdminAnnouncements from '@/components/admin/AdminAnnouncements.vue'
 
 const authStore = useAuthStore()
 
@@ -28,12 +32,12 @@ const load = async () => {
   if (response.data) {
     space.value = response.data
 
-    const adminUsersProgress = await Api.learningSpaces.getAdminUsersProgress(props.uid)
+    const adminUsersProgress = await Api.learningSpaces.getAdminUsersProgress(props.uid, locale.value)
     if (adminUsersProgress.data) {
       space.value.adminUsersProgress = adminUsersProgress.data
     }
 
-    const adminContentProgress = await Api.learningSpaces.getAdminContentProgress(props.uid)
+    const adminContentProgress = await Api.learningSpaces.getAdminContentProgress(props.uid, locale.value)
     if (adminContentProgress.data) {
       space.value.adminContentProgress = adminContentProgress.data
     }
@@ -45,6 +49,18 @@ const load = async () => {
 load()
 
 const base = getApiBase()
+
+type AdminView = 'progress' | 'quizzes' | 'submissions' | 'announcements'
+// Announcements are emails: hidden while the site has notification emails switched off
+const adminViews: AdminView[] = siteConfig.notificationsEnabled
+  ? ['progress', 'quizzes', 'submissions', 'announcements']
+  : ['progress', 'quizzes', 'submissions']
+const initialView = (window.location.hash || '').replace('#', '') as AdminView
+const activeView = ref<AdminView>(adminViews.includes(initialView) ? initialView : 'progress')
+const setView = (view: AdminView) => {
+  activeView.value = view
+  history.replaceState(null, '', `#${view}`)
+}
 
 const toastVisible = ref(false)
 
@@ -127,13 +143,33 @@ const closeContentDetailsModal = () => {
       :space="space"
       :uid="uid"
       :authenticated="!!authenticated"
-      selected="bookmarks"
+      selected="admin"
     />
 
     <div class="enrolled mt-5" v-if="authenticated">
       <div class="container zbg-balkar zmt-5">
         <div class="row">
           <div class="col-12">
+            <ul class="nav nav-tabs admin-tabs mb-4 flex-nowrap" role="tablist">
+              <li v-for="view in adminViews" :key="view" class="nav-item" role="presentation">
+                <button
+                  type="button"
+                  class="nav-link text-nowrap"
+                  :class="{ active: activeView === view }"
+                  role="tab"
+                  :aria-selected="activeView === view"
+                  @click="setView(view)"
+                >
+                  {{ $t(`admin-tab-${view}`) }}
+                </button>
+              </li>
+            </ul>
+
+            <AdminQuizzes v-if="activeView === 'quizzes'" :uid="uid" />
+            <AdminSubmissions v-else-if="activeView === 'submissions'" :uid="uid" />
+            <AdminAnnouncements v-else-if="activeView === 'announcements'" :uid="uid" />
+
+            <template v-else>
             <!-- Users Progress Section -->
             <h4 class="mb-3">Users Progress ({{ space.adminUsersProgress?.meta.totalUsers }} users)</h4>
             <div class="table-responsive mb-5">
@@ -234,6 +270,7 @@ const closeContentDetailsModal = () => {
                 </tbody>
               </table>
             </div>
+            </template>
           </div>
         </div>
       </div>
@@ -612,6 +649,19 @@ const closeContentDetailsModal = () => {
 
 .fw-bold {
   font-weight: bold !important;
+}
+
+/* Admin tabs: scroll sideways on phones instead of wrapping */
+.admin-tabs {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.admin-tabs .nav-link {
+  color: var(--neutral-black, #000);
+}
+.admin-tabs .nav-link.active {
+  font-weight: 600;
+  border-bottom-color: var(--theme-primary, #44b08e);
 }
 
 /* Admin Progress Tables */

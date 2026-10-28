@@ -28,6 +28,14 @@ const emit = defineEmits<{
 }>()
 
 const locale = useI18n().locale
+
+const formatReviewDate = (date: string) => {
+  try {
+    return new Date(date).toLocaleDateString(locale.value)
+  } catch {
+    return new Date(date).toLocaleDateString()
+  }
+}
 const router = useRouter()
 import type { Ref } from 'vue'
 
@@ -249,6 +257,7 @@ const onQuizCompleted = (payload: {
   minToPass?: number;
   correctAnswers: number;
   totalQuestions: number;
+  answers?: (number | null)[];
 }) => {
   // Store quiz completion status using a unique key
   const quizKey = `${moduleId.value}-${unitId.value}-${lessonId.value}-${payload.quizId}`
@@ -1083,6 +1092,18 @@ const selectedLesson = computed(() => {
                       />
                     </svg>
                   </div>
+                  <div v-if="sub.feedback || sub.grade" class="submission-review px-2 pb-3">
+                    <div class="submission-review__header">
+                      <span class="fw-bold">{{ $t('submission-teacher-feedback') }}</span>
+                      <span v-if="sub.reviewedAt" class="submission-review__date">
+                        {{ formatReviewDate(sub.reviewedAt) }}
+                      </span>
+                    </div>
+                    <div v-if="sub.grade" class="submission-review__grade">
+                      {{ $t('submission-grade') }}: <span class="fw-bold">{{ sub.grade }}</span>
+                    </div>
+                    <div v-if="sub.feedback" class="submission-review__feedback">{{ sub.feedback }}</div>
+                  </div>
                 </div>
               </div>
             </template>
@@ -1182,6 +1203,28 @@ const selectedLesson = computed(() => {
 }
 .remove-file {
   cursor: pointer;
+}
+.submission-review {
+  margin: 0 0.5rem 0.5rem;
+  padding: 0.75rem 1rem !important;
+  border-left: 4px solid var(--theme-primary, #44b08e);
+  background: var(--color-background-soft, #f7f7f7);
+  border-radius: 4px;
+}
+.submission-review__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+.submission-review__date {
+  color: var(--color-text-grey, #6c6c6c);
+  font-size: 0.875rem;
+}
+.submission-review__feedback {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 .module-type-forum {
   background: var(--theme-success, #a5dda3);

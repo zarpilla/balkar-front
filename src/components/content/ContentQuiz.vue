@@ -123,6 +123,8 @@
 import { defineProps, defineEmits, ref, computed, watch, onMounted } from 'vue'
 import RichTextElement from './RichTextElement.vue'
 import RadioOption from './RadioOption.vue'
+import { useRoute } from 'vue-router'
+import { Api } from '@/service/api'
 
 interface QuizOption {
   id: number
@@ -182,8 +184,11 @@ const emit = defineEmits<{
     minToPass?: number;
     correctAnswers: number;
     totalQuestions: number;
+    answers: (number | null)[];
   }): void
 }>()
+
+const route = useRoute()
 
 // Track selected answers for each question
 const selectedAnswers = ref<Record<number, number>>({})
@@ -283,6 +288,22 @@ const submitQuiz = () => {
   // Reset the changed after submit tracking
   changedAfterSubmit.value = {}
   isQuizSubmitted.value = true
+
+  recordAttempt()
+}
+
+const currentAnswers = (): (number | null)[] =>
+  props.data.quiz.questions.map((_, index) => selectedAnswers.value[index] ?? null)
+
+// Saves the attempt so course managers can see the results. Only real submissions are
+// recorded (not the answers pre-filled on completed pages), and errors never block the quiz.
+const recordAttempt = () => {
+  const spaceUid = route.params.uid as string | undefined
+  const pageUid = (route.params.lessonId || route.params.unitId) as string | undefined
+  if (!spaceUid || !pageUid || !localStorage.getItem('user.jwt')) return
+  Api.quizAttempts
+    .submit({ spaceUid, quizId: props.data.quiz.id, pageUid, answers: currentAnswers() })
+    .catch((error: any) => console.warn('Could not save the quiz attempt', error))
 }
 
 // Watch for quiz completion
@@ -294,7 +315,8 @@ watch([allQuestionsAnswered, allQuestionsCorrect, isQuizSubmitted], ([answered, 
       score: correctAnswersCount.value / props.data.quiz.questions.length,
       minToPass: props.data.quiz.minToPass, // This is now a percentage (0-100)
       correctAnswers: correctAnswersCount.value,
-      totalQuestions: props.data.quiz.questions.length
+      totalQuestions: props.data.quiz.questions.length,
+      answers: currentAnswers()
     })
   }
 })
