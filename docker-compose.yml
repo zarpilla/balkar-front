@@ -5,7 +5,7 @@ version: '3.8'
 services:
   frontend:
     # Uncomment for production:
-    image: ${DOCKERHUB_USERNAME}/balkar-front:mooc
+    image: ${DOCKERHUB_USERNAME}/balkar-front:latest
     # Comment out build for production:
     # build:
     #   context: .
