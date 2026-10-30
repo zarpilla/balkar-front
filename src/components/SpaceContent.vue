@@ -1,6 +1,7 @@
 <template>
   <div class="space-content">
     <template v-for="(item, index) in content" :key="index">
+      <DraftBadge v-if="item.quiz?.draft" block />
       <component
         :is="getComponentName(item.__component)"
         :data="item"
@@ -24,6 +25,7 @@ import ContentAccordion from './content/ContentAccordion.vue'
 import ContentQuiz from './content/ContentQuiz.vue'
 import ContentSlider from './content/ContentSlider.vue'
 import ContentMarkdown from './content/ContentMarkdown.vue'
+import DraftBadge from './DraftBadge.vue'
 
 interface ContentItem {
   __component: string

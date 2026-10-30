@@ -8,6 +8,7 @@
     >
       <RouterLink :to="`/space/${uid}/module/${module.uid}`" class="d-flex module-item">
         {{ module.menuTitle }}
+        <DraftBadge v-if="module.draft" />
         <svg
           class="ms-1 mt-module-item"
           :class="{ 'no-icon': module.completedPct !== 1 }"
@@ -160,6 +161,7 @@
             >
               <span class="unit-num pe-1">{{ j + 1 }}.</span>
               <span class="unit-name">{{ unit.title }}</span>
+              <DraftBadge v-if="unit.draft" />
             </RouterLink>
           </div>
           <div
@@ -250,6 +252,7 @@
                     </svg>
                   </span>
                   <span class="lesson-name">{{ lesson.title }}</span>
+                  <DraftBadge v-if="lesson.draft" />
                 </RouterLink>
               </div>
             </div>
@@ -261,6 +264,8 @@
 </template>
 
 <script setup lang="ts">
+import DraftBadge from '@/components/DraftBadge.vue'
+
 interface Props {
   space: any
   uid: string

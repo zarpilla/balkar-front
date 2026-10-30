@@ -15,6 +15,7 @@ import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import LearningSpaceEnrollment from '@/components/LearningSpaceEnrollment.vue'
 import LearningSpaceModuleMenu from '@/components/LearningSpaceModuleMenu.vue'
+import DraftBadge from '@/components/DraftBadge.vue'
 import { getApiBase } from '@/utils/config'
 
 const authStore = useAuthStore()
@@ -658,6 +659,7 @@ const selectedLesson = computed(() => {
                         class="module-unit"
                       >
                         <h1 class="mt-4 mb-4">{{ ui + 1 }}. {{ unit.title }}</h1>
+                        <DraftBadge v-if="module.draft || unit.draft" block />
 
                         <div class="mb-4">
                           <SpaceContent
@@ -678,7 +680,9 @@ const selectedLesson = computed(() => {
                               :to="`/space/${uid}/module/${module.uid}/unit/${unit.uid}/lesson/${lesson.uid}`"
                               class="d-flex lesson lesson-list-item"
                             >
-                              <span class="lesson-name me-auto">{{ lesson.title }}</span>
+                              <span class="lesson-name">{{ lesson.title }}</span>
+                              <DraftBadge v-if="lesson.draft" class="me-auto" />
+                              <span v-else class="me-auto"></span>
                               <svg
                                 width="24"
                                 height="25"
@@ -885,6 +889,7 @@ const selectedLesson = computed(() => {
                         >
                           <div v-if="lesson.uid.toString() === lessonId.toString()">
                             <h1>{{ lesson.title }}</h1>
+                            <DraftBadge v-if="module.draft || unit.draft || lesson.draft" block />
 
                             <SpaceContent
                               :content="lesson.content"

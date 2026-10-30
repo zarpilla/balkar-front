@@ -7,6 +7,7 @@ import LearningSpaceHeader from '@/components/LearningSpaceHeader.vue'
 import LearningSpaceBanner from '@/components/LearningSpaceBanner.vue'
 import LearningSpaceTheme from '@/components/LearningSpaceTheme.vue'
 import BaseProgressBar from '@/components/BaseProgressBar.vue'
+import DraftBadge from '@/components/DraftBadge.vue'
 import { getApiBase } from '@/utils/config'
 import { useRouter } from 'vue-router'
 
@@ -99,7 +100,7 @@ const authenticated = computed(() => {
                 :key="`bookmark-module-${module.uid}`"
               >
                 <div class="module-bookmarks mb-4">
-                  <h3 class="module-title mt-5">{{ module.title }}</h3>
+                  <h3 class="module-title mt-5">{{ module.title }}<DraftBadge v-if="module.draft" /></h3>
 
                   <template v-for="(unit, ui) in module.units" :key="`bookmark-unit-${unit.uid}`">
                     <div class="unit-bookmarks zms-3 mb-3">
@@ -113,6 +114,7 @@ const authenticated = computed(() => {
                         >
                           {{ ui + 1 }}. {{ unit.title }}
                         </RouterLink>
+                        <DraftBadge v-if="unit.draft" />
                         <span class="completed-pct-space ms-2">
                           <svg
                             v-if="unit.completed"
@@ -183,6 +185,7 @@ const authenticated = computed(() => {
                           >
                             {{ lesson.title }}
                           </RouterLink>
+                          <DraftBadge v-if="lesson.draft" />
                           <span class="completed-pct-space ms-2">
                             <svg
                               v-if="lesson.completed"
