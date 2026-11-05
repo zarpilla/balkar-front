@@ -58,7 +58,11 @@
             <div class="w-100 text-center" v-else>
               <button class="btn btn-secondary mt-4 mb-4" @click="handleEnroll">
                 {{
-                  space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se')
+                  space.enrolled
+                  ? space.contentCompleted
+                    ? $t('resume-course')
+                    : $t('go-to-course')
+                  : $t('apuntar-se')
                 }}
                 <svg
                   width="24"
@@ -144,7 +148,11 @@
             <div class="w-100 text-center mt-5" v-else>
               <router-link :to="`/register`" class="btn btn-secondary mt-4 mb-4">
                 {{
-                  space.enrolled && space.contentCompleted ? $t('resume-course') : $t('apuntar-se')
+                  space.enrolled
+                  ? space.contentCompleted
+                    ? $t('resume-course')
+                    : $t('go-to-course')
+                  : $t('apuntar-se')
                 }}
                 <svg
                   width="24"

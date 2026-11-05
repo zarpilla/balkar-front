@@ -101,9 +101,21 @@ onMounted(async () => {
   }
 })
 
+const errorToastVisible = ref(false)
 const enroll = async () => {
-  await Api.enrollments.enroll({ uid: props.uid })
-  toastVisible.value = true
+  // Already enrolled (e.g. added by an admin): just go to the course.
+  if (space.value.enrolled) {
+    router.push(`/space/${props.uid}`)
+    return
+  }
+  try {
+    await Api.enrollments.enroll({ uid: props.uid })
+  } catch (e) {
+    console.error(e)
+    errorToastVisible.value = !errorToastVisible.value
+    return
+  }
+  toastVisible.value = !toastVisible.value
   space.value.enrolled = true
   router.push(`/space/${props.uid}`)
 }
@@ -187,6 +199,13 @@ const spaceNeedsPayment = computed(() => {
       title="Enrolled"
       description="Enrolled to space successfully!"
       id="account-contact-ok-toast"
+    ></CustomToast>
+    <CustomToast
+      :show="errorToastVisible"
+      type="error"
+      :title="$t('enroll-error-title')"
+      :description="$t('enroll-error-text')"
+      id="enroll-error-toast"
     ></CustomToast>
   </Teleport>
 </template>
